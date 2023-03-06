@@ -4,7 +4,7 @@ import { faBars, faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { User } from "../../@types/UserType";
 import { navItem } from "../../@types/NavbarType";
-import NavbarItems from "./NavbarItems";
+import NavItems from "./NavItems";
 
 export default function Navbar() {
   const [user, setUser] = useState<null | User>(null);
@@ -36,6 +36,7 @@ export default function Navbar() {
     return navItems.filter((item) => {
       if (item.visible.includes("ALL")) return item;
       if (user && item.visible.includes("SIGNED_IN")) return item;
+      return false;
     });
   };
 
@@ -51,7 +52,7 @@ export default function Navbar() {
       <div className="hidden px-3 h-full  items-center sm:flex">
         <ul className="flex w-auto">
           {filterNavItems().map((navItem) => (
-            <NavbarItems mobileVersion={false} navItem={navItem} />
+            <NavItems mobileVersion={false} navItem={navItem} />
           ))}
         </ul>
       </div>
@@ -90,7 +91,7 @@ export default function Navbar() {
       >
         <ul className="flex flex-col w-auto bg-[#2C3531]">
           {filterNavItems().map((navItem) => (
-            <NavbarItems mobileVersion={true} navItem={navItem} />
+            <NavItems mobileVersion={true} navItem={navItem} />
           ))}
         </ul>
       </div>
