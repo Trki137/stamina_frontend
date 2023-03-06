@@ -3,12 +3,12 @@ import React from "react";
 import { Link } from "react-router-dom";
 import { navItem } from "../../@types/NavbarType";
 
-type NavItems = {
+type NavItemsType = {
   mobileVersion: boolean;
   navItem: navItem;
 };
 
-export default function NavItems({ mobileVersion, navItem }: NavItems) {
+export default function NavItems({ mobileVersion, navItem }: NavItemsType) {
   return (
     <React.Fragment>
       {mobileVersion ? (
