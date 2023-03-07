@@ -5,6 +5,7 @@ import "./index.css";
 import Navbar from "./pages/Navbar/Navbar";
 import Footer from "./pages/Footer/Footer";
 import SignUp from "./pages/SignUp/SignUp";
+import SignIn from "./pages/SignIn/SignIn";
 
 import { routes } from "./api/paths";
 
@@ -16,6 +17,7 @@ function App() {
         <main className="flex flex-1">
           <Routes>
             <Route element={<SignUp />} path={routes.signUp} />
+            <Route element={<SignIn />} path={routes.signIn} />
           </Routes>
         </main>
         <Footer />
