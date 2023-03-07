@@ -85,8 +85,8 @@ export default function Navbar() {
     setUser(obj === null ? obj : JSON.parse(obj));
   }, [user]);
   return (
-    <nav className="absolute flex flex-row-reverse justify-between text-center bg-[#2C3531] w-full h-16 sm:flex-row">
-      <div className="hidden px-3 h-full  items-center sm:flex">
+    <nav className="relative flex flex-row-reverse justify-between text-center bg-[#2C3531] w-full h-16 sm:flex-row">
+      <div className="hidden px-3 h-full items-center sm:flex">
         <ul className="flex w-auto">
           {filterNavItems().map((navItem) => (
             <NavItems
