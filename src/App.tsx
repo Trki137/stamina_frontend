@@ -1,9 +1,12 @@
 import React from "react";
-import { BrowserRouter as Router, Routes } from "react-router-dom";
+import { BrowserRouter as Router, Route, Routes } from "react-router-dom";
 import "./App.css";
 import "./index.css";
 import Navbar from "./pages/Navbar/Navbar";
 import Footer from "./pages/Footer/Footer";
+import Registration from "./pages/Registration/Registration";
+
+import { routes } from "./api/paths";
 
 function App() {
   return (
@@ -11,7 +14,9 @@ function App() {
       <Router>
         <Navbar />
         <main className="flex flex-1">
-          <Routes></Routes>
+          <Routes>
+            <Route element={<Registration />} path={routes.signUp} />
+          </Routes>
         </main>
         <Footer />
       </Router>
