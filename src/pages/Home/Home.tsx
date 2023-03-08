@@ -13,7 +13,7 @@ export default function Home() {
 
   return (
     <React.Fragment>
-      {!user ? <HomeRegistered /> : <HomeNotRegistered />}
+      {user ? <HomeRegistered /> : <HomeNotRegistered />}
     </React.Fragment>
   );
 }

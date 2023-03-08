@@ -127,7 +127,7 @@ export default function Navbar() {
       <div
         className={
           menuMobile
-            ? "fixed w-full top-16 ease-in-out duration-[350ms] sm:hidden"
+            ? "fixed w-full z-40  top-16 ease-in-out duration-[350ms] sm:hidden"
             : "fixed w-full top-[-100%] sm:hidden"
         }
       >
@@ -143,7 +143,7 @@ export default function Navbar() {
       </div>
 
       {userMenuActive && (
-        <div className="absolute right-10 top-[30px] my-4 h-min text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow sm:right-2.5">
+        <div className="z-40 absolute right-10 top-[30px] my-4 h-min text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow sm:right-2.5">
           <ul className="py-2">
             {filterUserNavItems().map((navItem) => (
               <MobileNavItem key={navItem.name} navItem={navItem} />

@@ -4,6 +4,7 @@ import { userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
 import { Link } from "react-router-dom";
 import { routes } from "../../api/paths";
+import ProfileImageUpload from "../../components/ProfileImageUpload/ProfileImageUpload";
 
 export default function SignUp() {
   const [userInput, setUserInput] = useState<userInputType[]>([
@@ -33,6 +34,8 @@ export default function SignUp() {
     },
   ]);
 
+  const [file, setFile] = useState<null | string>(null);
+
   const [error, setError] = useState<{ name: string; value: string }[]>([]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
@@ -44,6 +47,13 @@ export default function SignUp() {
       newUserInput[index].value = value;
       return newUserInput;
     });
+  };
+
+  const handleFileInput = (e: ChangeEvent<HTMLInputElement>) => {
+    if (e.target.files === null) return;
+    if (file !== null) URL.revokeObjectURL(file);
+    console.log("Storing image");
+    setFile(URL.createObjectURL(e.target.files[0]));
   };
 
   const getError = (name: string) => {
@@ -58,7 +68,7 @@ export default function SignUp() {
     <div className="flex items-center w-full">
       <div className="h-auto max-w-6xl w-3/4 md:w-full mx-auto bg-white rounded-lg shadow-xl md:max-w-4xl">
         <div className="flex flex-col md:flex-row-reverse">
-          <div className="h-32 md:h-auto md:w-1/2">
+          <div className="h-32 hidden md:h-auto md:w-1/2 md:block">
             <img
               className="object-cover w-full h-full"
               src={process.env.PUBLIC_URL + "/images/LoginImage.jpg"}
@@ -67,10 +77,15 @@ export default function SignUp() {
           </div>
           <div className="flex h-full w-full items-center align-middle justify-center p-6 sm:p-12 md:w-1/2">
             <div className="w-full h-full">
-              <div className="flex justify-center"></div>
+              <div className="flex items-center justify-center relative w-auto h-24">
+                <ProfileImageUpload
+                  file={file}
+                  handleFileInput={handleFileInput}
+                />
+              </div>
               <div>
                 {userInput.map((inputInfo) => (
-                  <div className="px-4 py-2">
+                  <div key={inputInfo.name} className="px-4 py-2">
                     <Input
                       inputInfo={inputInfo}
                       handleChange={handleInputChange}
@@ -78,7 +93,7 @@ export default function SignUp() {
                     />
                   </div>
                 ))}
-                <Button text="Sign in" handleClick={handleSubmit} />
+                <Button text="Sign up" handleClick={handleSubmit} />
               </div>
               <div className="mt-4 text-center">
                 <p className="text-sm">
