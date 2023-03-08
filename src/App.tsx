@@ -8,6 +8,7 @@ import SignUp from "./pages/SignUp/SignUp";
 import SignIn from "./pages/SignIn/SignIn";
 
 import { routes } from "./api/paths";
+import Home from "./pages/Home/Home";
 
 function App() {
   return (
@@ -16,6 +17,7 @@ function App() {
         <Navbar />
         <main className="flex flex-1">
           <Routes>
+            <Route element={<Home />} path={routes.home} />
             <Route element={<SignUp />} path={routes.signUp} />
             <Route element={<SignIn />} path={routes.signIn} />
           </Routes>
