@@ -1,3 +1,5 @@
+import { Dispatch, SetStateAction } from "react";
+
 export type User = {
   id: number;
   username: string;
@@ -18,3 +20,8 @@ export type UserSignIn = {
   username: string;
   password: string;
 };
+
+export interface Image {
+  image: string;
+  setImage: Dispatch<SetStateAction<string>>;
+}

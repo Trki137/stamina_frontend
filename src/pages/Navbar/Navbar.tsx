@@ -1,19 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
-import { User } from "../../@types/UserType";
+import { Image, User } from "../../@types/UserType";
 import { navItem } from "../../@types/NavbarType";
 import NavItems from "./NavItems";
 import MobileNavItem from "./MobileNavItem";
 
 import { useLocation } from "react-router-dom";
 import { routes } from "../../api/paths";
+import { ProfileImageContext } from "../../context/ProfileImageContext";
 
 export default function Navbar() {
   const [user, setUser] = useState<null | User>(null);
   const [menuMobile, setMenuMobile] = useState<boolean>(false);
   const [userMenuActive, setUserMenuActive] = useState<boolean>(false);
+  const { image } = useContext(ProfileImageContext) as Image;
 
   const navItems: navItem[] = [
     {
@@ -107,11 +109,21 @@ export default function Navbar() {
             icon={faSearch}
           />
         )}
-        <FontAwesomeIcon
-          className="text-white px-2 text-[20px] cursor-pointer"
-          icon={faUserCircle}
-          onClick={handleUserIcon}
-        />
+        {image.length === 0 && (
+          <FontAwesomeIcon
+            className="text-white px-2 text-[20px] cursor-pointer"
+            icon={faUserCircle}
+            onClick={handleUserIcon}
+          />
+        )}
+        {image.length > 0 && (
+          <img
+            className="w-6 h-6 rounded-full cursor-pointer"
+            src={`data:image/jpeg;base64,${image}`}
+            alt="Something went wrong"
+            onClick={handleUserIcon}
+          />
+        )}
         {menuMobile ? (
           <FontAwesomeIcon
             className="text-white px-2 text-[20px] cursor-pointer sm:hidden"

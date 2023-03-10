@@ -1,14 +1,15 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useContext, useState } from "react";
 import Input from "../../components/Input/Input";
 import { userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../api/paths";
 import ProfileImageUpload from "../../components/ProfileImageUpload/ProfileImageUpload";
-import { UserSignUp } from "../../@types/UserType";
+import { Image, UserSignUp } from "../../@types/UserType";
 import { validateSignUp } from "../../util/validation";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
+import { ProfileImageContext } from "../../context/ProfileImageContext";
 
 type Error = { name: string; message: string };
 
@@ -42,9 +43,13 @@ export default function SignUp() {
 
   const [file, setFile] = useState<null | string>(null);
 
+  const [imageFile, setImageFile] = useState<null | File>(null);
+
   const [error, setError] = useState<Error[] | null>([]);
 
   const [serverError, setServerError] = useState<string | null>(null);
+
+  const { setImage } = useContext(ProfileImageContext) as Image;
 
   const navigate = useNavigate();
 
@@ -63,6 +68,7 @@ export default function SignUp() {
     if (e.target.files === null) return;
     if (file !== null) URL.revokeObjectURL(file);
     setFile(URL.createObjectURL(e.target.files[0]));
+    setImageFile(e.target.files[0]);
   };
 
   const getError = (name: string) => {
@@ -89,6 +95,11 @@ export default function SignUp() {
       return;
     }
 
+    if (file) {
+      signUpWithImage(userSignUp);
+      return;
+    }
+
     axios
       .post(backend_paths.SIGN_UP_URL, userSignUp, {
         headers: {
@@ -103,6 +114,32 @@ export default function SignUp() {
       .catch((err) => setServerError(err.response.data));
   };
 
+  const signUpWithImage = (userSignUp: UserSignUp) => {
+    let formData = new FormData();
+
+    formData.append("userInfo", JSON.stringify(userSignUp));
+    if (!imageFile) return;
+    formData.append("image", imageFile);
+
+    console.log(formData);
+
+    axios({
+      method: "post",
+      url: `${backend_paths.SIGN_UP_URL}/sign-up-with-image`,
+      data: formData,
+      headers: { "Content-Type": "multipart/form-data" },
+    })
+      .then((res) => res.data)
+      .then((data) => {
+        localStorage.setItem("staminaUser", JSON.stringify(data.user));
+        console.log(data);
+        if (data.image) {
+          setImage(data.image);
+        }
+        navigate(routes.home);
+      })
+      .catch((err) => setServerError(err.response.data));
+  };
   return (
     <React.Fragment>
       <div className="flex flex-col items-center justify-center w-full">
@@ -128,7 +165,7 @@ export default function SignUp() {
                     handleFileInput={handleFileInput}
                   />
                 </div>
-                <form onSubmit={handleSubmit}>
+                <form onSubmit={handleSubmit} encType="multipart/form-data">
                   {userInput.map((inputInfo) => (
                     <div key={inputInfo.name} className="px-4 py-2">
                       <Input
