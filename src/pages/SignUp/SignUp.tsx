@@ -73,7 +73,6 @@ export default function SignUp() {
   };
   const handleSubmit = () => {
     setError(null);
-    return;
     const userSignUp: UserSignUp = {
       username: userInput[0].value,
       email: userInput[1].value,
