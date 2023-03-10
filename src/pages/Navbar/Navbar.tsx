@@ -83,7 +83,7 @@ export default function Navbar() {
   useEffect(() => {
     const obj = localStorage.getItem("staminaUser");
     setUser(obj === null ? obj : JSON.parse(obj));
-  }, [user]);
+  }, []);
   return (
     <nav className="relative flex flex-row-reverse justify-between text-center bg-[#2C3531] w-full h-16 sm:flex-row">
       <div className="hidden px-3 h-full items-center sm:flex">

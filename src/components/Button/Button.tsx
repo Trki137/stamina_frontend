@@ -6,7 +6,7 @@ type ButtonType = {
   text: string;
 
   icon?: IconDefinition;
-  handleClick: () => void;
+  handleClick?: () => void;
 };
 
 export default function Button({ handleClick, text, icon }: ButtonType) {

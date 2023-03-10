@@ -40,9 +40,7 @@ export default function SignIn() {
     const index = error.findIndex((item) => item.name === name);
     return index !== -1 ? error[index].value : null;
   };
-  const handleSubmit = () => {
-    console.log("Submit data...");
-  };
+  const handleSubmit = () => {};
 
   return (
     <div className="flex items-center w-full">
@@ -60,7 +58,7 @@ export default function SignIn() {
               <div className="flex justify-center"></div>
               <div>
                 {userInput.map((inputInfo) => (
-                  <div className="px-4 py-2">
+                  <div key={inputInfo.name} className="px-4 py-2">
                     <Input
                       inputInfo={inputInfo}
                       handleChange={handleInputChange}

@@ -13,7 +13,6 @@ export default function ProfileImageUpload({
   file,
   handleFileInput,
 }: ProfileImageUploadType) {
-  console.log(file);
   return (
     <div className="absolute file-input-container">
       <input

@@ -9,7 +9,7 @@ export default function Home() {
   useEffect(() => {
     const userData = localStorage.getItem("staminaUser");
     setUser(userData ? JSON.parse(userData) : null);
-  }, [user]);
+  }, []);
 
   return (
     <React.Fragment>
