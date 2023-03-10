@@ -8,6 +8,7 @@ import NavItems from "./NavItems";
 import MobileNavItem from "./MobileNavItem";
 
 import { useLocation } from "react-router-dom";
+import { routes } from "../../api/paths";
 
 export default function Navbar() {
   const [user, setUser] = useState<null | User>(null);
@@ -40,22 +41,22 @@ export default function Navbar() {
   const userNavItems: navItem[] = [
     {
       name: "Sign in",
-      link: "/signin",
+      link: routes.signIn,
       visible: ["NOT_SIGNED_IN"],
     },
     {
       name: "Sign up",
-      link: "/signup",
+      link: routes.signUp,
       visible: ["NOT_SIGNED_IN"],
     },
     {
       name: "Profile",
-      link: "/profile",
+      link: routes.profile,
       visible: ["SIGNED_IN"],
     },
     {
       name: "Sign out",
-      link: "/signout",
+      link: "/",
       visible: ["SIGNED_IN"],
     },
   ];

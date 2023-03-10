@@ -1,7 +1,6 @@
 import React from "react";
 import { navItem } from "../../@types/NavbarType";
 import { Link, useNavigate } from "react-router-dom";
-import { routes } from "../../api/paths";
 
 type MobileNavItemType = {
   navItem: navItem;
@@ -12,7 +11,7 @@ export default function MobileNavItem({ navItem }: MobileNavItemType) {
     if (navItem.name !== "Sign out") return;
 
     localStorage.removeItem("staminaUser");
-    navigate(routes.home);
+    window.location.reload();
   };
   return (
     <li>
