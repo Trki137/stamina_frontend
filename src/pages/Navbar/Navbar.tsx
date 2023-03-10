@@ -1,16 +1,21 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
-import { User } from "../../@types/UserType";
+import { Image, User } from "../../@types/UserType";
 import { navItem } from "../../@types/NavbarType";
 import NavItems from "./NavItems";
 import MobileNavItem from "./MobileNavItem";
+
+import { useLocation } from "react-router-dom";
+import { routes } from "../../api/paths";
+import { ProfileImageContext } from "../../context/ProfileImageContext";
 
 export default function Navbar() {
   const [user, setUser] = useState<null | User>(null);
   const [menuMobile, setMenuMobile] = useState<boolean>(false);
   const [userMenuActive, setUserMenuActive] = useState<boolean>(false);
+  const { image } = useContext(ProfileImageContext) as Image;
 
   const navItems: navItem[] = [
     {
@@ -38,22 +43,22 @@ export default function Navbar() {
   const userNavItems: navItem[] = [
     {
       name: "Sign in",
-      link: "/signin",
+      link: routes.signIn,
       visible: ["NOT_SIGNED_IN"],
     },
     {
       name: "Sign up",
-      link: "/signup",
+      link: routes.signUp,
       visible: ["NOT_SIGNED_IN"],
     },
     {
       name: "Profile",
-      link: "/profile",
+      link: routes.profile,
       visible: ["SIGNED_IN"],
     },
     {
       name: "Sign out",
-      link: "/signout",
+      link: "/",
       visible: ["SIGNED_IN"],
     },
   ];
@@ -83,7 +88,7 @@ export default function Navbar() {
   useEffect(() => {
     const obj = localStorage.getItem("staminaUser");
     setUser(obj === null ? obj : JSON.parse(obj));
-  }, [user]);
+  }, [useLocation().pathname]);
   return (
     <nav className="relative flex flex-row-reverse justify-between text-center bg-[#2C3531] w-full h-16 sm:flex-row">
       <div className="hidden px-3 h-full items-center sm:flex">
@@ -104,11 +109,21 @@ export default function Navbar() {
             icon={faSearch}
           />
         )}
-        <FontAwesomeIcon
-          className="text-white px-2 text-[20px] cursor-pointer"
-          icon={faUserCircle}
-          onClick={handleUserIcon}
-        />
+        {image.length === 0 && (
+          <FontAwesomeIcon
+            className="text-white px-2 text-[20px] cursor-pointer"
+            icon={faUserCircle}
+            onClick={handleUserIcon}
+          />
+        )}
+        {image.length > 0 && (
+          <img
+            className="w-6 h-6 rounded-full cursor-pointer"
+            src={`data:image/jpeg;base64,${image}`}
+            alt="Something went wrong"
+            onClick={handleUserIcon}
+          />
+        )}
         {menuMobile ? (
           <FontAwesomeIcon
             className="text-white px-2 text-[20px] cursor-pointer sm:hidden"
