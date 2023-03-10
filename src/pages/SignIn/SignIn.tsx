@@ -2,11 +2,16 @@ import React, { ChangeEvent, useState } from "react";
 import Input from "../../components/Input/Input";
 import { userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../api/paths";
 
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
+import { UserSignIn } from "../../@types/UserType";
+import { validateSignIn } from "../../util/validation";
+import axios from "axios";
+import { backend_paths } from "../../api/backend_paths";
 
+type Error = { name: string; message: string };
 export default function SignIn() {
   const [userInput, setUserInput] = useState<userInputType[]>([
     {
@@ -23,7 +28,11 @@ export default function SignIn() {
     },
   ]);
 
-  const [error, setError] = useState<{ name: string; value: string }[]>([]);
+  const [error, setError] = useState<Error[] | null>([]);
+
+  const [serverError, setServerError] = useState<string | null>();
+
+  const navigate = useNavigate();
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -37,13 +46,46 @@ export default function SignIn() {
   };
 
   const getError = (name: string) => {
+    if (!error) return null;
+
     const index = error.findIndex((item) => item.name === name);
-    return index !== -1 ? error[index].value : null;
+    return index !== -1 ? error[index].message : null;
   };
-  const handleSubmit = () => {};
+  const handleSubmit = () => {
+    setError(null);
+    const user: UserSignIn = {
+      username: userInput[0].value,
+      password: userInput[1].value,
+    };
+
+    const errors: Error[] = validateSignIn(user);
+
+    if (errors.length > 0) {
+      setError(errors);
+      return;
+    }
+
+    axios
+      .post(backend_paths.SIGN_IN_URL, user, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((res) => res.data)
+      .then((data) => {
+        localStorage.setItem("staminaUser", JSON.stringify(data));
+        navigate(routes.home);
+      })
+      .catch((err) => setServerError(err.response.data));
+  };
 
   return (
-    <div className="flex items-center w-full">
+    <div className="flex flex-col items-center justify-center w-full">
+      {serverError && (
+        <p className="mt-2 text-xs font-bold text-red-600 xs:text-lg md:text-2xl">
+          {serverError}
+        </p>
+      )}
       <div className="h-auto max-w-6xl w-3/4 md:w-full mx-auto bg-white rounded-lg shadow-xl md:max-w-4xl">
         <div className="flex flex-col md:flex-row">
           <div className="h-32 md:h-auto md:w-1/2">

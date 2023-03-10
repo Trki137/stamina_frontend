@@ -57,18 +57,20 @@ export function validateSignUp(user: UserSignUp) {
 }
 
 export function validateSignIn(user: UserSignIn) {
-    let errors = [];
-    if (user.username === "") {
-        errors.push({
-            name: "username",
-            message: "Username field empty",
-        });
-    }
+  let errors = [];
+  if (user.username === "") {
+    errors.push({
+      name: "username",
+      message: "Username field empty",
+    });
+  }
 
-    if (user.password === "") {
-        errors.push({
-            name: "password",
-            message: "Password field empty",
-        });
-    }
+  if (user.password === "") {
+    errors.push({
+      name: "password",
+      message: "Password field empty",
+    });
+  }
+
+  return errors;
 }
