@@ -31,4 +31,5 @@ export type SearchBarUser = {
   image: string | null;
   userid: number;
   username: string;
+  isfollowing: string;
 };
