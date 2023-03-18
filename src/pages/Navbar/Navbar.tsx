@@ -114,6 +114,7 @@ export default function Navbar({ handleSearchActiveChange }: NavbarType) {
             onClick={handleSearchActiveChange}
           />
         )}
+
         {image.length === 0 && (
           <FontAwesomeIcon
             className="text-white px-2 text-[20px] cursor-pointer"

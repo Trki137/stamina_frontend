@@ -11,6 +11,7 @@ import { routes } from "./api/paths";
 import Home from "./pages/Home/Home";
 import ProfileImageProvider from "./context/ProfileImageContext";
 import SearchSidebar from "./pages/SearchSidebar/SearchSidebar";
+import Exercise from "./pages/Exercise/Exercise";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
@@ -33,6 +34,7 @@ function App() {
               <Route path={routes.home} element={<Home />} />
               <Route element={<SignUp />} path={routes.signUp} />
               <Route element={<SignIn />} path={routes.signIn} />
+              <Route element={<Exercise />} path={routes.exercise} />
             </Routes>
           </main>
           <Footer />
