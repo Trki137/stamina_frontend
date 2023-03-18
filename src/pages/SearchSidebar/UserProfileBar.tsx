@@ -88,7 +88,7 @@ export default function UserProfileBar({ user, setUsers }: UserProfileBarType) {
       <div className="w-5/12">
         <p className="text-md font-bold">{user.username}</p>
         <p className="flex flex-row items-center text-[0.5rem] font-extralight text-gray-400">
-          Dean Trkulja
+          {user.name}
           <FontAwesomeIcon icon={faCircle} className="w-1 h-1 mx-1" />
           {user.followedby} pratitelja
         </p>

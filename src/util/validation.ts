@@ -8,6 +8,18 @@ export function validateSignUp(user: UserSignUp) {
       message: "Username field empty",
     });
   }
+  if (user.lastname === "") {
+    errors.push({
+      name: "lastname",
+      message: "Last name field empty",
+    });
+  }
+  if (user.firstname === "") {
+    errors.push({
+      name: "firstname",
+      message: "First name field empty",
+    });
+  }
 
   if (user.email === "") {
     errors.push({

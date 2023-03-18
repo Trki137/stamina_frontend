@@ -26,6 +26,7 @@ export default function SearchSidebar({
 
   useEffect(() => {
     let currentUserId = localStorage.getItem("staminaUser");
+    console.log(currentUserId);
     if (currentUserId == null) return;
     currentUserId = JSON.parse(currentUserId).userid;
 
@@ -43,6 +44,8 @@ export default function SearchSidebar({
     setFilterUsers(users.filter((user) => user.username.includes(searchTerm)));
   }, [users, searchTerm]);
 
+  console.log(filterUsers);
+
   return (
     <Sidebar sidebarActive={searchActive}>
       <FontAwesomeIcon
@@ -52,9 +55,10 @@ export default function SearchSidebar({
       />
       <SearchInput value={searchTerm} handleChange={handleChange} />
       <div className="mt-7 border-t-[1px] border-gray-300">
-        {filterUsers.map((user: SearchBarUser) => (
-          <UserProfileBar key={user.userid} setUsers={setUsers} user={user} />
-        ))}
+        {filterUsers.length > 0 &&
+          filterUsers.map((user: SearchBarUser) => (
+            <UserProfileBar key={user.userid} setUsers={setUsers} user={user} />
+          ))}
       </div>
     </Sidebar>
   );
