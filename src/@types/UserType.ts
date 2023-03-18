@@ -10,6 +10,8 @@ export type User = {
 };
 
 export type UserSignUp = {
+  firstname: string;
+  lastname: string;
   username: string;
   email: string;
   password: string;
@@ -27,6 +29,7 @@ export interface Image {
 }
 
 export type SearchBarUser = {
+  name: string;
   followedby: string;
   image: string | null;
   userid: number;

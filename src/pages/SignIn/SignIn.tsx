@@ -76,7 +76,11 @@ export default function SignIn() {
       })
       .then((res) => res.data)
       .then((data) => {
-        localStorage.setItem("staminaUser", JSON.stringify(data.user));
+        let user = null;
+        if (data.user === undefined) user = data;
+        else user = data.user;
+
+        localStorage.setItem("staminaUser", JSON.stringify(user));
         if (data.image) {
           setImage(data.image);
         }

@@ -16,6 +16,18 @@ type Error = { name: string; message: string };
 export default function SignUp() {
   const [userInput, setUserInput] = useState<userInputType[]>([
     {
+      name: "firstname",
+      value: "",
+      type: "text",
+      label: "First name",
+    },
+    {
+      name: "lastname",
+      value: "",
+      type: "text",
+      label: "Last name",
+    },
+    {
       name: "username",
       value: "",
       type: "text",
@@ -82,10 +94,12 @@ export default function SignUp() {
     setServerError(null);
 
     const userSignUp: UserSignUp = {
-      username: userInput[0].value,
-      email: userInput[1].value,
-      password: userInput[2].value,
-      repeatPassword: userInput[3].value,
+      firstname: userInput[0].value,
+      lastname: userInput[1].value,
+      username: userInput[2].value,
+      email: userInput[3].value,
+      password: userInput[4].value,
+      repeatPassword: userInput[5].value,
     };
 
     const errors: Error[] = validateSignUp(userSignUp);
