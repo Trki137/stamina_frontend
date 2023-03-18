@@ -3,6 +3,7 @@ import Sidebar from "../../components/Sidebar/Sidebar";
 import SearchInput from "../../components/Input/SearchInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
+import UserProfileBar from "./UserProfileBar";
 
 type SearchSidebarType = {
   handleSearchActiveChange: () => void;
@@ -26,6 +27,11 @@ export default function SearchSidebar({
         onClick={handleSearchActiveChange}
       />
       <SearchInput value={searchTerm} handleChange={handleChange} />
+      <div className="mt-7 border-t-[1px] border-gray-300">
+        <UserProfileBar />
+        <UserProfileBar />
+        <UserProfileBar />
+      </div>
     </Sidebar>
   );
 }
