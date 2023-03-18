@@ -11,7 +11,11 @@ import { useLocation } from "react-router-dom";
 import { routes } from "../../api/paths";
 import { ProfileImageContext } from "../../context/ProfileImageContext";
 
-export default function Navbar() {
+type NavbarType = {
+  handleSearchActiveChange: () => void;
+};
+
+export default function Navbar({ handleSearchActiveChange }: NavbarType) {
   const [user, setUser] = useState<null | User>(null);
   const [menuMobile, setMenuMobile] = useState<boolean>(false);
   const [userMenuActive, setUserMenuActive] = useState<boolean>(false);
@@ -107,6 +111,7 @@ export default function Navbar() {
           <FontAwesomeIcon
             className="text-white px-2 text-[20px] cursor-pointer"
             icon={faSearch}
+            onClick={handleSearchActiveChange}
           />
         )}
         {image.length === 0 && (
@@ -142,7 +147,7 @@ export default function Navbar() {
       <div
         className={
           menuMobile
-            ? "fixed w-full z-40  top-16 ease-in-out duration-[350ms] sm:hidden"
+            ? "fixed w-full z-40 top-16 ease-in-out duration-[350ms] sm:hidden"
             : "fixed w-full top-[-100%] sm:hidden"
         }
       >
