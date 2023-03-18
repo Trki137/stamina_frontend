@@ -1,7 +1,7 @@
 import { Dispatch, SetStateAction } from "react";
 
 export type User = {
-  id: number;
+  userid: number;
   username: string;
   email: string;
   description: string;
@@ -35,4 +35,11 @@ export type SearchBarUser = {
   userid: number;
   username: string;
   isfollowing: string;
+};
+
+export type FollowerOrFollowing = {
+  userid: number;
+  username: string;
+  name: string;
+  image: string | null;
 };
