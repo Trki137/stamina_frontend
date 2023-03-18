@@ -1,9 +1,12 @@
-import React, { ChangeEvent, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Sidebar from "../../components/Sidebar/Sidebar";
 import SearchInput from "../../components/Input/SearchInput";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faX } from "@fortawesome/free-solid-svg-icons";
 import UserProfileBar from "./UserProfileBar";
+import axios from "axios";
+import { backend_paths } from "../../api/backend_paths";
+import { SearchBarUser } from "../../@types/UserType";
 
 type SearchSidebarType = {
   handleSearchActiveChange: () => void;
@@ -14,10 +17,24 @@ export default function SearchSidebar({
   searchActive,
 }: SearchSidebarType) {
   const [searchTerm, setSearchTerm] = useState<string>("");
+  const [users, setUsers] = useState<SearchBarUser[]>([]);
 
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
+
+  useEffect(() => {
+    let currentUserId = localStorage.getItem("staminaUser");
+    console.log(currentUserId);
+    if (currentUserId == null) return;
+    currentUserId = JSON.parse(currentUserId).userid;
+    console.log(currentUserId);
+    axios
+      .get(`${backend_paths.USERS_URL}/${currentUserId}`)
+      .then((res) => res.data)
+      .then((data: SearchBarUser[]) => setUsers(data))
+      .catch((err) => console.log(err));
+  }, []);
 
   return (
     <Sidebar sidebarActive={searchActive}>
@@ -28,9 +45,9 @@ export default function SearchSidebar({
       />
       <SearchInput value={searchTerm} handleChange={handleChange} />
       <div className="mt-7 border-t-[1px] border-gray-300">
-        <UserProfileBar />
-        <UserProfileBar />
-        <UserProfileBar />
+        {users.map((user: SearchBarUser) => (
+          <UserProfileBar key={user.userid} user={user} />
+        ))}
       </div>
     </Sidebar>
   );
