@@ -12,8 +12,8 @@ type ModalRowType = {
 
 export default function ModalRow({ user, setModalActive }: ModalRowType) {
   return (
-    <div className="flex items-center border-b-[1px] border-gray-200 p-5 cursor-pointer hover:bg-gray-200">
-      <div className="w-2/12 text-gray-800">
+    <div className="flex gap-x-3 items-center border-b-[1px] border-gray-200 p-5 cursor-pointer hover:bg-gray-200">
+      <div className="w-fit text-gray-800">
         {user.image !== null && (
           <img
             src={`data:image/jpeg;base64,${user.image}`}
