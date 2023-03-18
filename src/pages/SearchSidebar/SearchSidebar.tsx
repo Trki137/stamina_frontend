@@ -26,7 +26,6 @@ export default function SearchSidebar({
 
   useEffect(() => {
     let currentUserId = localStorage.getItem("staminaUser");
-    console.log(currentUserId);
     if (currentUserId == null) return;
     currentUserId = JSON.parse(currentUserId).userid;
 
@@ -57,7 +56,12 @@ export default function SearchSidebar({
       <div className="mt-7 border-t-[1px] border-gray-300">
         {filterUsers.length > 0 &&
           filterUsers.map((user: SearchBarUser) => (
-            <UserProfileBar key={user.userid} setUsers={setUsers} user={user} />
+            <UserProfileBar
+              key={user.userid}
+              handleSearchActiveChange={handleSearchActiveChange}
+              setUsers={setUsers}
+              user={user}
+            />
           ))}
       </div>
     </Sidebar>

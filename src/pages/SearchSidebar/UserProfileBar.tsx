@@ -6,13 +6,21 @@ import Button from "../../components/Button/Button";
 import { SearchBarUser } from "../../@types/UserType";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
+import { Link } from "react-router-dom";
+import { routes } from "../../api/paths";
 
 type UserProfileBarType = {
   user: SearchBarUser;
 
   setUsers: Dispatch<SetStateAction<SearchBarUser[]>>;
+
+  handleSearchActiveChange: () => void;
 };
-export default function UserProfileBar({ user, setUsers }: UserProfileBarType) {
+export default function UserProfileBar({
+  user,
+  setUsers,
+  handleSearchActiveChange,
+}: UserProfileBarType) {
   const handleUnFollow = (userId: number) => {
     let currentUserId = localStorage.getItem("staminaUser");
     if (currentUserId == null) return;
@@ -71,22 +79,32 @@ export default function UserProfileBar({ user, setUsers }: UserProfileBarType) {
   return (
     <div className="flex items-center p-5 cursor-pointer hover:bg-gray-200">
       <div className="w-2/12 text-gray-800">
-        {user.image !== null && (
-          <img
-            src={`data:image/jpeg;base64,${user.image}`}
-            className="w-10 h-10 rounded-full "
-            alt="Can't access"
-          />
-        )}
-        {user.image === null && (
-          <FontAwesomeIcon
-            icon={faUserCircle}
-            className="w-9 h-9 rounded-full "
-          />
-        )}
+        <Link
+          to={`${routes.profile}/${user.userid}`}
+          onClick={handleSearchActiveChange}
+        >
+          {user.image !== null && (
+            <img
+              src={`data:image/jpeg;base64,${user.image}`}
+              className="w-10 h-10 rounded-full "
+              alt="Can't access"
+            />
+          )}
+          {user.image === null && (
+            <FontAwesomeIcon
+              icon={faUserCircle}
+              className="w-9 h-9 rounded-full "
+            />
+          )}
+        </Link>
       </div>
       <div className="w-5/12">
-        <p className="text-md font-bold">{user.username}</p>
+        <Link
+          to={`${routes.profile}/${user.userid}`}
+          onClick={handleSearchActiveChange}
+        >
+          <p className="text-md font-bold">{user.username}</p>
+        </Link>
         <p className="flex flex-row items-center text-[0.5rem] font-extralight text-gray-400">
           {user.name}
           <FontAwesomeIcon icon={faCircle} className="w-1 h-1 mx-1" />

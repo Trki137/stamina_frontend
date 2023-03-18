@@ -36,7 +36,7 @@ function App() {
               <Route element={<SignUp />} path={routes.signUp} />
               <Route element={<SignIn />} path={routes.signIn} />
               <Route element={<Exercise />} path={routes.exercise} />
-              <Route element={<Profile />} path={routes.profile} />
+              <Route element={<Profile />} path={`${routes.profile}/:id`} />
             </Routes>
           </main>
           <Footer />
