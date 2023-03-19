@@ -8,21 +8,13 @@ import ModalList from "./ModalList";
 import { FollowerOrFollowing } from "../../@types/UserType";
 import { useParams } from "react-router-dom";
 import Button from "../../components/Button/Button";
+import EditProfileModal from "./EditProfileModal";
+import { ProfileInfoType } from "../../@types/Profile";
 
-type ProfileInfo = {
-  username: string;
-  email: string;
-  description: string | null;
-  image: string | null;
-  name: string;
-  numoffollowers: string;
-  numoffollowing: string;
-  isfollowing: boolean;
-};
 export default function ProfileHead() {
   const { id } = useParams();
   const [currentUserId, setCurrentUserId] = useState<number>(0);
-  const [profileInfo, setProfileInfo] = useState<ProfileInfo>({
+  const [profileInfo, setProfileInfo] = useState<ProfileInfoType>({
     username: "",
     email: "",
     description: null,
@@ -35,6 +27,8 @@ export default function ProfileHead() {
   const [followingUser, setFollowingUser] = useState<FollowerOrFollowing[]>([]);
   const [followersUser, setFollowersUser] = useState<FollowerOrFollowing[]>([]);
   const [modalActive, setModalActive] = useState<number>(0);
+  const [editProfileModalActive, setEditProfileModalActive] =
+    useState<number>(0);
 
   const handleUnfollowFollow = (actionId: number) => {
     if (id === undefined || currentUserId === 0 || profileInfo === undefined)
@@ -115,6 +109,15 @@ export default function ProfileHead() {
           title={modalActive === 1 ? "Followers" : "Following"}
         />
       )}
+      {editProfileModalActive > 0 && (
+        <EditProfileModal
+          title="Edit profile"
+          setModalActive={setEditProfileModalActive}
+          profile={profileInfo}
+          setProfileInfo={setProfileInfo}
+          userid={currentUserId}
+        />
+      )}
       <div className="flex flex-col w-full justify-end items-start m-auto">
         <div className="flex w-fit min-w-[300px]  sm:min-w-[500px] items-center justify-center  gap-x-2 pt-10 pb-3 sm:mx-auto">
           <div className="w-1/2 sm:w-1/3 flex justify-center items-center">
@@ -136,7 +139,10 @@ export default function ProfileHead() {
             <div className="flex flex-col max-w-[250px] w-full sm:flex-row  sm:items-center sm:justify-start sm:gap-x-8">
               <p className="text-2xl font-bold ">{profileInfo?.username}</p>
               {id !== undefined && parseInt(id) === currentUserId && (
-                <ProfileButton text="Edit profile" />
+                <ProfileButton
+                  text="Edit profile"
+                  handleClick={() => setEditProfileModalActive(1)}
+                />
               )}
               {id !== undefined &&
                 parseInt(id) !== currentUserId &&

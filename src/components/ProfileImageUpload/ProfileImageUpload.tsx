@@ -7,11 +7,13 @@ import "./ProfileImageUpload.css";
 type ProfileImageUploadType = {
   file: null | string;
   handleFileInput: (e: ChangeEvent<HTMLInputElement>) => void;
+  isBase64: boolean;
 };
 
 export default function ProfileImageUpload({
   file,
   handleFileInput,
+  isBase64,
 }: ProfileImageUploadType) {
   return (
     <div className="absolute file-input-container">
@@ -28,8 +30,15 @@ export default function ProfileImageUpload({
         )}
         <FontAwesomeIcon icon={faUpload} className="icon-file-upload" />
 
-        {file && (
+        {file && !isBase64 && (
           <img src={file} alt="Something went wrong" className="image-user" />
+        )}
+        {file && isBase64 && (
+          <img
+            src={`data:image/jpeg;base64,${file}`}
+            alt="Something went wrong"
+            className="image-user"
+          />
         )}
       </label>
     </div>
