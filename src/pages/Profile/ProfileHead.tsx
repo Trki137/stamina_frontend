@@ -120,7 +120,7 @@ export default function ProfileHead() {
       )}
       <div className="flex flex-col w-full justify-end items-start m-auto">
         <div className="flex w-fit min-w-[300px]  sm:min-w-[500px] items-center justify-center  gap-x-2 pt-10 pb-3 sm:mx-auto">
-          <div className="w-1/2 sm:w-1/3 flex justify-center items-center">
+          <div className="w-1/2 sm:w-1/3 h-32 flex justify-center items-center">
             {profileInfo?.image && (
               <img
                 src={`data:image/jpeg;base64,${profileInfo.image}`}
