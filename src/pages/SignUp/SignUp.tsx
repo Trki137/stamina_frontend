@@ -177,6 +177,7 @@ export default function SignUp() {
                   <ProfileImageUpload
                     file={file}
                     handleFileInput={handleFileInput}
+                    isBase64={false}
                   />
                 </div>
                 <form onSubmit={handleSubmit} encType="multipart/form-data">
