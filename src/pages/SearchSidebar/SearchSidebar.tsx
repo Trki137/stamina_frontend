@@ -33,6 +33,7 @@ export default function SearchSidebar({
       .get(`${backend_paths.USERS_URL}/allUsers/${currentUserId}`)
       .then((res) => res.data)
       .then((data: SearchBarUser[]) => {
+          console.log(data);
         setUsers(data);
         setFilterUsers(data);
       })

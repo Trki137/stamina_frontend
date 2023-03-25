@@ -1,12 +1,13 @@
 export const routes = {
   home: "/",
+  myData: "my-data",
   profile: "/profile",
   events: "/events",
-  exercise: "/exercise",
-  inputData: "/exercise/inputData",
-  createTraining: "/exercise/createTraining",
-  addWorkout: "/exercise/addWorkout",
-  chooseTraining: "/exercise/chooseTraining",
+  workout: "/workout",
+  inputData: "/workout/inputData",
+  createTraining: "/workout/createTraining",
+  addWorkout: "/workout/addWorkout",
+  chooseTraining: "/workout/chooseTraining",
   signIn: "/signin",
   signUp: "/signup",
 };

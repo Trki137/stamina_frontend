@@ -13,6 +13,7 @@ import ProfileImageProvider from "./context/ProfileImageContext";
 import SearchSidebar from "./pages/SearchSidebar/SearchSidebar";
 import Exercise from "./pages/Exercise/Exercise";
 import Profile from "./pages/Profile/Profile";
+import AddWorkout from "./pages/AddWorkout/AddWorkout";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
@@ -35,7 +36,8 @@ function App() {
               <Route path={routes.home} element={<Home />} />
               <Route element={<SignUp />} path={routes.signUp} />
               <Route element={<SignIn />} path={routes.signIn} />
-              <Route element={<Exercise />} path={routes.exercise} />
+              <Route element={<Exercise />} path={routes.workout} />
+              <Route element={<AddWorkout />} path={routes.addWorkout} />
               <Route element={<Profile />} path={`${routes.profile}/:id`} />
             </Routes>
           </main>
