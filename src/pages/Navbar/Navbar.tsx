@@ -24,22 +24,22 @@ export default function Navbar({handleSearchActiveChange}: NavbarType) {
   const navItems: navItem[] = [
     {
       name: "home",
-      link: "/",
+      link: routes.home,
       visible: ["ALL"],
     },
     {
       name: "my data",
-      link: "/mydata",
+      link: routes.myData,
       visible: ["SIGNED_IN"],
     },
     {
       name: "exercise",
-      link: "/exercise",
+      link: routes.workout,
       visible: ["SIGNED_IN"],
     },
     {
       name: "events",
-      link: "/events",
+      link: routes.events,
       visible: ["SIGNED_IN"],
     },
   ];
