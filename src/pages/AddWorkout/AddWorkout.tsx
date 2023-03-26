@@ -143,7 +143,7 @@ export default function AddWorkout() {
   return (
     <div className="w-full h-[100%] pt-56 flex justify-center items-center align-middle">
       <div className="w-full lg:w-1/2 h-full flex flex-row">
-        <div className="pl-32 lg:pl-0 flex flex-col gap-y-1">
+        <div className="pl-32 w-full min-w-fit lg:pl-0 flex flex-col gap-y-1">
           <Input
             inputInfo={name}
             handleChange={(e: ChangeEvent<HTMLInputElement>) =>
@@ -162,6 +162,7 @@ export default function AddWorkout() {
             onChange={handleMuscleChange}
             value={selectedMuscle}
             isMultiple={true}
+            fixedWidth={true}
           />
 
           <MySelect
@@ -170,6 +171,7 @@ export default function AddWorkout() {
             onChange={(value: SelectValue) => setSelectedEquipment(value)}
             value={selectedEquipment}
             isMultiple={true}
+            fixedWidth={true}
           />
           <MySelect
             placeholder={"Choose intensity level"}
@@ -179,6 +181,7 @@ export default function AddWorkout() {
             }
             value={selectedIntensity}
             isMultiple={false}
+            fixedWidth={true}
           />
           <div className="w-full flex justify-start ">
             <div className="w-3/6">

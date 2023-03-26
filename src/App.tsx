@@ -14,6 +14,7 @@ import SearchSidebar from "./pages/SearchSidebar/SearchSidebar";
 import Exercise from "./pages/Exercise/Exercise";
 import Profile from "./pages/Profile/Profile";
 import AddWorkout from "./pages/AddWorkout/AddWorkout";
+import AddTraining from "./pages/AddTraining/AddTraining";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
@@ -33,11 +34,12 @@ function App() {
           />
           <main className="flex flex-1">
             <Routes>
-              <Route path={routes.home} element={<Home />} />
+              <Route element={<Home />} path={routes.home} />
               <Route element={<SignUp />} path={routes.signUp} />
               <Route element={<SignIn />} path={routes.signIn} />
               <Route element={<Exercise />} path={routes.workout} />
               <Route element={<AddWorkout />} path={routes.addWorkout} />
+              <Route element={<AddTraining />} path={routes.createTraining} />
               <Route element={<Profile />} path={`${routes.profile}/:id`} />
             </Routes>
           </main>

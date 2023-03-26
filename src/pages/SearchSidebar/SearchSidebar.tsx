@@ -33,7 +33,6 @@ export default function SearchSidebar({
       .get(`${backend_paths.USERS_URL}/allUsers/${currentUserId}`)
       .then((res) => res.data)
       .then((data: SearchBarUser[]) => {
-          console.log(data);
         setUsers(data);
         setFilterUsers(data);
       })
@@ -43,8 +42,6 @@ export default function SearchSidebar({
   useEffect(() => {
     setFilterUsers(users.filter((user) => user.username.includes(searchTerm)));
   }, [users, searchTerm]);
-
-  console.log(filterUsers);
 
   return (
     <Sidebar sidebarActive={searchActive}>

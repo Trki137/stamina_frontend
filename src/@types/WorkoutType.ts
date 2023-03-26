@@ -26,3 +26,9 @@ export type allWorkoutsType = {
   muscle_targeted: muscleGroupType[];
   equipment: equipmentType[] | null;
 };
+
+export type selectedWorkoutType = {
+  workout: allWorkoutsType;
+  numOfRepetitions: string;
+  typeOfRepetition: string;
+};
