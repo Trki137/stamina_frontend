@@ -8,13 +8,23 @@ import {
 } from "react-tailwindcss-select/dist/components/type";
 import ProfileButton from "../../components/Button/ProfileButton";
 import { userInputType } from "../../@types/LoginTypes";
-import { trainingDataTypes } from "../../@types/TrainingTypes";
+import {
+  saveTrainingType,
+  trainingInfoType,
+  workoutsToSendType,
+} from "../../@types/TrainingTypes";
 import TrainingItem from "./TrainingItem";
 import WorkoutInfo from "./WorkoutInfo";
 import AddWorkoutForm from "./AddWorkoutForm";
 import TrainingDetailsForm from "./TrainingDetailsForm";
 import { IExerciseData, Muscle } from "react-body-highlighter";
 import TrainingMuscleWorked from "./TrainingMuscleWorked";
+
+import {
+  calculateAvgCalories,
+  calculateTime,
+  resolveIntensity,
+} from "../../util/trainingCalculation";
 
 export default function AddTraining() {
   const [trainingInfo, setTrainingInfo] = useState<userInputType[]>([
@@ -51,12 +61,6 @@ export default function AddTraining() {
     anterior: IExerciseData[];
     posterior: IExerciseData[];
   }>(null);
-  const [trainingData, setTrainingData] = useState<trainingDataTypes>({
-    numOfSet: "",
-    restBetweenSets: "",
-    restBetweenWorkouts: "",
-    workouts: [],
-  });
   const [listOfWorkouts, setListOfWorkouts] = useState<selectedWorkoutType[]>(
     []
   );
@@ -98,10 +102,6 @@ export default function AddTraining() {
       typeOfRepetition: selectedRepetitionOption.label,
     };
     setListOfWorkouts((prev) => [...prev, data]);
-    setTrainingData((prev) => ({
-      ...prev,
-      workouts: [...prev.workouts, workout.workoutid],
-    }));
   };
 
   const handleInfo = (id: number) => {
@@ -152,9 +152,6 @@ export default function AddTraining() {
         }))
     );
 
-    console.log(posteriorData);
-    console.log(anteriorData);
-
     let newArr: IExerciseData[] = [];
     for (let i = 0; i < anteriorData.length; i++) {
       newArr = newArr.concat(anteriorData[i]);
@@ -182,7 +179,63 @@ export default function AddTraining() {
     });
   };
 
-  const handleSaveToDb = (data: { description: string; name: string }) => {};
+  const handleSaveToDb = (data: { description: string; name: string }) => {
+    const workouts: workoutsToSendType = listOfWorkouts.map((workout) => {
+      if (workout.typeOfRepetition === "x") {
+        return {
+          workoutid: workout.workout.workoutid,
+          time: null,
+          repetition: parseInt(workout.numOfRepetitions),
+        };
+      }
+
+      return {
+        workoutid: workout.workout.workoutid,
+        time: parseInt(workout.numOfRepetitions),
+        repetition: null,
+      };
+    });
+
+    const roundInfo: trainingInfoType = {
+      restSet: parseInt(trainingInfo[0].value),
+      restWorkout: parseInt(trainingInfo[1].value),
+      sets: parseInt(trainingInfo[2].value),
+    };
+
+    const time = calculateTime(allWorkouts, workouts, roundInfo);
+    if (!time) return;
+
+    const avg_calories = calculateAvgCalories(
+      allWorkouts,
+      parseFloat(time),
+      workouts,
+      roundInfo
+    );
+    const intensity = resolveIntensity(allWorkouts);
+
+    const dataToSend: saveTrainingType = {
+      time,
+      description: data.description,
+      name: data.name,
+      avg_calories,
+      intensity,
+      restBetweenSets: roundInfo.restSet,
+      numOfSets: roundInfo.sets,
+      restBetweenWorkouts: roundInfo.restWorkout,
+      workouts,
+    };
+
+    console.log(dataToSend);
+
+    axios
+      .post(backend_paths.TRAINING, dataToSend, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((data) => console.log(data))
+      .catch((err) => console.log(err));
+  };
 
   return (
     <div className="w-full h-full min-h-[700px] min-w-full flex  justify-center ">
