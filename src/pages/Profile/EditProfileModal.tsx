@@ -145,7 +145,7 @@ export default function EditProfileModal({
   };
 
   return (
-    <ProfileModal title={title} setModalActive={setModalActive}>
+    <ProfileModal title={title} setModalActive={() => setModalActive(0)}>
       <div className="flex items-center justify-center relative w-auto h-24">
         <ProfileImageUpload
           file={file}

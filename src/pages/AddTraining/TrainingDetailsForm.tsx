@@ -2,12 +2,16 @@ import React, { ChangeEvent } from "react";
 import Input from "../../components/Input/Input";
 import { userInputType } from "../../@types/LoginTypes";
 import ProfileButton from "../../components/Button/ProfileButton";
+import SaveTrainingModal from "./SaveTrainingModal";
 
 type TrainingDetailsFormType = {
   trainingInfo: userInputType[];
   handleTrainingInfo: (e: ChangeEvent<HTMLInputElement>) => void;
   handleSaveTraining: () => void;
   handleGoBack: () => void;
+  handleCancelSave: () => void;
+  modalVisible: boolean;
+  handleSave: (data: { description: string; name: string }) => void;
 };
 
 export default function TrainingDetailsForm({
@@ -15,11 +19,20 @@ export default function TrainingDetailsForm({
   handleTrainingInfo,
   handleSaveTraining,
   handleGoBack,
+  handleCancelSave,
+  modalVisible,
+  handleSave,
 }: TrainingDetailsFormType) {
   const handleStartWorkout = () => {};
 
   return (
     <React.Fragment>
+      {modalVisible && (
+        <SaveTrainingModal
+          handleClose={handleCancelSave}
+          handleSave={handleSave}
+        />
+      )}
       <div className="flex w-full">
         <div className={"mx-auto"}>
           {trainingInfo.map((info) => (

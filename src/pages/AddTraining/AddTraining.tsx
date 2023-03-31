@@ -47,7 +47,6 @@ export default function AddTraining() {
   const [selectedWorkout, setSelectedWorkout] = useState<Option | null>(null);
   const [selectedRepetitionOption, setSelectedRepetitionOption] =
     useState<Option | null>(null);
-
   const [data, setData] = useState<null | {
     anterior: IExerciseData[];
     posterior: IExerciseData[];
@@ -64,6 +63,8 @@ export default function AddTraining() {
   const [workoutInfo, setWorkoutInfo] = useState<allWorkoutsType | null>(null);
   const [isWorkoutAddPhaseActive, setIsWorkoutAddPhaseActive] =
     useState<boolean>(true);
+  const [modalVisible, setModalVisible] = useState<boolean>(false);
+
   useEffect(() => {
     axios
       .get(backend_paths.WORKOUT)
@@ -181,6 +182,8 @@ export default function AddTraining() {
     });
   };
 
+  const handleSaveToDb = (data: { description: string; name: string }) => {};
+
   return (
     <div className="w-full h-full min-h-[700px] min-w-full flex  justify-center ">
       <div className="w-full px-4 h-full my-auto max-w-sm flex flex-col items-center">
@@ -215,8 +218,11 @@ export default function AddTraining() {
             <TrainingDetailsForm
               trainingInfo={trainingInfo}
               handleTrainingInfo={handleTrainingInfo}
-              handleSaveTraining={() => {}}
+              handleSaveTraining={() => setModalVisible(true)}
+              handleSave={handleSaveToDb}
+              handleCancelSave={() => setModalVisible(false)}
               handleGoBack={() => setIsWorkoutAddPhaseActive(true)}
+              modalVisible={modalVisible}
             />
           </div>
         )}
