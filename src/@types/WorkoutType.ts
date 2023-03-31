@@ -1,3 +1,5 @@
+import { IExerciseData } from "react-body-highlighter";
+
 export type muscleGroupType = {
   muscleid: string;
   name: string;
@@ -31,4 +33,9 @@ export type selectedWorkoutType = {
   workout: allWorkoutsType;
   numOfRepetitions: string;
   typeOfRepetition: string;
+};
+
+export type workoutBodyTarget = null | {
+  anterior: IExerciseData[];
+  posterior: IExerciseData[];
 };

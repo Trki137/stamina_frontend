@@ -35,7 +35,7 @@ export default function WorkoutInfo({ data }: WorkoutInfoType) {
       : getEquipmentString(data.equipment.map((equipment) => equipment.name));
 
   return (
-    <div className="flex flex-col justify-center px-8">
+    <div className="flex flex-col justify-center px-8 max-w-md min-w-md">
       <div className="flex w-full justify-center">
         <BodyHighlighter
           data={anteriorData}

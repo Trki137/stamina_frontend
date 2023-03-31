@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import { allWorkoutsType, selectedWorkoutType } from "../../@types/WorkoutType";
 import { backend_paths } from "../../api/backend_paths";
 import axios from "axios";
@@ -12,8 +12,31 @@ import { trainingDataTypes } from "../../@types/TrainingTypes";
 import TrainingItem from "./TrainingItem";
 import WorkoutInfo from "./WorkoutInfo";
 import AddWorkoutForm from "./AddWorkoutForm";
+import TrainingDetailsForm from "./TrainingDetailsForm";
+import { IExerciseData, Muscle } from "react-body-highlighter";
+import TrainingMuscleWorked from "./TrainingMuscleWorked";
 
 export default function AddTraining() {
+  const [trainingInfo, setTrainingInfo] = useState<userInputType[]>([
+    {
+      name: "restBetweenSet",
+      value: "",
+      label: "Rest between sets",
+      type: "text",
+    },
+    {
+      name: "restBetweenWorkouts",
+      value: "",
+      label: "Rest between workouts",
+      type: "text",
+    },
+    {
+      name: "numOfSets",
+      value: "",
+      label: "Number of sets",
+      type: "text",
+    },
+  ]);
   const [repetitionValue, setRepetitionValue] = useState<userInputType>({
     label: "Repetition",
     value: "",
@@ -25,6 +48,10 @@ export default function AddTraining() {
   const [selectedRepetitionOption, setSelectedRepetitionOption] =
     useState<Option | null>(null);
 
+  const [data, setData] = useState<null | {
+    anterior: IExerciseData[];
+    posterior: IExerciseData[];
+  }>(null);
   const [trainingData, setTrainingData] = useState<trainingDataTypes>({
     numOfSet: "",
     restBetweenSets: "",
@@ -96,14 +123,66 @@ export default function AddTraining() {
 
       return [...prevWorkout.slice(0, index), ...prevWorkout.slice(index + 1)];
     });
+
+    if (workoutInfo === null) return;
+
+    if (id === workoutInfo.workoutid) setWorkoutInfo(null);
   };
 
   const handleNext = () => {
     setIsWorkoutAddPhaseActive(false);
+    setWorkoutInfo(null);
+
+    const posteriorData: IExerciseData[][] = listOfWorkouts.map((workout) =>
+      workout.workout.muscle_targeted
+        .filter((muscle) => muscle.body_side === "posterior")
+        .map((muscle) => ({
+          name: "",
+          muscles: [muscle.input_name] as Muscle[],
+        }))
+    );
+
+    const anteriorData: IExerciseData[][] = listOfWorkouts.map((workout) =>
+      workout.workout.muscle_targeted
+        .filter((muscle) => muscle.body_side === "anterior")
+        .map((muscle) => ({
+          name: "",
+          muscles: [muscle.input_name] as Muscle[],
+        }))
+    );
+
+    console.log(posteriorData);
+    console.log(anteriorData);
+
+    let newArr: IExerciseData[] = [];
+    for (let i = 0; i < anteriorData.length; i++) {
+      newArr = newArr.concat(anteriorData[i]);
+    }
+
+    let newArray2: IExerciseData[] = [];
+    for (let i = 0; i < posteriorData.length; i++) {
+      newArray2 = newArray2.concat(posteriorData[i]);
+    }
+
+    setData({
+      anterior: newArr,
+      posterior: newArray2,
+    });
+  };
+
+  const handleTrainingInfo = (e: ChangeEvent<HTMLInputElement>) => {
+    const { value, name } = e.target;
+
+    setTrainingInfo((prevTrainingInfo) => {
+      const newTrainingInfo = [...prevTrainingInfo];
+      const index = newTrainingInfo.findIndex((info) => info.name === name);
+      newTrainingInfo[index].value = value;
+      return newTrainingInfo;
+    });
   };
 
   return (
-    <div className="w-full h-full min-h-[700px] flex  justify-center ">
+    <div className="w-full h-full min-h-[700px] min-w-full flex  justify-center ">
       <div className="w-full px-4 h-full my-auto max-w-sm flex flex-col items-center">
         {isWorkoutAddPhaseActive && (
           <React.Fragment>
@@ -131,6 +210,17 @@ export default function AddTraining() {
           </React.Fragment>
         )}
 
+        {!isWorkoutAddPhaseActive && (
+          <div className="w-full">
+            <TrainingDetailsForm
+              trainingInfo={trainingInfo}
+              handleTrainingInfo={handleTrainingInfo}
+              handleSaveTraining={() => {}}
+              handleGoBack={() => setIsWorkoutAddPhaseActive(true)}
+            />
+          </div>
+        )}
+
         {isWorkoutAddPhaseActive && (
           <div className="w-full py-2">
             <div className="w-1/3 flex items-start">
@@ -140,6 +230,7 @@ export default function AddTraining() {
         )}
       </div>
       {workoutInfo && <WorkoutInfo data={workoutInfo} />}
+      {data && !isWorkoutAddPhaseActive && <TrainingMuscleWorked data={data} />}
     </div>
   );
 }
