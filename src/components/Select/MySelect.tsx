@@ -4,7 +4,7 @@ import Select from "react-tailwindcss-select";
 import { SelectValue } from "react-tailwindcss-select/dist/components/type";
 
 type SelectType = {
-  placeholder: string;
+  placeholder: string | undefined;
   options:
     | {
         value: string;
@@ -16,6 +16,7 @@ type SelectType = {
 
   value: SelectValue;
   isMultiple: boolean;
+  fixedWidth: boolean;
 };
 
 export default function MySelect({
@@ -24,9 +25,13 @@ export default function MySelect({
   onChange,
   value,
   isMultiple,
+  fixedWidth,
 }: SelectType) {
+  const className = fixedWidth
+    ? "relative h-10 w-full min-w-[200px]"
+    : "relative h-10 ";
   return (
-    <div className="relative h-10 w-72 min-w-[200px]">
+    <div className={className}>
       {options && (
         <Select
           placeholder={placeholder}

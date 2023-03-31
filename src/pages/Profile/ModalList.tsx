@@ -15,7 +15,7 @@ export default function ModalList({
   title,
 }: ModalListType) {
   return (
-    <Modal title={title} setModalActive={setModalActive}>
+    <Modal title={title} modalChange={() => setModalActive(0)}>
       {users.map((user) => (
         <ModalRow
           key={user.userid}

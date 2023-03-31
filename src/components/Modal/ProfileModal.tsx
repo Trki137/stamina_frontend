@@ -1,11 +1,11 @@
-import React, { Dispatch, SetStateAction } from "react";
+import React from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faTimes } from "@fortawesome/free-solid-svg-icons";
 
 type ModalType = {
   children: React.ReactNode;
   title: string;
-  setModalActive: Dispatch<SetStateAction<number>>;
+  setModalActive: () => void;
 };
 
 export default function ProfileModal({
@@ -26,7 +26,7 @@ export default function ProfileModal({
             </h3>
             <FontAwesomeIcon
               icon={faTimes}
-              onClick={() => setModalActive(0)}
+              onClick={setModalActive}
               className="cursor-pointer"
             />
           </div>
