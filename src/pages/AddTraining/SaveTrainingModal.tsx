@@ -45,7 +45,7 @@ export default function SaveTrainingModal({
             <ProfileButton
               text={"Save"}
               handleClick={() =>
-                handleSave({ description: description, name: input.name })
+                handleSave({ description: description, name: input.value })
               }
             />
           </div>

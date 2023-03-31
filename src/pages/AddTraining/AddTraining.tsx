@@ -233,7 +233,18 @@ export default function AddTraining() {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       })
-      .then((data) => console.log(data))
+      .then((data) => {
+        setModalVisible(false);
+        setTrainingInfo((prevState) =>
+          prevState.map((input) => ({ ...input, value: "" }))
+        );
+        setSelectedWorkout(null);
+        setSelectedRepetitionOption(null);
+        setListOfWorkouts([]);
+        setData(null);
+        setIsWorkoutAddPhaseActive(true);
+        setRepetitionValue((prevState) => ({ ...prevState, value: "" }));
+      })
       .catch((err) => console.log(err));
   };
 

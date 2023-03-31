@@ -29,15 +29,24 @@ export function calculateTime(
   roundInfo: trainingInfoType
 ) {
   const numberOfSets = roundInfo.sets;
+  console.log(trainingInfo);
+  console.log(workouts);
   let totalTime: number =
     roundInfo.restSet * numberOfSets + roundInfo.restWorkout * workouts.length;
 
   for (let i = 0; i < workouts.length; i++) {
     const workout = workouts[i];
 
-    const workoutInfo = trainingInfo.filter(
-      (w) => w.workoutid === workout.workoutid
-    )[0];
+    const workoutInfo = trainingInfo.filter((w) => {
+      console.log(w.workoutid);
+      console.log(workout.workoutid);
+
+      console.log(w.workoutid == workout.workoutid);
+      return w.workoutid == workout.workoutid;
+    })[0];
+
+    if (!workoutInfo) continue;
+
     if (workoutInfo.time !== null) {
       totalTime += workoutInfo.time;
       continue;
@@ -114,10 +123,16 @@ const getTime = (
   trainingInfo: workoutsToSendType,
   intensity: string
 ) => {
+  console.log(workoutid);
+  console.log(trainingInfo);
+
   const workout = trainingInfo.filter(
     (info) => info.workoutid === workoutid
   )[0];
 
+  console.log(workout);
+
+  if (!workout) return 0;
   if (workout.time !== null) return workout.time;
 
   return workout.repetition === null
