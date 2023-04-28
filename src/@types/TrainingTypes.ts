@@ -30,6 +30,7 @@ export type trainingInfoType = {
 };
 
 export type trainingInfoCardType = {
+  [key: string]: any;
   time: number;
   name: string;
   intensity: string;

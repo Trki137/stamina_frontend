@@ -1,15 +1,19 @@
 import React, { Dispatch, SetStateAction, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
-import { faCaretDown, faFilter } from "@fortawesome/free-solid-svg-icons";
+import { faFilter } from "@fortawesome/free-solid-svg-icons";
 
 import { intensityLevel } from "../../constants/IntensityLevel";
 import CheckBox from "../../components/Input/CheckBox";
 import RangeSlider from "../../components/Input/RangeSlider";
 import { muscleGroupType } from "../../@types/WorkoutType";
+import Sort from "./Sort";
+import { SortValueTypes } from "../../@types/SortTypes";
 
 type FilterType = {
   setIntensityFilter: Dispatch<SetStateAction<string[]>>;
   setFilteredMuscle: Dispatch<SetStateAction<string[]>>;
+  setSort: (sort: SortValueTypes) => void;
+  sortValues: SortValueTypes[];
   maxTime: number;
   minTime: number;
   maxCal: number;
@@ -24,6 +28,8 @@ export default function Filter({
   minCal,
   allMuscles,
   setFilteredMuscle,
+  setSort,
+  sortValues,
 }: FilterType) {
   const [filterActive, setFilterActive] = useState<boolean>(false);
   const [clear, setClear] = useState<boolean>(false);
@@ -72,10 +78,7 @@ export default function Filter({
           </span>
         </div>
         <div className=" px-3">
-          <span className="flex items-center">
-            <p className="mr-2">Sort by</p>
-            <FontAwesomeIcon icon={faCaretDown} />
-          </span>
+          <Sort setSort={setSort} sortValues={sortValues} />
         </div>
       </div>
       <div>

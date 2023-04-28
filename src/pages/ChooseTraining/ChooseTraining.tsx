@@ -5,14 +5,16 @@ import { backend_paths } from "../../api/backend_paths";
 import TrainingCard from "./TrainingCard";
 import Filter from "./Filter";
 import { muscleGroupType } from "../../@types/WorkoutType";
+import { sortValues } from "../../constants/SortValues";
+import { SortValueTypes } from "../../@types/SortTypes";
 
 export default function ChooseTraining() {
   const [allTraining, setAllTraining] = useState<trainingInfoCardType[]>([]);
   const [intensityFilter, setIntensityFilter] = useState<string[]>([]);
   const [filteredMuscle, setFilteredMuscle] = useState<string[]>([]);
   const [filtered, setFiltered] = useState<trainingInfoCardType[]>([]);
-
   const [allMuscles, setAllMuscles] = useState<muscleGroupType[]>([]);
+  const [currentSort, setCurrentSort] = useState<SortValueTypes | null>(null);
 
   useEffect(() => {
     axios
@@ -42,12 +44,23 @@ export default function ChooseTraining() {
         )
       );
 
-    setFiltered(filter);
+    if (currentSort) setSort(currentSort);
+    else setFiltered(filter);
   }, [allTraining, intensityFilter, filteredMuscle]);
+
+  const setSort = (sort: SortValueTypes) => {
+    setCurrentSort(sort);
+    const sorted = filtered.sort((data1, data2) => {
+      const t1 = data1[`${sort.value}`];
+      const t2 = data2[`${sort.value}`];
+
+      return sort.order === "ASC" ? t1 - t2 : t2 - t1;
+    });
+    setFiltered(sorted);
+  };
 
   const getMinutes = (num: number) => {
     if (Number.isNaN(num)) return 0;
-    //console.log(Math.ceil(num / 60));
     return Math.ceil(num / 60);
   };
 
@@ -69,6 +82,8 @@ export default function ChooseTraining() {
     <React.Fragment>
       <div className="w-full flex flex-col">
         <Filter
+          setSort={setSort}
+          sortValues={sortValues}
           setIntensityFilter={setIntensityFilter}
           setFilteredMuscle={setFilteredMuscle}
           minTime={getMinutes(Number(minTime))}
