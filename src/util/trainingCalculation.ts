@@ -41,8 +41,8 @@ export function calculateTime(
       console.log(w.workoutid);
       console.log(workout.workoutid);
 
-      console.log(w.workoutid == workout.workoutid);
-      return w.workoutid == workout.workoutid;
+      console.log(w.workoutid === workout.workoutid);
+      return w.workoutid === workout.workoutid;
     })[0];
 
     if (!workoutInfo) continue;
