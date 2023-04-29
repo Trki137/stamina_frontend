@@ -6,7 +6,50 @@ import ProfileButton from "../../components/Button/ProfileButton";
 
 export default function Event() {
   const [allChallenges, setAllChallenges] = useState<CardChallengeType[]>([]);
-  const [allEvents, setAllEvents] = useState<CardEventType[]>([]);
+  const [allEvents, setAllEvents] = useState<CardEventType[]>([
+    {
+      startsAt: "10:00",
+      remainingSpace: 10,
+      id: 1,
+      createdBy: "Dean Trkulja",
+      location: {
+        address: "Radiceva",
+        city: "Zagreb",
+      },
+      name: "Velesajam turnir",
+      description:
+        "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      image: "/images/data.jpeg",
+    },
+    {
+      startsAt: "10:00",
+      remainingSpace: 10,
+      id: 2,
+      createdBy: "Dean Trkulja",
+      location: {
+        address: "Radiceva",
+        city: "Zagreb",
+      },
+      name: "Velesajam turnir",
+      description:
+        "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      image: null,
+    },
+    {
+      startsAt: "10:00",
+      remainingSpace: 10,
+      id: 3,
+      createdBy: "Dean Trkulja",
+      location: {
+        address: "Radiceva",
+        city: "Zagreb",
+      },
+      name: "Velesajam turnir",
+      description:
+        "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
+      image: "/images/data.jpeg",
+    },
+  ]);
 
   const [createEventActive, setCreateEventActive] = useState<boolean>(false);
   const [createChallengeActive, setCreateChallengeActive] =
@@ -18,7 +61,7 @@ export default function Event() {
         <ProfileButton text={"Create event"} />
         <ProfileButton text={"Create challenge"} />
       </div>
-      <div>
+      <div className="w-full">
         <div>
           <h1 className="font-bold text-xl px-2">Challenges</h1>
           <div>
@@ -27,11 +70,11 @@ export default function Event() {
             ))}
           </div>
         </div>
-        <div>
+        <div className="w-full mx-auto">
           <h1 className="font-bold text-xl px-2">Events</h1>
-          <div>
+          <div className="w-full px-2 grid grid-cols-1 gap-y-4 sm:grid-cols-2 lg:grid-cols-3 gap-x-3">
             {allEvents.map((event) => (
-              <EventCard cardInfo={event} />
+              <EventCard key={event.id} cardInfo={event} />
             ))}
           </div>
         </div>

@@ -4,6 +4,8 @@ export type CardChallengeType = {
   name: string;
   until: string;
   equipment: string;
+  description: string;
+  image: string | null;
 };
 export type CardEventType = {
   id: number;
@@ -11,7 +13,9 @@ export type CardEventType = {
   name: string;
   startsAt: string;
   remainingSpace: number;
+  description: string;
   location: Location;
+  image: string | null;
 };
 
 export type Location = {
