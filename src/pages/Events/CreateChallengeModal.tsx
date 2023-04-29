@@ -5,7 +5,7 @@ import React, {
   useEffect,
   useState,
 } from "react";
-import { CardChallengeType } from "../../@types/EventType";
+import { CardChallengeType, SaveChallengeType } from "../../@types/EventType";
 import Textarea from "../../components/Input/Textarea";
 import { userInputType } from "../../@types/LoginTypes";
 import Input from "../../components/Input/Input";
@@ -76,25 +76,28 @@ export default function CreateChallengeModal({
     if (!user) return;
     if (!selectedWorkout) return;
 
-    const equipment = allWorkouts
-      .filter((workout) => workout.workoutid === Number(selectedWorkout.value))
-      .map((workout) => workout.equipment?.map((eq) => eq.name))
-      .join(",");
-
-    const data: CardChallengeType = {
+    const data: SaveChallengeType = {
       name: userInput[0].value,
       description,
-      createdBy: JSON.parse(user).username,
-      image: null,
-      id: 4,
-      until: dayjs(startDate).format("DD.MM.YYYY"),
-      equipment,
+      date: dayjs(startDate).format("DD.MM.YYYY"),
+      workoutId: Number(selectedWorkout.value),
+      userId: JSON.parse(user).userid,
     };
 
-    setActive(false);
-    setAllChallenges((prevChallenges) => [...prevChallenges, data]);
-
     console.log(data);
+
+    axios
+      .post(backend_paths.CHALLENGE, data, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((res) => res.data)
+      .then((data) => {
+        setAllChallenges((prevChallenges) => [...prevChallenges, data]);
+        setActive(false);
+      })
+      .catch((e) => console.log(e));
   };
 
   return (

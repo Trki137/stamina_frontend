@@ -1,61 +1,28 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { CardChallengeType, CardEventType } from "../../@types/EventType";
 import ChallengeCard from "../../components/Cards/ChallengeCard";
 import EventCard from "../../components/Cards/EventCard";
 import ProfileButton from "../../components/Button/ProfileButton";
 import CreateEventModal from "./CreateEventModal";
 import CreateChallengeModal from "./CreateChallengeModal";
+import axios from "axios";
+import { backend_paths } from "../../api/backend_paths";
 
 export default function Event() {
   const [allChallenges, setAllChallenges] = useState<CardChallengeType[]>([]);
-  const [allEvents, setAllEvents] = useState<CardEventType[]>([
-    {
-      startsAt: "10:00",
-      remainingSpace: 10,
-      id: 1,
-      createdBy: "Dean Trkulja",
-      location: {
-        address: "Radiceva",
-        city: "Zagreb",
-      },
-      name: "Velesajam turnir",
-      description:
-        "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      image: "/images/data.jpeg",
-    },
-    {
-      startsAt: "10:00",
-      remainingSpace: 10,
-      id: 2,
-      createdBy: "Dean Trkulja",
-      location: {
-        address: "Radiceva",
-        city: "Zagreb",
-      },
-      name: "Velesajam turnir",
-      description:
-        "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      image: null,
-    },
-    {
-      startsAt: "10:00",
-      remainingSpace: 10,
-      id: 3,
-      createdBy: "Dean Trkulja",
-      location: {
-        address: "Radiceva",
-        city: "Zagreb",
-      },
-      name: "Velesajam turnir",
-      description:
-        "It was popularised in the 1960s with the release of Letraset sheets containing Lorem Ipsum passages, and more recently with desktop publishing software like Aldus PageMaker including versions of Lorem Ipsum.",
-      image: "/images/data.jpeg",
-    },
-  ]);
+  const [allEvents, setAllEvents] = useState<CardEventType[]>([]);
 
   const [createEventActive, setCreateEventActive] = useState<boolean>(false);
   const [createChallengeActive, setCreateChallengeActive] =
     useState<boolean>(false);
+
+  useEffect(() => {
+    axios
+      .get(backend_paths.CHALLENGE)
+      .then((res) => res.data)
+      .then((data) => setAllChallenges(data))
+      .catch((e) => console.log(e));
+  }, []);
 
   return (
     <React.Fragment>
@@ -83,9 +50,9 @@ export default function Event() {
         <div className="w-full">
           <div>
             <h1 className="font-bold text-xl px-2">Challenges</h1>
-            <div>
+            <div className="w-full px-2 grid grid-cols-1 gap-y-4 sm:grid-cols-2 lg:grid-cols-3 gap-x-3">
               {allChallenges.map((challenge) => (
-                <ChallengeCard cardInfo={challenge} />
+                <ChallengeCard key={challenge.id} cardInfo={challenge} />
               ))}
             </div>
           </div>

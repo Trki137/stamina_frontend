@@ -1,15 +1,24 @@
 export type CardChallengeType = {
   id: number;
-  createdBy: string;
+  createdby: string;
   name: string;
   until: string;
   equipment: string;
   description: string;
   image: string | null;
 };
+
+export type SaveChallengeType = {
+  name: string;
+  description: string;
+  date: string;
+  workoutId: number;
+  userId: number;
+};
+
 export type CardEventType = {
   id: number;
-  createdBy: string;
+  createdby: string;
   name: string;
   startsAt: string;
   remainingSpace: number;

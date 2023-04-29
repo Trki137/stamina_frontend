@@ -18,7 +18,7 @@ export default function EventCard({ cardInfo }: EventCardType) {
           />
         )}
         <h5 className="mb-1 text-xl font-medium text-gray-900">
-          {cardInfo.createdBy}
+          {cardInfo.createdby}
         </h5>
         <span className="text-sm text-[#917543]">{cardInfo.name}</span>
         <div className="text-left mt-6 space-y-3">
