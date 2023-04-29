@@ -63,7 +63,10 @@ export default function Event() {
         <CreateEventModal setActive={setCreateEventActive} />
       )}
       {createChallengeActive && (
-        <CreateChallengeModal setActive={setCreateChallengeActive} />
+        <CreateChallengeModal
+          setActive={setCreateChallengeActive}
+          setAllChallenges={setAllChallenges}
+        />
       )}
 
       <div className="w-full flex flex-col justify-start items-start">
