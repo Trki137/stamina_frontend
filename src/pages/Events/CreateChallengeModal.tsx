@@ -1,4 +1,10 @@
-import React, { ChangeEvent, Dispatch, SetStateAction, useState } from "react";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import { CardChallengeType } from "../../@types/EventType";
 import Textarea from "../../components/Input/Textarea";
 import { userInputType } from "../../@types/LoginTypes";
@@ -12,21 +18,20 @@ import {
   Option,
   SelectValue,
 } from "react-tailwindcss-select/dist/components/type";
+import { allWorkoutsType } from "../../@types/WorkoutType";
+import axios from "axios";
+import { backend_paths } from "../../api/backend_paths";
 
 type CreateChallengeModalType = {
   setActive: Dispatch<SetStateAction<boolean>>;
   setAllChallenges: Dispatch<SetStateAction<CardChallengeType[]>>;
-  handleSelectChange: (value: SelectValue) => void;
-  workoutSelectFormat: { value: string; label: string }[] | null;
-  selectedWorkout: Option | null;
 };
 export default function CreateChallengeModal({
   setActive,
   setAllChallenges,
-  handleSelectChange,
-  workoutSelectFormat,
-  selectedWorkout,
 }: CreateChallengeModalType) {
+  const [selectedWorkout, setSelectedWorkout] = useState<Option | null>(null);
+  const [allWorkouts, setAllWorkouts] = useState<allWorkoutsType[]>([]);
   const [startDate, setStartDate] = useState<Date>(new Date());
   const [description, setDescription] = useState<string>("");
   const [userInput, setUserInput] = useState<userInputType[]>([
@@ -37,7 +42,24 @@ export default function CreateChallengeModal({
       label: "Event name",
     },
   ]);
+  useEffect(() => {
+    axios
+      .get(backend_paths.WORKOUT)
+      .then((res) => res.data)
+      .then((data) => setAllWorkouts(data))
+      .catch((err) => console.log(err));
+  }, []);
 
+  const handleSelectChange = (value: SelectValue) => {
+    setSelectedWorkout(value as Option);
+  };
+
+  const getWorkoutSelectFormat = () => {
+    return allWorkouts.map((workout) => ({
+      value: `${workout.workoutid}`,
+      label: workout.name,
+    }));
+  };
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { value, name } = e.target;
 
@@ -49,7 +71,32 @@ export default function CreateChallengeModal({
     });
   };
 
-  console.log(dayjs(startDate).format("DD.MM.YYYY"));
+  const handleSave = () => {
+    let user = localStorage.getItem("staminaUser");
+    if (!user) return;
+    if (!selectedWorkout) return;
+
+    const equipment = allWorkouts
+      .filter((workout) => workout.workoutid === Number(selectedWorkout.value))
+      .map((workout) => workout.equipment?.map((eq) => eq.name))
+      .join(",");
+
+    const data: CardChallengeType = {
+      name: userInput[0].value,
+      description,
+      createdBy: JSON.parse(user).username,
+      image: null,
+      id: 4,
+      until: dayjs(startDate).format("DD.MM.YYYY"),
+      equipment,
+    };
+
+    setActive(false);
+    setAllChallenges((prevChallenges) => [...prevChallenges, data]);
+
+    console.log(data);
+  };
+
   return (
     <AddDataModal
       title={"Create challenge"}
@@ -59,7 +106,12 @@ export default function CreateChallengeModal({
         <div className="space-y-4">
           <MyDatePicker setStartDate={setStartDate} startDate={startDate} />
           {userInput.map((input) => (
-            <Input inputInfo={input} handleChange={handleChange} error={null} />
+            <Input
+              key={input.name}
+              inputInfo={input}
+              handleChange={handleChange}
+              error={null}
+            />
           ))}
           <Textarea
             placeholder={"Description..."}
@@ -68,15 +120,16 @@ export default function CreateChallengeModal({
           />
           <MySelect
             placeholder="Choose a workout"
-            options={workoutSelectFormat}
+            options={getWorkoutSelectFormat()}
             onChange={handleSelectChange}
             value={selectedWorkout}
             isMultiple={false}
             fixedWidth={true}
+            searchable={true}
           />
         </div>
         <div className="mt-3">
-          <ProfileButton text={"Create"} />
+          <ProfileButton text={"Create"} handleClick={handleSave} />
         </div>
       </div>
     </AddDataModal>
