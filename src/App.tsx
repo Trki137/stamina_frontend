@@ -15,6 +15,7 @@ import Exercise from "./pages/Exercise/Exercise";
 import Profile from "./pages/Profile/Profile";
 import AddWorkout from "./pages/AddWorkout/AddWorkout";
 import AddTraining from "./pages/AddTraining/AddTraining";
+import ChooseTraining from "./pages/ChooseTraining/ChooseTraining";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
@@ -41,6 +42,10 @@ function App() {
               <Route element={<AddWorkout />} path={routes.addWorkout} />
               <Route element={<AddTraining />} path={routes.createTraining} />
               <Route element={<Profile />} path={`${routes.profile}/:id`} />
+              <Route
+                element={<ChooseTraining />}
+                path={routes.chooseTraining}
+              />
             </Routes>
           </main>
           <Footer />

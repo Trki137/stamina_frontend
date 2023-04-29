@@ -28,3 +28,14 @@ export type trainingInfoType = {
   restWorkout: number;
   sets: number;
 };
+
+export type trainingInfoCardType = {
+  [key: string]: any;
+  time: number;
+  name: string;
+  intensity: string;
+  description: string;
+  trainingid: number;
+  avg_calories: number;
+  targeted_muscles: string;
+};
