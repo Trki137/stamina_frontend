@@ -61,7 +61,11 @@ export default function Event() {
             <h1 className="font-bold text-xl px-2">Challenges</h1>
             <div className="w-full px-2 grid grid-cols-1 gap-y-4 sm:grid-cols-2 lg:grid-cols-3 gap-x-3">
               {allChallenges.map((challenge) => (
-                <ChallengeCard key={challenge.id} cardInfo={challenge} />
+                <ChallengeCard
+                  key={challenge.id}
+                  cardInfo={challenge}
+                  setAllChallenges={setAllChallenges}
+                />
               ))}
             </div>
           </div>
@@ -69,7 +73,11 @@ export default function Event() {
             <h1 className="font-bold text-xl px-2">Events</h1>
             <div className="w-full px-2 grid grid-cols-1 gap-y-4 sm:grid-cols-2 lg:grid-cols-3 gap-x-3">
               {allEvents.map((event) => (
-                <EventCard key={event.id} cardInfo={event} />
+                <EventCard
+                  key={event.id}
+                  cardInfo={event}
+                  setAllEvents={setAllEvents}
+                />
               ))}
             </div>
           </div>

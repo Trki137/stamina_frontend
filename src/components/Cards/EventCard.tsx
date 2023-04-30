@@ -1,14 +1,59 @@
-import React from "react";
-import { CardEventType } from "../../@types/EventType";
+import React, { Dispatch, SetStateAction, useState } from "react";
+import { CardEventType, JoinUnJoinEventType } from "../../@types/EventType";
 import ProfileButton from "../Button/ProfileButton";
+import axios from "axios";
+import { backend_paths } from "../../api/backend_paths";
 
 type EventCardType = {
   cardInfo: CardEventType;
+  setAllEvents: Dispatch<SetStateAction<CardEventType[]>>;
 };
 
-export default function EventCard({ cardInfo }: EventCardType) {
+export default function EventCard({ cardInfo, setAllEvents }: EventCardType) {
+  const [disappear, setDisappear] = useState<boolean>(false);
+
+  const className = disappear
+    ? "opacity-0 transition-all ease-in-out duration-[1000ms]"
+    : "mx-auto w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow px-5";
+
+  const handleJoin = (eventId: number) => {
+    const user = localStorage.getItem("staminaUser");
+    if (!user) return;
+
+    const userId = JSON.parse(user).userid;
+    const data: JoinUnJoinEventType = {
+      userId,
+      eventId,
+    };
+
+    axios
+      .post(backend_paths.EVENT, data, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((res) => {
+        setDisappear(true);
+        setTimeout(
+          () =>
+            setAllEvents((prevAllEvents) => {
+              const newAllEvents = [];
+
+              for (let i = 0; i < prevAllEvents.length; i++) {
+                if (prevAllEvents[i].id === eventId) continue;
+                newAllEvents.push(prevAllEvents[i]);
+              }
+
+              return newAllEvents;
+            }),
+          1500
+        );
+      })
+      .catch((e) => console.log(e));
+  };
+
   return (
-    <div className="mx-auto w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow px-5">
+    <div className={className}>
       <div className="flex flex-col items-center justify-end pb-10 pt-5">
         {cardInfo.image && (
           <img
@@ -33,6 +78,7 @@ export default function EventCard({ cardInfo }: EventCardType) {
           <ProfileButton
             text={"Join"}
             disabled={cardInfo.remainingspace === 0}
+            handleClick={() => handleJoin(cardInfo.id)}
           />
         </div>
       </div>

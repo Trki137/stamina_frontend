@@ -9,4 +9,5 @@ export const backend_paths = {
   USERS_URL: `${BASE}/user`,
   CHALLENGE: `${BASE}/challenge`,
   GROUP_EVENT: `${BASE}/group_event`,
+  EVENT: `${BASE}/event`,
 };

@@ -39,7 +39,7 @@ export type CardEventType = {
   image: string | null;
 };
 
-export type Location = {
-  city: string;
-  address: string;
+export type JoinUnJoinEventType = {
+  userId: number;
+  eventId: number;
 };
