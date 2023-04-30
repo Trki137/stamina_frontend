@@ -84,8 +84,6 @@ export default function CreateChallengeModal({
       userId: JSON.parse(user).userid,
     };
 
-    console.log(data);
-
     axios
       .post(backend_paths.CHALLENGE, data, {
         headers: {

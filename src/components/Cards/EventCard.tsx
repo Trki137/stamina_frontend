@@ -26,7 +26,7 @@ export default function EventCard({ cardInfo }: EventCardType) {
           <p>
             Location: {cardInfo.city}, {cardInfo.address}
           </p>
-          <p>Time: {cardInfo.startsAt} h</p>
+          <p>Time: {cardInfo.startsat} h</p>
           <p>Remaining spots: {cardInfo.remainingSpace}</p>
         </div>
         <div className="flex mt-4 w-full">

@@ -31,7 +31,7 @@ export type CardEventType = {
   id: number;
   createdby: string;
   name: string;
-  startsAt: string;
+  startsat: string;
   remainingSpace: number;
   description: string;
   city: string;

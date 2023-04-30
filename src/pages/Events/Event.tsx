@@ -29,11 +29,14 @@ export default function Event() {
       .then((data) => setAllEvents(data))
       .catch((e) => console.log(e));
   }, []);
-
+  console.log(allEvents);
   return (
     <React.Fragment>
       {createEventActive && (
-        <CreateEventModal setActive={setCreateEventActive} />
+        <CreateEventModal
+          setAllEvents={setAllEvents}
+          setActive={setCreateEventActive}
+        />
       )}
       {createChallengeActive && (
         <CreateChallengeModal
