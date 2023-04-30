@@ -27,12 +27,12 @@ export default function EventCard({ cardInfo }: EventCardType) {
             Location: {cardInfo.city}, {cardInfo.address}
           </p>
           <p>Time: {cardInfo.startsat} h</p>
-          <p>Remaining spots: {cardInfo.remainingSpace}</p>
+          <p>Remaining spots: {cardInfo.remainingspace}</p>
         </div>
         <div className="flex mt-4 w-full">
           <ProfileButton
             text={"Join"}
-            disabled={cardInfo.remainingSpace === 0}
+            disabled={cardInfo.remainingspace === 0}
           />
         </div>
       </div>

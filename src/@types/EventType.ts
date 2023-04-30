@@ -32,7 +32,7 @@ export type CardEventType = {
   createdby: string;
   name: string;
   startsat: string;
-  remainingSpace: number;
+  remainingspace: number;
   description: string;
   city: string;
   address: string;
