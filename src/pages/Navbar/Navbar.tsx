@@ -15,11 +15,11 @@ type NavbarType = {
   handleSearchActiveChange: () => void;
 };
 
-export default function Navbar({handleSearchActiveChange}: NavbarType) {
+export default function Navbar({ handleSearchActiveChange }: NavbarType) {
   const [user, setUser] = useState<null | User>(null);
   const [menuMobile, setMenuMobile] = useState<boolean>(false);
   const [userMenuActive, setUserMenuActive] = useState<boolean>(false);
-  const {image} = useContext(ProfileImageContext) as Image;
+  const { image } = useContext(ProfileImageContext) as Image;
 
   const navItems: navItem[] = [
     {
@@ -83,11 +83,20 @@ export default function Navbar({handleSearchActiveChange}: NavbarType) {
     });
   };
 
+  const getImage = () => {
+    if (image.length > 0 && !image.startsWith("http"))
+      return `data:image/jpeg;base64,${image}`;
+
+    if (user?.image) {
+      return user.image;
+    } else return image;
+  };
+
   const handleMenuMobile = () =>
-      setMenuMobile((prevMenuMobile) => !prevMenuMobile);
+    setMenuMobile((prevMenuMobile) => !prevMenuMobile);
 
   const handleUserIcon = () =>
-      setUserMenuActive((prevUserMenuActive) => !prevUserMenuActive);
+    setUserMenuActive((prevUserMenuActive) => !prevUserMenuActive);
 
   useEffect(() => {
     const obj = localStorage.getItem("staminaUser");
@@ -100,86 +109,86 @@ export default function Navbar({handleSearchActiveChange}: NavbarType) {
     if (navItems[2].link.includes("undefined"))
       navItems[2].link = `${routes.profile}/${user.userid}`;
   }, [useLocation().pathname]);
+
   return (
-      <nav className="relative flex flex-row-reverse justify-between text-center bg-[#2C3531] w-full h-16 sm:flex-row">
-        <div className="hidden px-3 h-full items-center sm:flex">
-          <ul className="flex w-auto">
-            {filterNavItems().map((navItem) => (
-                <NavItems
-                    key={navItem.name}
-                    mobileVersion={false}
-                    navItem={navItem}
-                />
-            ))}
-          </ul>
-        </div>
-        <div className="flex items-center h-full px-3">
-          {user && (
-              <FontAwesomeIcon
-                  className="text-white px-2 text-[20px] cursor-pointer"
-                  icon={faSearch}
-                  onClick={handleSearchActiveChange}
-              />
-          )}
-
-          {image.length === 0 && (
-              <FontAwesomeIcon
-                  className="text-white px-2 text-[20px] cursor-pointer"
-                  icon={faUserCircle}
-                  onClick={handleUserIcon}
-              />
-          )}
-          {image.length > 0 && (
-              <img
-                  className="w-6 h-6 rounded-full cursor-pointer"
-                  src={`data:image/jpeg;base64,${image}`}
-                  alt="Something went wrong"
-                  onClick={handleUserIcon}
-              />
-          )}
-          {menuMobile ? (
-              <FontAwesomeIcon
-                  className="text-white px-2 text-[20px] cursor-pointer sm:hidden"
-                  icon={faXmark}
-                  onClick={handleMenuMobile}
-              />
-          ) : (
-              <FontAwesomeIcon
-                  className="text-white px-2 text-[20px] cursor-pointer sm:hidden"
-                  icon={faBars}
-                  onClick={handleMenuMobile}
-              />
-          )}
-        </div>
-
-        <div
-            className={
-              menuMobile
-                  ? "fixed w-full z-40 top-16 ease-in-out duration-[350ms] sm:hidden"
-                  : "fixed w-full top-[-100%] sm:hidden"
-            }
-        >
-          <ul className="flex flex-col w-auto bg-[#2C3531]">
-            {filterNavItems().map((navItem) => (
-                <NavItems
-                    key={navItem.name}
-                    mobileVersion={true}
-                    navItem={navItem}
-                />
-            ))}
-          </ul>
-        </div>
-
-        {userMenuActive && (
-            <div
-                className="z-40 absolute right-10 top-[30px] my-4 h-min text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow sm:right-2.5">
-              <ul className="py-2">
-                {filterUserNavItems().map((navItem) => (
-                    <MobileNavItem key={navItem.name} navItem={navItem}/>
-                ))}
-              </ul>
-            </div>
+    <nav className="relative flex flex-row-reverse justify-between text-center bg-[#2C3531] w-full h-16 sm:flex-row">
+      <div className="hidden px-3 h-full items-center sm:flex">
+        <ul className="flex w-auto">
+          {filterNavItems().map((navItem) => (
+            <NavItems
+              key={navItem.name}
+              mobileVersion={false}
+              navItem={navItem}
+            />
+          ))}
+        </ul>
+      </div>
+      <div className="flex items-center h-full px-3">
+        {user && (
+          <FontAwesomeIcon
+            className="text-white px-2 text-[20px] cursor-pointer"
+            icon={faSearch}
+            onClick={handleSearchActiveChange}
+          />
         )}
-      </nav>
+
+        {image.length === 0 && !user && (
+          <FontAwesomeIcon
+            className="text-white px-2 text-[20px] cursor-pointer"
+            icon={faUserCircle}
+            onClick={handleUserIcon}
+          />
+        )}
+        {(image.length > 0 || user?.image) && (
+          <img
+            className="w-6 h-6 rounded-full cursor-pointer"
+            src={getImage()}
+            alt="Something went wrong"
+            onClick={handleUserIcon}
+          />
+        )}
+        {menuMobile ? (
+          <FontAwesomeIcon
+            className="text-white px-2 text-[20px] cursor-pointer sm:hidden"
+            icon={faXmark}
+            onClick={handleMenuMobile}
+          />
+        ) : (
+          <FontAwesomeIcon
+            className="text-white px-2 text-[20px] cursor-pointer sm:hidden"
+            icon={faBars}
+            onClick={handleMenuMobile}
+          />
+        )}
+      </div>
+
+      <div
+        className={
+          menuMobile
+            ? "fixed w-full z-40 top-16 ease-in-out duration-[350ms] sm:hidden"
+            : "fixed w-full top-[-100%] sm:hidden"
+        }
+      >
+        <ul className="flex flex-col w-auto bg-[#2C3531]">
+          {filterNavItems().map((navItem) => (
+            <NavItems
+              key={navItem.name}
+              mobileVersion={true}
+              navItem={navItem}
+            />
+          ))}
+        </ul>
+      </div>
+
+      {userMenuActive && (
+        <div className="z-40 absolute right-10 top-[30px] my-4 h-min text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow sm:right-2.5">
+          <ul className="py-2">
+            {filterUserNavItems().map((navItem) => (
+              <MobileNavItem key={navItem.name} navItem={navItem} />
+            ))}
+          </ul>
+        </div>
+      )}
+    </nav>
   );
 }

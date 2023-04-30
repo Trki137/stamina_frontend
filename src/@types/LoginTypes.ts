@@ -4,3 +4,11 @@ export type userInputType = {
   type: string;
   label: string;
 };
+
+export type GoogleLogin = {
+  email: string;
+  username: string;
+  firstname: string;
+  lastname: string;
+  image: string;
+};

@@ -1,16 +1,16 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { ChangeEvent, useContext, useEffect, useState } from "react";
 import Input from "../../components/Input/Input";
-import { userInputType } from "../../@types/LoginTypes";
+import { GoogleLogin, userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../api/paths";
-
-import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 import { Image, UserSignIn } from "../../@types/UserType";
 import { validateSignIn } from "../../util/validation";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
 import { ProfileImageContext } from "../../context/ProfileImageContext";
+import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
+import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
 type Error = { name: string; message: string };
 export default function SignIn() {
@@ -35,7 +35,61 @@ export default function SignIn() {
 
   const { setImage } = useContext(ProfileImageContext) as Image;
 
+  const [user, setUser] = useState<Omit<TokenResponse, "error">>();
+  const [profile, setProfile] = useState([]);
+
   const navigate = useNavigate();
+
+  const login = useGoogleLogin({
+    onSuccess: (codeResponse) => setUser(codeResponse),
+    onError: (error) => console.log("Login Failed:", error),
+  });
+
+  useEffect(() => {
+    if (user) {
+      axios
+        .get(
+          `https://www.googleapis.com/oauth2/v1/userinfo?access_token=${user.access_token}`,
+          {
+            headers: {
+              Authorization: `Bearer ${user.access_token}`,
+              Accept: "application/json",
+            },
+          }
+        )
+        .then((res) => {
+          const { email, family_name, given_name, name, picture } = res.data;
+          const data: GoogleLogin = {
+            email,
+            firstname: given_name,
+            lastname: family_name,
+            username: name,
+            image: picture,
+          };
+
+          axios
+            .post(`${backend_paths.SIGN_IN_URL}/google-sign-in`, data, {
+              headers: {
+                "Content-Type": "application/x-www-form-urlencoded",
+              },
+            })
+            .then((res) => res.data)
+            .then((data) => {
+              let user = null;
+              if (data.user === undefined) user = data;
+              else user = data.user;
+
+              localStorage.setItem("staminaUser", JSON.stringify(user));
+              if (user.image) {
+                setImage(user.image);
+              }
+              navigate(routes.home);
+            })
+            .catch((err) => setServerError(err.response.data));
+        })
+        .catch((err) => console.log(err));
+    }
+  }, [user]);
 
   const handleInputChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -121,9 +175,9 @@ export default function SignIn() {
                 <div className="flex flex-col gap-y-1">
                   <Button text="Sign in" handleClick={handleSubmit} />
                   <Button
-                    text="Sign in with"
+                    text="Sign in with "
                     icon={faGoogle}
-                    handleClick={handleSubmit}
+                    handleClick={() => login()}
                   />
                 </div>
               </div>
