@@ -17,14 +17,19 @@ export default function Event() {
     useState<boolean>(false);
 
   useEffect(() => {
+    const user = localStorage.getItem("staminaUser");
+    if (!user) return;
+
+    const userId = JSON.parse(user).userid;
+
     axios
-      .get(backend_paths.CHALLENGE)
+      .get(`${backend_paths.CHALLENGE}/${userId}`)
       .then((res) => res.data)
       .then((data) => setAllChallenges(data))
       .catch((e) => console.log(e));
 
     axios
-      .get(backend_paths.GROUP_EVENT)
+      .get(`${backend_paths.GROUP_EVENT}/${userId}`)
       .then((res) => res.data)
       .then((data) => setAllEvents(data))
       .catch((e) => console.log(e));
@@ -58,27 +63,35 @@ export default function Event() {
         </div>
         <div className="w-full">
           <div>
-            <h1 className="font-bold text-xl px-2">Challenges</h1>
+            <h1 className="font-bold text-xl px-2 text-left mb-5">
+              Challenges
+            </h1>
             <div className="w-full px-2 grid grid-cols-1 gap-y-4 sm:grid-cols-2 lg:grid-cols-3 gap-x-3">
-              {allChallenges.map((challenge) => (
-                <ChallengeCard
-                  key={challenge.id}
-                  cardInfo={challenge}
-                  setAllChallenges={setAllChallenges}
-                />
-              ))}
+              {allChallenges.length === 0 && (
+                <h1>There are no active challenges</h1>
+              )}
+              {allChallenges.length !== 0 &&
+                allChallenges.map((challenge) => (
+                  <ChallengeCard
+                    key={challenge.id}
+                    cardInfo={challenge}
+                    setAllChallenges={setAllChallenges}
+                  />
+                ))}
             </div>
           </div>
-          <div className="w-full mx-auto">
-            <h1 className="font-bold text-xl px-2">Events</h1>
+          <div className="w-full mx-auto mt-5">
+            <h1 className="font-bold text-xl px-2 text-left">Events</h1>
             <div className="w-full px-2 grid grid-cols-1 gap-y-4 sm:grid-cols-2 lg:grid-cols-3 gap-x-3">
-              {allEvents.map((event) => (
-                <EventCard
-                  key={event.id}
-                  cardInfo={event}
-                  setAllEvents={setAllEvents}
-                />
-              ))}
+              {allEvents.length === 0 && <h1>There are no active events</h1>}
+              {allEvents.length !== 0 &&
+                allEvents.map((event) => (
+                  <EventCard
+                    key={event.id}
+                    cardInfo={event}
+                    setAllEvents={setAllEvents}
+                  />
+                ))}
             </div>
           </div>
         </div>
