@@ -17,6 +17,7 @@ import AddWorkout from "./pages/AddWorkout/AddWorkout";
 import AddTraining from "./pages/AddTraining/AddTraining";
 import ChooseTraining from "./pages/ChooseTraining/ChooseTraining";
 import MyData from "./pages/MyData/MyData";
+import Event from "./pages/Events/Event";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
@@ -48,6 +49,7 @@ function App() {
                 path={routes.chooseTraining}
               />
               <Route element={<MyData />} path={routes.myData} />
+              <Route element={<Event />} path={routes.events} />
             </Routes>
           </main>
           <Footer />

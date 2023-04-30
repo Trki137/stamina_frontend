@@ -17,6 +17,7 @@ type SelectType = {
   value: SelectValue;
   isMultiple: boolean;
   fixedWidth: boolean;
+  searchable?: boolean;
 };
 
 export default function MySelect({
@@ -26,6 +27,7 @@ export default function MySelect({
   value,
   isMultiple,
   fixedWidth,
+  searchable,
 }: SelectType) {
   const className = fixedWidth
     ? "relative h-10 w-full min-w-[200px]"
@@ -40,6 +42,7 @@ export default function MySelect({
           value={value}
           onChange={onChange}
           isMultiple={isMultiple}
+          isSearchable={searchable ? searchable : false}
         />
       )}
     </div>

@@ -7,4 +7,7 @@ export const backend_paths = {
   SIGN_UP_URL: `${BASE}/sign-up`,
   SIGN_IN_URL: `${BASE}/sign-in`,
   USERS_URL: `${BASE}/user`,
+  CHALLENGE: `${BASE}/challenge`,
+  GROUP_EVENT: `${BASE}/group_event`,
+  EVENT: `${BASE}/event`,
 };
