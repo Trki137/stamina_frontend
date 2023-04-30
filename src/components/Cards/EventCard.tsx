@@ -13,7 +13,7 @@ export default function EventCard({ cardInfo }: EventCardType) {
         {cardInfo.image && (
           <img
             className="w-24 h-24 mb-3 rounded-full shadow-lg"
-            src={process.env.PUBLIC_URL + cardInfo.image}
+            src={`data:image/jpeg;base64,${cardInfo.image}`}
             alt="No image"
           />
         )}
@@ -24,7 +24,7 @@ export default function EventCard({ cardInfo }: EventCardType) {
         <div className="text-left mt-6 space-y-3">
           <p>Description: {cardInfo.description}</p>
           <p>
-            Location: {cardInfo.location.city}, {cardInfo.location.address}
+            Location: {cardInfo.city}, {cardInfo.address}
           </p>
           <p>Time: {cardInfo.startsAt} h</p>
           <p>Remaining spots: {cardInfo.remainingSpace}</p>

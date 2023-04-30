@@ -22,6 +22,12 @@ export default function Event() {
       .then((res) => res.data)
       .then((data) => setAllChallenges(data))
       .catch((e) => console.log(e));
+
+    axios
+      .get(backend_paths.GROUP_EVENT)
+      .then((res) => res.data)
+      .then((data) => setAllEvents(data))
+      .catch((e) => console.log(e));
   }, []);
 
   return (

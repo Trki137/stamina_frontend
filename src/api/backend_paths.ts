@@ -8,4 +8,5 @@ export const backend_paths = {
   SIGN_IN_URL: `${BASE}/sign-in`,
   USERS_URL: `${BASE}/user`,
   CHALLENGE: `${BASE}/challenge`,
+  GROUP_EVENT: `${BASE}/group_event`,
 };
