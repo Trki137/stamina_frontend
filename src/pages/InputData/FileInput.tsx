@@ -10,6 +10,7 @@ export default function FileInput() {
   const [fileName, setFileName] = useState<string | null>(null);
   const [showSuccess, setShowSuccess] = useState<boolean>(false);
   const [errorMsg, setErrorMsg] = useState<string | null>(null);
+  const [hide, setHide] = useState<boolean>(true);
   const handleFileUpload = (e: ChangeEvent<HTMLInputElement>) => {
     if (!e.target.files) return;
     if (!e.target.files[0]) return;
@@ -48,7 +49,9 @@ export default function FileInput() {
         setFileName(null);
         setErrorMsg(null);
         setShowSuccess(true);
-        setTimeout(() => setShowSuccess(false), 1500);
+        setHide(false);
+        setTimeout(() => setShowSuccess(false), 2000);
+        setTimeout(() => setHide(true), 3500);
       })
       .catch((err) => setErrorMsg(fileName + " is not valid file"));
   };
@@ -56,6 +59,7 @@ export default function FileInput() {
   return (
     <div className="mx-auto w-3/4 md:w-1/2 mt-3">
       <SuccessMsg
+        hide={hide}
         showSuccess={showSuccess}
         successMsg={"File uploaded successfully"}
       />
