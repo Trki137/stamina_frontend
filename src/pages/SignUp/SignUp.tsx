@@ -135,8 +135,6 @@ export default function SignUp() {
     if (!imageFile) return;
     formData.append("image", imageFile);
 
-    console.log(formData);
-
     axios({
       method: "post",
       url: `${backend_paths.SIGN_UP_URL}/sign-up-with-image`,

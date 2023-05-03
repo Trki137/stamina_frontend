@@ -84,6 +84,7 @@ export default function Navbar({ handleSearchActiveChange }: NavbarType) {
   };
 
   const getImage = () => {
+    console.log(image.length);
     if (image.length > 0 && !image.startsWith("http"))
       return `data:image/jpeg;base64,${image}`;
 
@@ -132,14 +133,14 @@ export default function Navbar({ handleSearchActiveChange }: NavbarType) {
           />
         )}
 
-        {image.length === 0 && !user && (
+        {image.length === 0 && (
           <FontAwesomeIcon
             className="text-white px-2 text-[20px] cursor-pointer"
             icon={faUserCircle}
             onClick={handleUserIcon}
           />
         )}
-        {(image.length > 0 || user?.image) && (
+        {(image.length > 0 || user?.image.startsWith("http")) && (
           <img
             className="w-6 h-6 rounded-full cursor-pointer"
             src={getImage()}

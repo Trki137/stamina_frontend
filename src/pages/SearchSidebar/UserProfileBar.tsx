@@ -76,6 +76,11 @@ export default function UserProfileBar({
       });
   };
 
+  const getImage = (image: string) => {
+    if (!image.startsWith("http")) return `data:image/jpeg;base64,${image}`;
+    else return image;
+  };
+
   return (
     <div className="flex items-center p-5 cursor-pointer hover:bg-gray-200">
       <div className="w-2/12 text-gray-800">
@@ -85,7 +90,7 @@ export default function UserProfileBar({
         >
           {user.image !== null && (
             <img
-              src={`data:image/jpeg;base64,${user.image}`}
+              src={getImage(user.image)}
               className="w-10 h-10 rounded-full "
               alt="Can't access"
             />
