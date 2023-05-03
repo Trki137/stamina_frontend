@@ -34,6 +34,10 @@ export default function Event() {
       .then((data) => setAllEvents(data))
       .catch((e) => console.log(e));
   }, []);
+
+  console.log(allEvents);
+  console.log(allChallenges);
+
   console.log(allEvents);
   return (
     <React.Fragment>
