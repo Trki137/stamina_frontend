@@ -5,7 +5,11 @@ module.exports = {
     "./node_modules/react-tailwindcss-select/dist/index.esm.js",
   ],
   theme: {
-    extend: {},
+    extend: {
+      scale: {
+        85: ".85",
+      },
+    },
   },
   plugins: [],
 };
