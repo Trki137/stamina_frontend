@@ -85,7 +85,7 @@ export default function UserProfileBar({
     <div className="flex items-center p-5 cursor-pointer hover:bg-gray-200">
       <div className="w-2/12 text-gray-800">
         <Link
-          to={`${routes.profile}/${user.userid}`}
+          to={`${routes.PROFILE}/${user.userid}`}
           onClick={handleSearchActiveChange}
         >
           {user.image !== null && (
@@ -105,7 +105,7 @@ export default function UserProfileBar({
       </div>
       <div className="w-5/12">
         <Link
-          to={`${routes.profile}/${user.userid}`}
+          to={`${routes.PROFILE}/${user.userid}`}
           onClick={handleSearchActiveChange}
         >
           <p className="text-md text-left font-bold">{user.username}</p>

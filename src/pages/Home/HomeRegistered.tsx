@@ -11,7 +11,7 @@ export default function HomeRegistered() {
         <Banner
           text="Challenge yourself by accepting others challenge or even better create your own"
           btnText="Go to events"
-          address={routes.events}
+          address={routes.EVENTS}
           image="bannerRegistered.jpg"
         />
       </div>

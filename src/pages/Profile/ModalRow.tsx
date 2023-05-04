@@ -30,7 +30,7 @@ export default function ModalRow({ user, setModalActive }: ModalRowType) {
       </div>
       <div className="w-5/12">
         <Link
-          to={`${routes.profile}/${user.userid}`}
+          to={`${routes.PROFILE}/${user.userid}`}
           onClick={() => setModalActive(0)}
         >
           <p className="text-md font-bold">{user.username}</p>

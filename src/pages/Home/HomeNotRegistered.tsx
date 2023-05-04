@@ -8,7 +8,7 @@ export default function HomeNotRegistered() {
       <Banner
         text="The mind is the most important part of achieving any fitness goal.Mental change always comes before physical change"
         btnText="Get Started"
-        address={routes.signUp}
+        address={routes.SIGN_UP}
         image={"BannerNotRegistered.jpg"}
       />
     </div>

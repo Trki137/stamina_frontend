@@ -43,20 +43,20 @@ function App() {
         />
         <main className="flex flex-1">
           <Routes>
-            <Route element={<Home />} path={routes.home} />
-            <Route element={<SignUp />} path={routes.signUp} />
+            <Route element={<Home />} path={routes.HOME} />
+            <Route element={<SignUp />} path={routes.SIGN_UP} />
             <Route
               element={<SignIn userSetter={setUser} />}
-              path={routes.signIn}
+              path={routes.SIGN_IN}
             />
-            <Route element={<Exercise />} path={routes.workout} />
-            <Route element={<AddWorkout />} path={routes.addWorkout} />
-            <Route element={<AddTraining />} path={routes.createTraining} />
-            <Route element={<Profile />} path={`${routes.profile}/:id`} />
-            <Route element={<ChooseTraining />} path={routes.chooseTraining} />
-            <Route element={<MyData />} path={routes.myData} />
-            <Route element={<Event />} path={routes.events} />
-            <Route element={<InputData />} path={routes.inputData} />
+            <Route element={<Exercise />} path={routes.WORKOUT} />
+            <Route element={<AddWorkout />} path={routes.ADD_WORKOUT} />
+            <Route element={<AddTraining />} path={routes.CREATE_TRAINING} />
+            <Route element={<Profile />} path={`${routes.PROFILE}/:id`} />
+            <Route element={<ChooseTraining />} path={routes.CHOOSE_TRAINING} />
+            <Route element={<MyData />} path={routes.MY_DATA} />
+            <Route element={<Event />} path={routes.EVENTS} />
+            <Route element={<InputData />} path={routes.INPUT_DATA} />
           </Routes>
         </main>
         <Footer />

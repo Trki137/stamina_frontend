@@ -87,7 +87,7 @@ export default function SignIn({ userSetter }: SignInType) {
 
               localStorage.setItem("staminaUser", JSON.stringify(user));
               userSetter(true);
-              navigate(routes.home);
+              navigate(routes.HOME);
             })
             .catch((err) => setServerError(err.response.data));
         })
@@ -143,7 +143,7 @@ export default function SignIn({ userSetter }: SignInType) {
         }
         localStorage.setItem("staminaUser", JSON.stringify(user));
         userSetter(true);
-        navigate(routes.home);
+        navigate(routes.HOME);
       })
       .catch((err) => setServerError(err.response.data));
   };
@@ -190,7 +190,7 @@ export default function SignIn({ userSetter }: SignInType) {
                 <p className="text-sm">
                   Don't have an account?
                   <Link
-                    to={routes.signUp}
+                    to={routes.SIGN_UP}
                     className="text-[#917543] hover:underline"
                   >
                     {" "}
