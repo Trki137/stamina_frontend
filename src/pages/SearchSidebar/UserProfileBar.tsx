@@ -2,12 +2,12 @@ import React, { Dispatch, SetStateAction } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
 import { faCircle } from "@fortawesome/free-solid-svg-icons";
-import Button from "../../components/Button/Button";
 import { SearchBarUser } from "../../@types/UserType";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
 import { Link } from "react-router-dom";
 import { routes } from "../../api/paths";
+import Button from "../../components/Button/Button";
 
 type UserProfileBarType = {
   user: SearchBarUser;
@@ -108,15 +108,18 @@ export default function UserProfileBar({
           to={`${routes.profile}/${user.userid}`}
           onClick={handleSearchActiveChange}
         >
-          <p className="text-md font-bold">{user.username}</p>
+          <p className="text-md text-left font-bold">{user.username}</p>
         </Link>
-        <p className="flex flex-row items-center text-[0.5rem] font-extralight text-gray-400">
+        <p className="text-left flex flex-row items-center text-[0.5rem] font-extralight text-gray-400">
           {user.name}
-          <FontAwesomeIcon icon={faCircle} className="w-1 h-1 mx-1" />
-          {user.followedby} pratitelja
+          <FontAwesomeIcon
+            icon={faCircle}
+            className="w-1 h-1 mx-1 hidden xl:flex"
+          />
+          <span className="hidden xl:flex">{user.followedby} pratitelja</span>
         </p>
       </div>
-      <div className="w-5/12 h-1/6">
+      <div className="ml-auto text-right w-4/12 h-1/6">
         {user.isfollowing === "0" && (
           <Button text="Follow" handleClick={() => handleFollow(user.userid)} />
         )}

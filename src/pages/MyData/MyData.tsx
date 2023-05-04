@@ -6,7 +6,11 @@ import BarChartTimeChooser from "./Graphs/BarChartTimeChooser";
 import { getCurrentMonthSpan } from "../../util/date";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
-import { ExerciseDataType } from "../../@types/ExerciseDataTypes";
+import {
+  AvgDataType,
+  ExerciseDataType,
+  MyDataType,
+} from "../../@types/ExerciseDataTypes";
 import { COLORS } from "../../constants/Colors";
 
 export default function MyData() {
@@ -42,8 +46,8 @@ export default function MyData() {
         const timeData: BarChartDataType[] = [];
         const hearthData: BarChartDataType[] = [];
 
-        const myData = data.userData;
-        const avgData = data.avgData;
+        const myData: MyDataType[] = data.userData;
+        const avgData: AvgDataType[] = data.avgData;
 
         for (let i = 0; i < myData.length; i++) {
           const date = myData[i].date;

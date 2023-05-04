@@ -1,19 +1,28 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import Input from "../../components/Input/Input";
 import { GoogleLogin, userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../api/paths";
-import { Image, UserSignIn } from "../../@types/UserType";
+import { UserSignIn } from "../../@types/UserType";
 import { validateSignIn } from "../../util/validation";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
-import { ProfileImageContext } from "../../context/ProfileImageContext";
 import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
+type SignInType = {
+  userSetter: Dispatch<SetStateAction<boolean>>;
+};
+
 type Error = { name: string; message: string };
-export default function SignIn() {
+export default function SignIn({ userSetter }: SignInType) {
   const [userInput, setUserInput] = useState<userInputType[]>([
     {
       name: "username",
@@ -33,10 +42,7 @@ export default function SignIn() {
 
   const [serverError, setServerError] = useState<string | null>();
 
-  const { setImage } = useContext(ProfileImageContext) as Image;
-
   const [user, setUser] = useState<Omit<TokenResponse, "error">>();
-  const [profile, setProfile] = useState([]);
 
   const navigate = useNavigate();
 
@@ -80,9 +86,7 @@ export default function SignIn() {
               else user = data.user;
 
               localStorage.setItem("staminaUser", JSON.stringify(user));
-              if (user.image) {
-                setImage(user.image);
-              }
+              userSetter(true);
               navigate(routes.home);
             })
             .catch((err) => setServerError(err.response.data));
@@ -134,10 +138,11 @@ export default function SignIn() {
         if (data.user === undefined) user = data;
         else user = data.user;
 
-        localStorage.setItem("staminaUser", JSON.stringify(user));
         if (data.image) {
-          setImage(data.image);
+          user.image = data.image;
         }
+        localStorage.setItem("staminaUser", JSON.stringify(user));
+        userSetter(true);
         navigate(routes.home);
       })
       .catch((err) => setServerError(err.response.data));
@@ -172,7 +177,7 @@ export default function SignIn() {
                     />
                   </div>
                 ))}
-                <div className="flex flex-col gap-y-1">
+                <div className="mx-auto w-1/2 flex flex-col gap-y-1">
                   <Button text="Sign in" handleClick={handleSubmit} />
                   <Button
                     text="Sign in with "

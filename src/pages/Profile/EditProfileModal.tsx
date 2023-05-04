@@ -169,7 +169,9 @@ export default function EditProfileModal({
           setValue={setDescription}
         />
       </div>
-      <Button text="Save" handleClick={handleUpdate} />
+      <div className="w-1/2 mx-auto">
+        <Button text="Save" handleClick={handleUpdate} />
+      </div>
     </ProfileModal>
   );
 }

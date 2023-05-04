@@ -1,25 +1,28 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { Dispatch, SetStateAction, useEffect, useState } from "react";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faBars, faSearch, faXmark } from "@fortawesome/free-solid-svg-icons";
 import { faUserCircle } from "@fortawesome/free-regular-svg-icons";
-import { Image, User } from "../../@types/UserType";
+import { User } from "../../@types/UserType";
 import { navItem } from "../../@types/NavbarType";
 import NavItems from "./NavItems";
 import MobileNavItem from "./MobileNavItem";
-
-import { useLocation } from "react-router-dom";
 import { routes } from "../../api/paths";
-import { ProfileImageContext } from "../../context/ProfileImageContext";
+import { useLocation } from "react-router-dom";
 
 type NavbarType = {
   handleSearchActiveChange: () => void;
+  userSetter: Dispatch<SetStateAction<boolean>>;
+  userBoolean: boolean;
 };
 
-export default function Navbar({ handleSearchActiveChange }: NavbarType) {
+export default function Navbar({
+  handleSearchActiveChange,
+  userSetter,
+  userBoolean,
+}: NavbarType) {
   const [user, setUser] = useState<null | User>(null);
   const [menuMobile, setMenuMobile] = useState<boolean>(false);
   const [userMenuActive, setUserMenuActive] = useState<boolean>(false);
-  const { image } = useContext(ProfileImageContext) as Image;
 
   const navItems: navItem[] = [
     {
@@ -84,14 +87,17 @@ export default function Navbar({ handleSearchActiveChange }: NavbarType) {
   };
 
   const getImage = () => {
-    console.log(image.length);
-    if (image.length > 0 && !image.startsWith("http"))
-      return `data:image/jpeg;base64,${image}`;
-
-    if (user?.image) {
-      return user.image;
-    } else return image;
+    if (user) {
+      if (user.image.startsWith("http")) {
+        return user.image;
+      } else return `data:image/jpeg;base64,${user.image}`;
+    }
   };
+
+  useEffect(() => {
+    setUserMenuActive(false);
+    setMenuMobile(false);
+  }, [useLocation().pathname]);
 
   const handleMenuMobile = () =>
     setMenuMobile((prevMenuMobile) => !prevMenuMobile);
@@ -109,7 +115,7 @@ export default function Navbar({ handleSearchActiveChange }: NavbarType) {
     setUser(user);
     if (navItems[2].link.includes("undefined"))
       navItems[2].link = `${routes.profile}/${user.userid}`;
-  }, [useLocation().pathname]);
+  }, [userBoolean]);
 
   return (
     <nav className="relative flex flex-row-reverse justify-between text-center bg-[#2C3531] w-full h-16 sm:flex-row">
@@ -133,14 +139,21 @@ export default function Navbar({ handleSearchActiveChange }: NavbarType) {
           />
         )}
 
-        {image.length === 0 && (
+        {!user && (
           <FontAwesomeIcon
             className="text-white px-2 text-[20px] cursor-pointer"
             icon={faUserCircle}
             onClick={handleUserIcon}
           />
         )}
-        {(image.length > 0 || user?.image.startsWith("http")) && (
+        {user && !user.image && (
+          <FontAwesomeIcon
+            className="text-white px-2 text-[20px] cursor-pointer"
+            icon={faUserCircle}
+            onClick={handleUserIcon}
+          />
+        )}
+        {user && user?.image && (
           <img
             className="w-6 h-6 rounded-full cursor-pointer"
             src={getImage()}
@@ -185,7 +198,11 @@ export default function Navbar({ handleSearchActiveChange }: NavbarType) {
         <div className="z-40 absolute right-10 top-[30px] my-4 h-min text-base list-none bg-white divide-y divide-gray-100 rounded-lg shadow sm:right-2.5">
           <ul className="py-2">
             {filterUserNavItems().map((navItem) => (
-              <MobileNavItem key={navItem.name} navItem={navItem} />
+              <MobileNavItem
+                setUser={userSetter}
+                key={navItem.name}
+                navItem={navItem}
+              />
             ))}
           </ul>
         </div>
