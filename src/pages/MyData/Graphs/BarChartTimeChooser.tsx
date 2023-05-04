@@ -5,7 +5,7 @@ type BarChartTimeChooserType = {
   active: string;
   setActive: Dispatch<SetStateAction<string>>;
   date: string;
-  setDate: Dispatch<SetStateAction<string>>;
+  setDate: Dispatch<SetStateAction<string | null>>;
 };
 export default function BarChartTimeChooser({
   active,
