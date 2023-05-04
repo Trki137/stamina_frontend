@@ -10,7 +10,7 @@ import dayjs from "dayjs";
 type MyDatePickerType = {
   date: string;
   intervalType: string;
-  setDate: Dispatch<SetStateAction<string>>;
+  setDate: Dispatch<SetStateAction<string | null>>;
 };
 
 export default function MyDatePicker({
@@ -20,6 +20,7 @@ export default function MyDatePicker({
 }: MyDatePickerType) {
   const handleDateUp = () => {
     setDate((prevWeekSpan) => {
+      if (!prevWeekSpan) return prevWeekSpan;
       const [day, month, year] = prevWeekSpan
         .substring(
           prevWeekSpan.indexOf(" - ") !== -1
@@ -36,6 +37,7 @@ export default function MyDatePicker({
 
   const handleDateDown = () => {
     setDate((prevWeekSpan) => {
+      if (!prevWeekSpan) return prevWeekSpan;
       const [day, month, year] = prevWeekSpan
         .substring(
           0,

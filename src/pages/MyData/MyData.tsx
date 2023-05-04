@@ -3,158 +3,198 @@ import MyPieChart from "./Graphs/MyPieChart";
 import { ActivityDataType, BarChartDataType } from "../../@types/GraphsType";
 import MyBarChart from "./Graphs/MyBarChart";
 import BarChartTimeChooser from "./Graphs/BarChartTimeChooser";
-import {
-  getCurrentDate,
-  getCurrentMonthSpan,
-  getCurrentWeekSpan,
-  getYearSpan,
-  monthNames,
-} from "../../util/date";
-import { caloriesData as cData } from "../../constants/MockData";
+import { getCurrentMonthSpan } from "../../util/date";
+import axios from "axios";
+import { backend_paths } from "../../api/backend_paths";
+import { ExerciseDataType } from "../../@types/ExerciseDataTypes";
+import { COLORS } from "../../constants/Colors";
 
 export default function MyData() {
-  const [activityData, setActivityData] = useState<ActivityDataType[]>([
-    {
-      name: "Football",
-      value: 323003,
-    },
-    {
-      name: "Running",
-      value: 123302,
-    },
-    {
-      name: "Gym",
-      value: 223003,
-    },
-  ]);
-
-  const [caloriesData, setCaloriesData] = useState<BarChartDataType[]>(cData);
-  const [barData, setBarData] = useState<BarChartDataType[]>(caloriesData);
-  const [active, setActive] = useState<string>("WEEK");
-  const [date, setDate] = useState<string>(getCurrentWeekSpan());
-
-  function dataForYear() {
-    const year = date.substring(date.length - 5);
-    console.log(year);
-    const yearData: BarChartDataType[] = caloriesData.filter((data) =>
-      data.xAxisText.endsWith(year)
-    );
-
-    const finalData: BarChartDataType[] = [];
-
-    for (let i = 0; i < 12; i++) {
-      const month = i + 1;
-
-      const monthData: BarChartDataType[] = yearData.filter((data) => {
-        const dataMonth = Number(data.xAxisText.split(".")[1]);
-        return month === dataMonth;
-      });
-
-      if (monthData.length === 0) {
-        finalData.push({
-          xAxisText: monthNames[i],
-          barData: 0,
-          lineData: 0,
-        });
-        continue;
-      }
-
-      const avg_calories_month_count = monthData.reduce(
-        (cal, sum) => (cal += sum.barData),
-        0
-      );
-      const avg_calories_month_personal_count = monthData.reduce(
-        (cal, sum) => (cal += sum.lineData),
-        0
-      );
-
-      finalData.push({
-        xAxisText: monthNames[i],
-        barData: avg_calories_month_count / monthData.length,
-        lineData: avg_calories_month_personal_count / monthData.length,
-      });
-    }
-
-    setBarData(finalData);
-  }
+  const [activityData, setActivityData] = useState<ActivityDataType[]>([]);
+  const [caloriesData, setCaloriesData] = useState<BarChartDataType[]>([]);
+  const [barCaloriesData, setBarCaloriesData] = useState<BarChartDataType[]>(
+    []
+  );
+  const [timeData, setTimeData] = useState<BarChartDataType[]>([]);
+  const [barTimeData, setBarTimeData] = useState<BarChartDataType[]>([]);
+  const [hearthData, setHearthData] = useState<BarChartDataType[]>([]);
+  const [barHearthData, setBarHearthData] = useState<BarChartDataType[]>([]);
+  const [activeForCalories, setActiveForCalories] = useState<string>("WEEK");
+  const [dateForCalories, setDateForCalories] = useState<string | null>(null);
+  const [activeForTime, setActiveForTime] = useState<string>("WEEK");
+  const [dateForTime, setDateForTime] = useState<string | null>(null);
+  const [activeForHearth, setActiveForHearth] = useState<string>("WEEK");
+  const [dateForHearth, setDateForHearth] = useState<string | null>(null);
 
   useEffect(() => {
-    if (active === "YEAR") {
-      dataForYear();
-      return;
-    }
-    let [start, end] = date.split(" - ");
+    const user = localStorage.getItem("staminaUser");
+    if (!user) return;
 
-    if (!end) end = start;
+    const userId = JSON.parse(user).userid;
+    if (!userId) return;
 
-    let [day, month, year] = start
-      .substring(
-        0,
-        date.indexOf(" - ") !== -1 ? date.indexOf(" - ") : date.length
-      )
-      .trim()
-      .split(".");
-    const startDate = Date.parse(`${year}-${month}-${day}`);
+    axios
+      .get(`${backend_paths.DATA}/${userId}`)
+      .then((res) => res.data)
+      .then((data: ExerciseDataType) => {
+        const activityData: ActivityDataType[] = [];
+        const calData: BarChartDataType[] = [];
+        const timeData: BarChartDataType[] = [];
+        const hearthData: BarChartDataType[] = [];
 
-    [day, month, year] = end
-      .substring(
-        0,
-        date.indexOf(" - ") !== -1 ? date.indexOf(" - ") : date.length
-      )
-      .trim()
-      .split(".");
-    const endDate = Date.parse(`${year}-${month}-${day}`);
-    const filtered = caloriesData?.filter((data) => {
-      [day, month, year] = data.xAxisText
-        .substring(
-          0,
-          date.indexOf(" - ") !== -1 ? date.indexOf(" - ") : date.length
-        )
-        .trim()
-        .split(".");
-      const dateValue = Date.parse(`${year}-${month}-${day}`);
-      return dateValue >= startDate && dateValue <= endDate;
-    });
-    setBarData(filtered);
-  }, [date]);
+        const myData = data.userData;
+        const avgData = data.avgData;
 
-  useEffect(() => {
-    switch (active) {
-      case "DAY": {
-        setDate(getCurrentDate());
-        break;
-      }
-      case "WEEK": {
-        setDate(getCurrentWeekSpan());
-        break;
-      }
-      case "MONTH": {
-        setDate(getCurrentMonthSpan());
-        break;
-      }
-      case "YEAR": {
-        setDate(getYearSpan());
-        break;
-      }
-    }
-  }, [active]);
+        for (let i = 0; i < myData.length; i++) {
+          const date = myData[i].date;
+
+          const sportIndex = activityData.findIndex(
+            (eData) => eData.name === myData[i].name
+          );
+          if (sportIndex === -1) {
+            activityData.push({
+              name: myData[i].name,
+              value: Number(myData[i].time),
+            });
+          } else activityData[sportIndex].value += Number(myData[i].time);
+
+          const index = avgData.findIndex((eData) => eData.date === date);
+
+          let avgCal = 0;
+          let avgTime = 0;
+          let avgHearthRate = 0;
+
+          if (index !== -1) {
+            avgCal = avgData[index].avgcalories;
+            avgTime = Number(avgData[index].avgtime);
+            avgHearthRate = avgData[index].avg_hearth_rate;
+          }
+
+          calData.push({
+            xAxisText: date,
+            lineData: myData[i].calories,
+            barData: avgCal,
+          });
+          timeData.push({
+            xAxisText: date,
+            lineData: Number(myData[i].time),
+            barData: avgTime,
+          });
+          hearthData.push({
+            xAxisText: date,
+            lineData: myData[i].avg_hearth_rate,
+            barData: avgHearthRate,
+          });
+        }
+
+        for (let i = 0; i < avgData.length; i++) {
+          const index = myData.findIndex(
+            (eData) => eData.date === avgData[i].date
+          );
+          if (index !== -1) continue;
+
+          calData.push({
+            xAxisText: avgData[i].date,
+            lineData: 0,
+            barData: avgData[i].avgcalories,
+          });
+          timeData.push({
+            xAxisText: avgData[i].date,
+            lineData: 0,
+            barData: Number(avgData[i].avgtime),
+          });
+          hearthData.push({
+            xAxisText: avgData[i].date,
+            lineData: 0,
+            barData: avgData[i].avg_hearth_rate,
+          });
+        }
+
+        setCaloriesData(calData);
+        setTimeData(timeData);
+        setHearthData(hearthData);
+        setActivityData(activityData);
+        setBarHearthData(hearthData);
+        setBarCaloriesData(calData);
+        setBarTimeData(timeData);
+
+        setDateForCalories(getCurrentMonthSpan());
+        setDateForHearth(getCurrentMonthSpan());
+        setDateForTime(getCurrentMonthSpan());
+      })
+      .catch((e) => console.log(e));
+  }, []);
 
   return (
-    <div className="w-full">
-      <div className="w-full">
-        <BarChartTimeChooser
-          setDate={setDate}
-          setActive={setActive}
-          active={active}
-          date={date}
-        />
-        <MyBarChart
-          data={barData}
-          barLegendName={"Average calories"}
-          lineLegendName={"My calories"}
-        />
+    <div className="w-full flex flex-col items-center align-center">
+      <div className="w-full space-y-8 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-y-10 p-10">
+        {dateForCalories && (
+          <div className="w-full">
+            <BarChartTimeChooser
+              setDate={setDateForCalories}
+              setActive={setActiveForCalories}
+              active={activeForCalories}
+              date={dateForCalories}
+            />
+            <MyBarChart
+              data={barCaloriesData}
+              copyData={caloriesData}
+              setData={setBarCaloriesData}
+              active={activeForCalories}
+              date={dateForCalories}
+              setDate={setDateForCalories}
+              barLegendName={"Average calories"}
+              lineLegendName={"My calories"}
+            />
+          </div>
+        )}
+
+        {dateForHearth && (
+          <div className="w-full">
+            <BarChartTimeChooser
+              setDate={setDateForHearth}
+              setActive={setActiveForHearth}
+              active={activeForHearth}
+              date={dateForHearth}
+            />
+            <MyBarChart
+              data={barHearthData}
+              copyData={hearthData}
+              setData={setBarHearthData}
+              active={activeForHearth}
+              date={dateForHearth}
+              setDate={setDateForHearth}
+              barLegendName={"My average hearth rate"}
+              lineLegendName={"Average hearth rate"}
+              color={COLORS[3]}
+            />
+          </div>
+        )}
+
+        {dateForTime && (
+          <div className="w-full">
+            <BarChartTimeChooser
+              setDate={setDateForTime}
+              setActive={setActiveForTime}
+              active={activeForTime}
+              date={dateForTime}
+            />
+            <MyBarChart
+              data={barTimeData}
+              copyData={timeData}
+              setData={setBarTimeData}
+              active={activeForTime}
+              date={dateForTime}
+              setDate={setDateForTime}
+              barLegendName={"My average workout time"}
+              lineLegendName={"Average workout time"}
+              color={COLORS[6]}
+            />
+          </div>
+        )}
       </div>
-      <div className="w-1/3">
+
+      <div className="w-1/3 ">
         <MyPieChart data={activityData} title={"My Activities"} />
       </div>
     </div>

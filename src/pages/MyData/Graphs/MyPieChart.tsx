@@ -37,10 +37,10 @@ export default function MyPieChart({ title, data }: PieChartType) {
   };
 
   return (
-    <div className="mt-3 w-full flex flex-col items-center align-center justify-center text-center">
+    <div className="mb-3 mt-3 w-full flex flex-col items-center align-center justify-center text-center">
       <p className="font-bold">{title.toUpperCase()}</p>
       <div className="w-full">
-        <ResponsiveContainer width="100%" height={200} className="text-center">
+        <ResponsiveContainer width="100%" height={250} className="text-center">
           <PieChart>
             <Legend
               layout={"horizontal"}
