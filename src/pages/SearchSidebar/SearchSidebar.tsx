@@ -45,11 +45,13 @@ export default function SearchSidebar({
 
   return (
     <Sidebar sidebarActive={searchActive}>
-      <FontAwesomeIcon
-        icon={faX}
-        className="ml-2 mt-2 w-3 h-3 cursor-pointer"
-        onClick={handleSearchActiveChange}
-      />
+      <div className="w-full flex items-start">
+        <FontAwesomeIcon
+          icon={faX}
+          className="ml-4 mt-2 w-3 h-3 cursor-pointer"
+          onClick={handleSearchActiveChange}
+        />
+      </div>
       <SearchInput value={searchTerm} handleChange={handleChange} />
       <div className="mt-7 border-t-[1px] border-gray-300">
         {filterUsers.length > 0 &&

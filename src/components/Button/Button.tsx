@@ -12,7 +12,7 @@ type ButtonType = {
 export default function Button({ handleClick, text, icon }: ButtonType) {
   return (
     <button
-      className="block text-sm font-medium leading-5 bg-[#917543] w-1/2 text-white mx-auto px-4 py-2 rounded-lg text-center duration-300 ease-in-out active:scale-95"
+      className="block text-sm font-medium leading-5 bg-[#917543] w-full text-white mx-auto px-4 py-2 rounded-lg text-center duration-300 ease-in-out active:scale-95"
       type="button"
       onClick={handleClick}
     >

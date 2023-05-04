@@ -3,7 +3,7 @@ export type ExerciseDataType = {
   avgData: AvgDataType[];
 };
 
-type MyDataType = {
+export type MyDataType = {
   name: string;
   date: string;
   time: string;
@@ -11,7 +11,7 @@ type MyDataType = {
   avg_hearth_rate: number;
 };
 
-type AvgDataType = {
+export type AvgDataType = {
   date: string;
   avgtime: string;
   avgcalories: number;

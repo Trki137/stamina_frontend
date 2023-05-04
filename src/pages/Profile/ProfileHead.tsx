@@ -123,7 +123,11 @@ export default function ProfileHead() {
           <div className="w-1/2 sm:w-1/3 h-32 flex justify-center items-center">
             {profileInfo?.image && (
               <img
-                src={`data:image/jpeg;base64,${profileInfo.image}`}
+                src={
+                  profileInfo.image.startsWith("http")
+                    ? profileInfo.image
+                    : `data:image/jpeg;base64,${profileInfo.image}`
+                }
                 className="w-full h-full max-w-[120px] max-h-[120px] p-1 rounded-full border-2"
                 alt="Can't access"
               />
