@@ -11,10 +11,12 @@ import { SearchBarUser } from "../../@types/UserType";
 type SearchSidebarType = {
   handleSearchActiveChange: () => void;
   searchActive: boolean;
+  user: boolean;
 };
 export default function SearchSidebar({
   handleSearchActiveChange,
   searchActive,
+  user,
 }: SearchSidebarType) {
   const [searchTerm, setSearchTerm] = useState<string>("");
   const [users, setUsers] = useState<SearchBarUser[]>([]);
@@ -37,7 +39,7 @@ export default function SearchSidebar({
         setFilterUsers(data);
       })
       .catch((err) => console.log(err));
-  }, []);
+  }, [user]);
 
   useEffect(() => {
     setFilterUsers(users.filter((user) => user.username.includes(searchTerm)));

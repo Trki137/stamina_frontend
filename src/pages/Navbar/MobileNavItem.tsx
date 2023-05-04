@@ -1,16 +1,17 @@
-import React from "react";
+import React, { Dispatch, SetStateAction } from "react";
 import { navItem } from "../../@types/NavbarType";
 import { Link } from "react-router-dom";
 
 type MobileNavItemType = {
   navItem: navItem;
+  setUser: Dispatch<SetStateAction<boolean>>;
 };
-export default function MobileNavItem({ navItem }: MobileNavItemType) {
+export default function MobileNavItem({ navItem, setUser }: MobileNavItemType) {
   const signOut = () => {
     if (navItem.name !== "Sign out") return;
 
+    setUser(false);
     localStorage.removeItem("staminaUser");
-    window.location.reload();
   };
   return (
     <li>

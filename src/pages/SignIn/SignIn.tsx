@@ -1,4 +1,10 @@
-import React, { ChangeEvent, useEffect, useState } from "react";
+import React, {
+  ChangeEvent,
+  Dispatch,
+  SetStateAction,
+  useEffect,
+  useState,
+} from "react";
 import Input from "../../components/Input/Input";
 import { GoogleLogin, userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
@@ -11,8 +17,12 @@ import { backend_paths } from "../../api/backend_paths";
 import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
+type SignInType = {
+  userSetter: Dispatch<SetStateAction<boolean>>;
+};
+
 type Error = { name: string; message: string };
-export default function SignIn() {
+export default function SignIn({ userSetter }: SignInType) {
   const [userInput, setUserInput] = useState<userInputType[]>([
     {
       name: "username",
@@ -33,7 +43,6 @@ export default function SignIn() {
   const [serverError, setServerError] = useState<string | null>();
 
   const [user, setUser] = useState<Omit<TokenResponse, "error">>();
-  const [profile, setProfile] = useState([]);
 
   const navigate = useNavigate();
 
@@ -77,6 +86,7 @@ export default function SignIn() {
               else user = data.user;
 
               localStorage.setItem("staminaUser", JSON.stringify(user));
+              userSetter(true);
               navigate(routes.home);
             })
             .catch((err) => setServerError(err.response.data));
@@ -132,6 +142,7 @@ export default function SignIn() {
           user.image = data.image;
         }
         localStorage.setItem("staminaUser", JSON.stringify(user));
+        userSetter(true);
         navigate(routes.home);
       })
       .catch((err) => setServerError(err.response.data));

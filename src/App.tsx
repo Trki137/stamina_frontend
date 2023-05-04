@@ -21,7 +21,9 @@ import InputData from "./pages/InputData/InputData";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
-
+  const [user, setUser] = useState<boolean>(
+    localStorage.getItem("staminaUser") !== null
+  );
   const handleSearchActiveChange = () => {
     setSearchActive((prevSearchActive) => !prevSearchActive);
   };
@@ -29,8 +31,13 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Router>
-        <Navbar handleSearchActiveChange={handleSearchActiveChange} />
+        <Navbar
+          userSetter={setUser}
+          userBoolean={user}
+          handleSearchActiveChange={handleSearchActiveChange}
+        />
         <SearchSidebar
+          user={user}
           searchActive={searchActive}
           handleSearchActiveChange={handleSearchActiveChange}
         />
@@ -38,7 +45,10 @@ function App() {
           <Routes>
             <Route element={<Home />} path={routes.home} />
             <Route element={<SignUp />} path={routes.signUp} />
-            <Route element={<SignIn />} path={routes.signIn} />
+            <Route
+              element={<SignIn userSetter={setUser} />}
+              path={routes.signIn}
+            />
             <Route element={<Exercise />} path={routes.workout} />
             <Route element={<AddWorkout />} path={routes.addWorkout} />
             <Route element={<AddTraining />} path={routes.createTraining} />
