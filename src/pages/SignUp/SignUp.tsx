@@ -187,7 +187,9 @@ export default function SignUp() {
                       />
                     </div>
                   ))}
-                  <Button text="Sign up" handleClick={handleSubmit} />
+                  <div className="mx-auto w-1/2">
+                    <Button text="Sign up" handleClick={handleSubmit} />
+                  </div>
                 </form>
                 <div className="mt-4 text-center">
                   <p className="text-sm">

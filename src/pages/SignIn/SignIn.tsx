@@ -177,7 +177,7 @@ export default function SignIn({ userSetter }: SignInType) {
                     />
                   </div>
                 ))}
-                <div className="flex flex-col gap-y-1">
+                <div className="mx-auto w-1/2 flex flex-col gap-y-1">
                   <Button text="Sign in" handleClick={handleSubmit} />
                   <Button
                     text="Sign in with "
