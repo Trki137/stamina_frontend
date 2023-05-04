@@ -7,6 +7,7 @@ import { navItem } from "../../@types/NavbarType";
 import NavItems from "./NavItems";
 import MobileNavItem from "./MobileNavItem";
 import { routes } from "../../api/paths";
+import { useLocation } from "react-router-dom";
 
 type NavbarType = {
   handleSearchActiveChange: () => void;
@@ -92,6 +93,11 @@ export default function Navbar({
       } else return `data:image/jpeg;base64,${user.image}`;
     }
   };
+
+  useEffect(() => {
+    setUserMenuActive(false);
+    setMenuMobile(false);
+  }, [useLocation().pathname]);
 
   const handleMenuMobile = () =>
     setMenuMobile((prevMenuMobile) => !prevMenuMobile);
