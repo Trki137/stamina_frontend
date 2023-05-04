@@ -1,14 +1,13 @@
-import React, { ChangeEvent, useContext, useEffect, useState } from "react";
+import React, { ChangeEvent, useEffect, useState } from "react";
 import Input from "../../components/Input/Input";
 import { GoogleLogin, userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../api/paths";
-import { Image, UserSignIn } from "../../@types/UserType";
+import { UserSignIn } from "../../@types/UserType";
 import { validateSignIn } from "../../util/validation";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
-import { ProfileImageContext } from "../../context/ProfileImageContext";
 import { TokenResponse, useGoogleLogin } from "@react-oauth/google";
 import { faGoogle } from "@fortawesome/free-brands-svg-icons";
 
@@ -32,8 +31,6 @@ export default function SignIn() {
   const [error, setError] = useState<Error[] | null>([]);
 
   const [serverError, setServerError] = useState<string | null>();
-
-  const { setImage } = useContext(ProfileImageContext) as Image;
 
   const [user, setUser] = useState<Omit<TokenResponse, "error">>();
   const [profile, setProfile] = useState([]);
@@ -80,9 +77,6 @@ export default function SignIn() {
               else user = data.user;
 
               localStorage.setItem("staminaUser", JSON.stringify(user));
-              if (user.image) {
-                setImage(user.image);
-              }
               navigate(routes.home);
             })
             .catch((err) => setServerError(err.response.data));
@@ -134,10 +128,10 @@ export default function SignIn() {
         if (data.user === undefined) user = data;
         else user = data.user;
 
-        localStorage.setItem("staminaUser", JSON.stringify(user));
         if (data.image) {
-          setImage(data.image);
+          user.image = data.image;
         }
+        localStorage.setItem("staminaUser", JSON.stringify(user));
         navigate(routes.home);
       })
       .catch((err) => setServerError(err.response.data));

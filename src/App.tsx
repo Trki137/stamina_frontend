@@ -9,7 +9,6 @@ import SignIn from "./pages/SignIn/SignIn";
 
 import { routes } from "./api/paths";
 import Home from "./pages/Home/Home";
-import ProfileImageProvider from "./context/ProfileImageContext";
 import SearchSidebar from "./pages/SearchSidebar/SearchSidebar";
 import Exercise from "./pages/Exercise/Exercise";
 import Profile from "./pages/Profile/Profile";
@@ -30,32 +29,27 @@ function App() {
   return (
     <div className="flex flex-col min-h-screen">
       <Router>
-        <ProfileImageProvider>
-          <Navbar handleSearchActiveChange={handleSearchActiveChange} />
-          <SearchSidebar
-            searchActive={searchActive}
-            handleSearchActiveChange={handleSearchActiveChange}
-          />
-          <main className="flex flex-1">
-            <Routes>
-              <Route element={<Home />} path={routes.home} />
-              <Route element={<SignUp />} path={routes.signUp} />
-              <Route element={<SignIn />} path={routes.signIn} />
-              <Route element={<Exercise />} path={routes.workout} />
-              <Route element={<AddWorkout />} path={routes.addWorkout} />
-              <Route element={<AddTraining />} path={routes.createTraining} />
-              <Route element={<Profile />} path={`${routes.profile}/:id`} />
-              <Route
-                element={<ChooseTraining />}
-                path={routes.chooseTraining}
-              />
-              <Route element={<MyData />} path={routes.myData} />
-              <Route element={<Event />} path={routes.events} />
-              <Route element={<InputData />} path={routes.inputData} />
-            </Routes>
-          </main>
-          <Footer />
-        </ProfileImageProvider>
+        <Navbar handleSearchActiveChange={handleSearchActiveChange} />
+        <SearchSidebar
+          searchActive={searchActive}
+          handleSearchActiveChange={handleSearchActiveChange}
+        />
+        <main className="flex flex-1">
+          <Routes>
+            <Route element={<Home />} path={routes.home} />
+            <Route element={<SignUp />} path={routes.signUp} />
+            <Route element={<SignIn />} path={routes.signIn} />
+            <Route element={<Exercise />} path={routes.workout} />
+            <Route element={<AddWorkout />} path={routes.addWorkout} />
+            <Route element={<AddTraining />} path={routes.createTraining} />
+            <Route element={<Profile />} path={`${routes.profile}/:id`} />
+            <Route element={<ChooseTraining />} path={routes.chooseTraining} />
+            <Route element={<MyData />} path={routes.myData} />
+            <Route element={<Event />} path={routes.events} />
+            <Route element={<InputData />} path={routes.inputData} />
+          </Routes>
+        </main>
+        <Footer />
       </Router>
     </div>
   );

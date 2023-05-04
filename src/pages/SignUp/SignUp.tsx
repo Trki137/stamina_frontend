@@ -1,15 +1,14 @@
-import React, { ChangeEvent, useContext, useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Input from "../../components/Input/Input";
 import { userInputType } from "../../@types/LoginTypes";
 import Button from "../../components/Button/Button";
 import { Link, useNavigate } from "react-router-dom";
 import { routes } from "../../api/paths";
 import ProfileImageUpload from "../../components/ProfileImageUpload/ProfileImageUpload";
-import { Image, UserSignUp } from "../../@types/UserType";
+import { UserSignUp } from "../../@types/UserType";
 import { validateSignUp } from "../../util/validation";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
-import { ProfileImageContext } from "../../context/ProfileImageContext";
 
 type Error = { name: string; message: string };
 
@@ -60,8 +59,6 @@ export default function SignUp() {
   const [error, setError] = useState<Error[] | null>([]);
 
   const [serverError, setServerError] = useState<string | null>(null);
-
-  const { setImage } = useContext(ProfileImageContext) as Image;
 
   const navigate = useNavigate();
 
@@ -143,11 +140,13 @@ export default function SignUp() {
     })
       .then((res) => res.data)
       .then((data) => {
-        localStorage.setItem("staminaUser", JSON.stringify(data.user));
-        console.log(data);
+        const user = data.user;
+
         if (data.image) {
-          setImage(data.image);
+          user.image = data.image;
         }
+        localStorage.setItem("staminaUser", JSON.stringify(data.user));
+
         navigate(routes.home);
       })
       .catch((err) => setServerError(err.response.data));
