@@ -98,22 +98,20 @@ export default function AddWorkout() {
   };
 
   const handleSaveWorkout = () => {
-    if (
-      !(
-        Array.isArray(selectedMuscle) &&
-        Array.isArray(selectedEquipment) &&
-        selectedIntensity
-      )
-    )
-      return;
+    if (!(Array.isArray(selectedMuscle) && selectedIntensity)) return;
 
     const intensity = selectedIntensity.value;
     const muscleTargeted: number[] = selectedMuscle.map((muscle) =>
       parseInt(muscle.value)
     );
-    const equipment: number[] = selectedEquipment.map((equipment) =>
-      parseInt(equipment.value)
-    );
+    let equipment: number[] | null = null;
+
+    if (selectedEquipment !== null) {
+      if (Array.isArray(selectedEquipment))
+        equipment = selectedEquipment.map((equipment: Option) =>
+          parseInt(equipment.value)
+        );
+    }
 
     const data: addWorkoutType = {
       name: name.value,

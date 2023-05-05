@@ -8,13 +8,16 @@ type TimerType = {
   timeText: string;
   setCurrentWorkoutIndex: Dispatch<SetStateAction<number>>;
   finished: boolean;
+  stopped: boolean;
 };
 export default function Timer({
   currentWorkout,
   timeText,
   setCurrentWorkoutIndex,
   finished,
+  stopped,
 }: TimerType) {
+  const [stoppedWorkout, setStoppedWorkout] = useState<TrainType | null>(null);
   const [timeRemaining, setTimeRemaining] = useState(timeText);
   const [percentage, setPercentage] = useState<number>(100);
   const [update, setUpdate] = useState<boolean>(false);
@@ -24,14 +27,25 @@ export default function Timer({
     };
 
     const myInterval = setInterval(updateTimer, 1000);
-    if (finished) clearInterval(myInterval);
+    if (finished) {
+      clearInterval(myInterval);
+    }
+    if (stopped) {
+      const stoppedWorkout = { ...currentWorkout };
+      stoppedWorkout.time =
+        Number(timeText.split(":")[0]) * 60 + Number(timeText.split(":")[1]);
+      setStoppedWorkout(stoppedWorkout);
+      clearInterval(myInterval);
+    }
 
     return () => clearInterval(myInterval);
-  }, [finished]);
+  }, [finished, stopped]);
 
   useEffect(() => {
     if (!currentWorkout.time) return;
-    let originalTime = currentWorkout.time;
+    let originalTime =
+      stoppedWorkout !== null ? stoppedWorkout.time : currentWorkout.time;
+    if (!originalTime) return;
     let minutes = Number(timeRemaining.split(":")[0]);
     let seconds = Number(timeRemaining.split(":")[1]);
 
@@ -53,6 +67,7 @@ export default function Timer({
 
   useEffect(() => {
     if (!currentWorkout.time) return;
+    setStoppedWorkout(null);
 
     let minutes = Math.trunc(currentWorkout.time / 60);
     let seconds = currentWorkout.time % 60;

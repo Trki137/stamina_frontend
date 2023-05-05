@@ -17,7 +17,7 @@ export type addWorkoutType = {
   description: string;
   intensity: string;
   muscleTargeted: number[];
-  equipment: number[];
+  equipment: number[] | null;
 };
 
 export type allWorkoutsType = {
