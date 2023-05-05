@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import WorkoutCard from "./WorkoutCard";
 import Timer from "./Timer";
-import { TrainType } from "../../@types/TrainTypes";
+import { TrainingData, TrainType } from "../../@types/TrainTypes";
 import Button from "../../components/Button/Button";
 import { useNavigate } from "react-router-dom";
 import { routes } from "../../api/paths";
@@ -12,6 +12,8 @@ import {
   faPlay,
   faStop,
 } from "@fortawesome/free-solid-svg-icons";
+import { allWorkoutsType } from "../../@types/WorkoutType";
+import StartScreen from "./StartScreen";
 
 export default function Training() {
   const [start, setStart] = useState<boolean>(false);
@@ -21,6 +23,7 @@ export default function Training() {
   const [currentWorkout, setCurrentWorkout] = useState<TrainType>(
     trainingData[0]
   );
+  const [workouts, setWorkouts] = useState<allWorkoutsType[]>([]);
   const [currentWorkoutIndex, setCurrentWorkoutIndex] = useState<number>(0);
   const [fromTo, setFromTo] = useState<{
     from: number;
@@ -33,15 +36,16 @@ export default function Training() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    const localData = localStorage.getItem("trainingData");
+    const localDataString = localStorage.getItem("trainingData");
 
-    if (localData === null) {
+    if (localDataString === null) {
       navigate(routes.CHOOSE_TRAINING);
       return;
     }
 
-    const data: TrainType[] = JSON.parse(localData);
-    setTrainingData(data);
+    const localData: TrainingData = JSON.parse(localDataString);
+    setTrainingData(localData.data);
+    setWorkouts(localData.workouts);
   }, []);
 
   useEffect(() => {
@@ -49,8 +53,6 @@ export default function Training() {
       trainingData.length > 0 &&
       currentWorkoutIndex === trainingData.length
     ) {
-      console.log(currentWorkoutIndex);
-      console.log(trainingData.length);
       setFinished(true);
       return;
     }
@@ -84,21 +86,21 @@ export default function Training() {
   };
 
   const handlePlay = () => {
-    if (finished) return;
+    if (finished || !currentWorkout.time) return;
     setStopped(false);
   };
 
   const handleStop = () => {
-    if (finished) return;
+    if (finished || !currentWorkout.time) return;
     setStopped(true);
   };
 
+  console.log(workouts);
+
   return (
     <div className="w-full">
-      {!start && (
-        <div className="m-auto mt-20 w-1/3">
-          <Button text={"Start workout"} handleClick={handleStart} />
-        </div>
+      {!start && workouts.length > 0 && (
+        <StartScreen workouts={workouts} handleStart={handleStart} />
       )}
       {start && (
         <React.Fragment>
@@ -112,8 +114,15 @@ export default function Training() {
                 setCurrentWorkoutIndex={setCurrentWorkoutIndex}
               />
             )}
+
+            {currentWorkout.repetition && (
+              <h1 className="mt-[130px] text-xl">
+                {currentWorkout.repetition}x {currentWorkout.name.toLowerCase()}
+                (s)
+              </h1>
+            )}
           </div>
-          <div className="flex flex-col w-full  relative mt-10 h-full max-h-[400px] justify-center align-center items-center">
+          <div className="flex flex-col w-full  relative mt-10 h-full max-h-[250px]  justify-center align-center items-center">
             {trainingData.map((data, index) => {
               const hidden: boolean =
                 data.sequence < fromTo.from || data.sequence >= fromTo.to;
@@ -137,7 +146,7 @@ export default function Training() {
               );
             })}
 
-            <div className="w-1/2 space-x-3 mt-[150px] flex items-center justify-center">
+            <div className="w-1/2 mx-auto space-x-3 flex items-center justify-center">
               <Button
                 icon={faBackwardStep}
                 handleClick={() => {
