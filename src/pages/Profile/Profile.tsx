@@ -7,23 +7,18 @@ import { CardChallengeType, CardEventType } from "../../@types/EventType";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
 import { ProfileData } from "../../@types/Profile";
+import { useParams } from "react-router-dom";
 
 export default function Profile() {
+  const { id } = useParams();
   const [tabIndexActive, setTabIndexActive] = useState<number>(0);
   const [challenges, setChallenges] = useState<CardChallengeType[]>([]);
   const [groupEvents, setGroupEvents] = useState<CardEventType[]>([]);
-
-  console.log(challenges);
-  console.log(groupEvents);
-
   useEffect(() => {
-    const user = localStorage.getItem("staminaUser");
-    if (!user) return;
-
-    const userId = JSON.parse(user).userid;
+    if (!id) return;
 
     axios
-      .get(`${backend_paths.EVENT}/${userId}`)
+      .get(`${backend_paths.EVENT}/${id}`)
       .then((res) => res.data)
       .then((data: ProfileData) => {
         setChallenges(data.my_challenges);

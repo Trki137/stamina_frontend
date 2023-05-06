@@ -156,7 +156,7 @@ export default function ChallengeCard({
           <FontAwesomeIcon
             icon={faPencil}
             onClick={() => setUpdateActive(true)}
-            className="absolute right-3 top-2 text-green-700"
+            className="absolute right-3 top-2 text-green-700 cursor-pointer"
           />
         )}
         {profile && cardInfo.finished && <SuccessTag />}

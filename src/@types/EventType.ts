@@ -31,6 +31,8 @@ export type SaveGroupEventType = {
   street: string;
   pbr: number;
   cityName: string;
+  latitude: number;
+  longitude: number;
 };
 
 export type CardEventType = {
@@ -43,9 +45,30 @@ export type CardEventType = {
   city: string;
   address: string;
   image: string | null;
+  latitude?: number;
+  longitude?: number;
+  max_space?: number;
+  pbr?: number;
+  cityid?: number;
+  addressid?: number;
 };
 
 export type JoinUnJoinEventType = {
   userId: number;
   eventId: number;
+};
+
+export type UpdateGroupEventType = {
+  max_space: number;
+  date_time: string;
+  eventId: number;
+  cityId: number;
+  pbr: number;
+  name: string;
+  addressId: number;
+  street: string;
+  latitude: number;
+  longitude: number;
+  eventName: string;
+  description: string;
 };

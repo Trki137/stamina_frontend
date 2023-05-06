@@ -9,45 +9,64 @@ import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 import { TextField } from "@mui/material";
 import ProfileButton from "../../components/Button/ProfileButton";
 import dayjs from "dayjs";
-import { CardEventType, SaveGroupEventType } from "../../@types/EventType";
+import {
+  CardEventType,
+  SaveGroupEventType,
+  UpdateGroupEventType,
+} from "../../@types/EventType";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
 
 type CreateEventModalType = {
   setActive: Dispatch<SetStateAction<boolean>>;
   setAllEvents: Dispatch<SetStateAction<CardEventType[]>>;
+  oldData?: CardEventType;
 };
 export default function CreateEventModal({
   setActive,
   setAllEvents,
+  oldData,
 }: CreateEventModalType) {
   const [userInput, setUserInput] = useState<userInputType[]>([
     {
       name: "name",
-      value: "",
+      value: oldData ? oldData.name : "",
       label: "Event name",
       type: "text",
     },
     {
       name: "max_people",
-      value: "",
+      value: oldData && oldData.max_space ? `${oldData.max_space}` : "",
       label: "Number of persons",
       type: "text",
     },
   ]);
-  const [dateTime, setDateTime] = useState<string>("");
-  const [dateTimeFormatted, setDateTimeFormatted] = useState<string>("");
-  const [description, setDescription] = useState<string>("");
+  const [dateTime, setDateTime] = useState<string>(
+    oldData ? oldData.startsat : ""
+  );
+  const [dateTimeFormatted, setDateTimeFormatted] = useState<string>(
+    oldData ? oldData.startsat : ""
+  );
+  const [description, setDescription] = useState<string>(
+    oldData ? oldData.description : ""
+  );
 
-  const [postcode, setPostcode] = useState<string>("10000");
-  const [townName, setTownName] = useState<string>("Zagreb");
-  const [streetName, setStreetName] = useState<string>("");
+  const [postcode, setPostcode] = useState<string>(
+    oldData && oldData.pbr ? `${oldData.pbr}` : "10000"
+  );
+  const [townName, setTownName] = useState<string>(
+    oldData ? oldData.city : "Zagreb"
+  );
+  const [streetName, setStreetName] = useState<string>(
+    oldData ? oldData.address : ""
+  );
+
   const [location, setLocation] = useState<{
     lat: number;
     lng: number;
   }>({
-    lat: 45.815399,
-    lng: 15.966568,
+    lat: oldData && oldData.latitude ? oldData.latitude : 45.815399,
+    lng: oldData && oldData.longitude ? oldData.longitude : 15.966568,
   });
   const handleChange = (e: ChangeEvent<HTMLInputElement>) => {
     const { name, value } = e.target;
@@ -73,6 +92,8 @@ export default function CreateEventModal({
       pbr: Number(postcode),
       cityName: townName,
       userId: JSON.parse(user).userid,
+      latitude: location.lat,
+      longitude: location.lng,
     };
 
     axios
@@ -89,6 +110,56 @@ export default function CreateEventModal({
       .catch((e) => console.log(e));
   };
 
+  const handleUpdate = () => {
+    let user = localStorage.getItem("staminaUser");
+    if (!user) return;
+    if (!oldData?.addressid) return;
+    if (!oldData.cityid) return;
+
+    const data: UpdateGroupEventType = {
+      addressId: oldData.addressid,
+      cityId: oldData.cityid,
+      name: townName,
+      description: description,
+      max_space: Number(userInput[1].value),
+      date_time: dateTimeFormatted,
+      street: streetName,
+      pbr: Number(postcode),
+      latitude: location.lat,
+      longitude: location.lng,
+      eventId: oldData.id,
+      eventName: userInput[0].value,
+    };
+
+    const card: CardEventType = {
+      name: userInput[0].value,
+      description: description,
+      max_space: Number(userInput[1].value),
+      pbr: Number(postcode),
+      latitude: location.lat,
+      longitude: location.lng,
+      createdby: oldData.createdby,
+      city: townName,
+      cityid: oldData.cityid,
+      remainingspace: oldData.remainingspace,
+      address: streetName,
+      addressid: oldData.addressid,
+      startsat: dateTimeFormatted,
+      image: oldData.image,
+      id: oldData.id,
+    };
+
+    axios
+      .put(backend_paths.GROUP_EVENT, data)
+      .then((res) => res.data)
+      .then((data) => {
+        setAllEvents((prevEvents) =>
+          prevEvents.map((event) => (event.id === oldData.id ? card : event))
+        );
+        setActive(false);
+      })
+      .catch((e) => console.log(e));
+  };
   return (
     <AddDataModal title={"Create event"} modalChange={() => setActive(false)}>
       <div className="flex-col w-full flex items-center space-y-2 py-2 px-3">
@@ -133,7 +204,10 @@ export default function CreateEventModal({
           setLocation={setLocation}
         />
       </div>
-      <ProfileButton text={"Add group event"} handleClick={handleSave} />
+      {!oldData && (
+        <ProfileButton text={"Add group event"} handleClick={handleSave} />
+      )}
+      {oldData && <ProfileButton text={"Update"} handleClick={handleUpdate} />}
     </AddDataModal>
   );
 }

@@ -3,6 +3,9 @@ import { CardEventType, JoinUnJoinEventType } from "../../@types/EventType";
 import ProfileButton from "../Button/ProfileButton";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import CreateEventModal from "../../pages/Events/CreateEventModal";
 
 type EventCardType = {
   cardInfo: CardEventType;
@@ -16,7 +19,7 @@ export default function EventCard({
   profile,
 }: EventCardType) {
   const [disappear, setDisappear] = useState<boolean>(false);
-
+  const [updateActive, setUpdateActive] = useState<boolean>(false);
   const active = new Date(cardInfo.startsat).getTime() > new Date().getTime();
 
   const className = disappear
@@ -103,43 +106,63 @@ export default function EventCard({
   };
 
   return (
-    <div className={className}>
-      <div className="flex flex-col items-center justify-end pb-10 pt-5">
-        {cardInfo.image && (
-          <img
-            className="w-24 h-24 mb-3 rounded-full shadow-lg"
-            src={`data:image/jpeg;base64,${cardInfo.image}`}
-            alt="No image"
+    <React.Fragment>
+      {profile && updateActive && (
+        <CreateEventModal
+          setActive={setUpdateActive}
+          setAllEvents={setAllEvents}
+          oldData={cardInfo}
+        />
+      )}
+      <div className={className}>
+        {profile && canAccess && active && (
+          <FontAwesomeIcon
+            icon={faPencil}
+            onClick={() => setUpdateActive(true)}
+            className="absolute right-3 top-2 text-green-700 cursor-pointer"
           />
         )}
-        <h5 className="mb-1 text-xl font-medium text-gray-900">
-          {cardInfo.createdby}
-        </h5>
-        <span className="text-sm text-[#917543]">{cardInfo.name}</span>
-        <div className="text-left mt-6 space-y-3">
-          <p>Description: {cardInfo.description}</p>
-          <p>
-            Location: {cardInfo.city}, {cardInfo.address}
-          </p>
-          <p>Time: {cardInfo.startsat} h</p>
-          <p>Remaining spots: {cardInfo.remainingspace}</p>
-        </div>
-        <div className="flex mt-4 w-full">
-          {!profile && (
-            <ProfileButton
-              text={"Join"}
-              disabled={cardInfo.remainingspace === 0}
-              handleClick={() => handleJoin(cardInfo.id)}
+        <div className="flex flex-col items-center justify-end pb-10 pt-5">
+          {cardInfo.image && (
+            <img
+              className="w-24 h-24 mb-3 rounded-full shadow-lg"
+              src={
+                cardInfo.image.startsWith("http")
+                  ? cardInfo.image
+                  : `data:image/jpeg;base64,${cardInfo.image}`
+              }
+              alt="No image"
             />
           )}
-          {profile && canAccess && active && (
-            <ProfileButton
-              text={"Cancel"}
-              handleClick={() => handleCancel(cardInfo.id)}
-            />
-          )}
+          <h5 className="mb-1 text-xl font-medium text-gray-900">
+            {cardInfo.createdby}
+          </h5>
+          <span className="text-sm text-[#917543]">{cardInfo.name}</span>
+          <div className="text-left mt-6 space-y-3">
+            <p>Description: {cardInfo.description}</p>
+            <p>
+              Location: {cardInfo.city}, {cardInfo.address}
+            </p>
+            <p>Time: {cardInfo.startsat} h</p>
+            <p>Remaining spots: {cardInfo.remainingspace}</p>
+          </div>
+          <div className="flex mt-4 w-full">
+            {!profile && (
+              <ProfileButton
+                text={"Join"}
+                disabled={cardInfo.remainingspace === 0}
+                handleClick={() => handleJoin(cardInfo.id)}
+              />
+            )}
+            {profile && canAccess && active && (
+              <ProfileButton
+                text={"Cancel"}
+                handleClick={() => handleCancel(cardInfo.id)}
+              />
+            )}
+          </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
