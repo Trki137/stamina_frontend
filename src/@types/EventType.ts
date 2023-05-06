@@ -6,6 +6,18 @@ export type CardChallengeType = {
   equipment: string;
   description: string;
   image: string | null;
+  finished: boolean;
+};
+
+export type ProfileCardChallengeType = {
+  id: number;
+  createdby: string;
+  name: string;
+  until: string;
+  equipment: string;
+  description: string;
+  image: string | null;
+  finished: boolean;
 };
 
 export type SaveChallengeType = {

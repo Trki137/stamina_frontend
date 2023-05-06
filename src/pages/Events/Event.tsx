@@ -77,6 +77,7 @@ export default function Event() {
               {allChallenges.length !== 0 &&
                 allChallenges.map((challenge) => (
                   <ChallengeCard
+                    profile={false}
                     key={challenge.id}
                     cardInfo={challenge}
                     setAllChallenges={setAllChallenges}
@@ -91,6 +92,7 @@ export default function Event() {
               {allEvents.length !== 0 &&
                 allEvents.map((event) => (
                   <EventCard
+                    profile={false}
                     key={event.id}
                     cardInfo={event}
                     setAllEvents={setAllEvents}

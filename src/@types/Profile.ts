@@ -1,3 +1,5 @@
+import { CardChallengeType, CardEventType } from "./EventType";
+
 export type ProfileInfoType = {
   username: string;
   email: string;
@@ -15,4 +17,9 @@ export type ProfileUpdateType = {
   email: string;
   description: string;
   username: string;
+};
+
+export type ProfileData = {
+  my_challenges: CardChallengeType[];
+  my_events: CardEventType[];
 };
