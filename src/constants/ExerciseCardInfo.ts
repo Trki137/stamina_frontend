@@ -6,7 +6,7 @@ export const cardData: ExerciseCardType[] = [
     title: "Create training",
     description: ["Create own training routine and share it with community"],
     linkText: "Create",
-    link: routes.createTraining,
+    link: routes.CREATE_TRAINING,
     imagePath: "/images/image2.jpg",
   },
   {
@@ -16,21 +16,21 @@ export const cardData: ExerciseCardType[] = [
       "You can add it to app and ,if you want, you can share it with community",
     ],
     linkText: "Add",
-    link: routes.addWorkout,
+    link: routes.ADD_WORKOUT,
     imagePath: "/images/image1.jpg",
   },
   {
     title: "Choose training",
     description: ["See other peoples workout routines and try them"],
     linkText: "Start",
-    link: routes.chooseTraining,
+    link: routes.CHOOSE_TRAINING,
     imagePath: "/images/equipment.jpeg",
   },
   {
     title: "Add data",
     description: ["Add data by hand or send us files"],
     linkText: "Input data",
-    link: routes.inputData,
+    link: routes.INPUT_DATA,
     imagePath: "/images/data.jpeg",
   },
 ];

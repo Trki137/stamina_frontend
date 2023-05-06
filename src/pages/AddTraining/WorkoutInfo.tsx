@@ -35,22 +35,22 @@ export default function WorkoutInfo({ data }: WorkoutInfoType) {
       : getEquipmentString(data.equipment.map((equipment) => equipment.name));
 
   return (
-    <div className="flex flex-col justify-center px-8 max-w-md min-w-md">
+    <div className="flex flex-col justify-center items-center align-middle px-8 w-full">
       <div className="flex w-full justify-center">
         <BodyHighlighter
           data={anteriorData}
           side={"anterior"}
-          maxWidth="400px"
-          maxHeight="400px"
+          maxWidth="150px"
+          maxHeight="150px"
         />
         <BodyHighlighter
           data={posteriorData}
           side={"posterior"}
-          maxWidth="400px"
-          maxHeight="400px"
+          maxWidth="150px"
+          maxHeight="150px"
         />
       </div>
-      <div className="leading-7">
+      <div className="leading-7 mt-[160px]">
         <h3 className="font-bold text-xl">{data.name}</h3>
         <div className="flex flex-col text-start gap-y-2">
           <p>

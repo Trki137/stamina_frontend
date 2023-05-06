@@ -250,7 +250,7 @@ export default function AddTraining() {
 
   return (
     <div className="w-full h-full min-h-[700px] min-w-full flex  justify-center ">
-      <div className="w-full px-4 h-full my-auto max-w-sm flex flex-col items-center">
+      <div className="w-full px-4 h-full my-auto max-w-sm flex flex-col items-center justify-center align-middle">
         {isWorkoutAddPhaseActive && (
           <React.Fragment>
             <AddWorkoutForm
@@ -299,7 +299,11 @@ export default function AddTraining() {
           </div>
         )}
       </div>
-      {workoutInfo && <WorkoutInfo data={workoutInfo} />}
+      {workoutInfo && (
+        <div className="w-2/3 my-auto">
+          <WorkoutInfo data={workoutInfo} />
+        </div>
+      )}
       {data && !isWorkoutAddPhaseActive && <TrainingMuscleWorked data={data} />}
     </div>
   );

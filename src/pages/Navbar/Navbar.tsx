@@ -27,22 +27,22 @@ export default function Navbar({
   const navItems: navItem[] = [
     {
       name: "home",
-      link: routes.home,
+      link: routes.HOME,
       visible: ["ALL"],
     },
     {
       name: "my data",
-      link: routes.myData,
+      link: routes.MY_DATA,
       visible: ["SIGNED_IN"],
     },
     {
       name: "exercise",
-      link: routes.workout,
+      link: routes.WORKOUT,
       visible: ["SIGNED_IN"],
     },
     {
       name: "events",
-      link: routes.events,
+      link: routes.EVENTS,
       visible: ["SIGNED_IN"],
     },
   ];
@@ -50,17 +50,17 @@ export default function Navbar({
   let userNavItems: navItem[] = [
     {
       name: "Sign in",
-      link: routes.signIn,
+      link: routes.SIGN_IN,
       visible: ["NOT_SIGNED_IN"],
     },
     {
       name: "Sign up",
-      link: routes.signUp,
+      link: routes.SIGN_UP,
       visible: ["NOT_SIGNED_IN"],
     },
     {
       name: "Profile",
-      link: `${routes.profile}/${user?.userid}`,
+      link: `${routes.PROFILE}/${user?.userid}`,
       visible: ["SIGNED_IN"],
     },
     {
@@ -114,7 +114,7 @@ export default function Navbar({
     const user: User = JSON.parse(obj);
     setUser(user);
     if (navItems[2].link.includes("undefined"))
-      navItems[2].link = `${routes.profile}/${user.userid}`;
+      navItems[2].link = `${routes.PROFILE}/${user.userid}`;
   }, [userBoolean]);
 
   return (

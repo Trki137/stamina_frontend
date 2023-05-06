@@ -8,8 +8,8 @@ import { faTrashCan } from "@fortawesome/free-regular-svg-icons";
 
 type TrainingItemType = {
   data: selectedWorkoutType;
-  handleInfo: () => void;
-  handleTrash: () => void;
+  handleInfo?: () => void;
+  handleTrash?: () => void;
 };
 export default function TrainingItem({
   data,
@@ -28,18 +28,22 @@ export default function TrainingItem({
         </p>
       </div>
       <div className="flex items-center gap-x-3">
-        <FontAwesomeIcon
-          color="green"
-          icon={faCircleInfo}
-          onClick={handleInfo}
-          className="cursor-pointer"
-        />
-        <FontAwesomeIcon
-          color="red"
-          icon={faTrashCan}
-          onClick={handleTrash}
-          className="cursor-pointer"
-        />
+        {handleInfo && (
+          <FontAwesomeIcon
+            color="green"
+            icon={faCircleInfo}
+            onClick={handleInfo}
+            className="cursor-pointer"
+          />
+        )}
+        {handleTrash && (
+          <FontAwesomeIcon
+            color="red"
+            icon={faTrashCan}
+            onClick={handleTrash}
+            className="cursor-pointer"
+          />
+        )}
       </div>
     </div>
   );

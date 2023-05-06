@@ -120,7 +120,7 @@ export default function SignUp() {
       .then((res) => res.data)
       .then((data) => {
         localStorage.setItem("staminaUser", JSON.stringify(data));
-        navigate(routes.home);
+        navigate(routes.HOME);
       })
       .catch((err) => setServerError(err.response.data));
   };
@@ -147,7 +147,7 @@ export default function SignUp() {
         }
         localStorage.setItem("staminaUser", JSON.stringify(data.user));
 
-        navigate(routes.home);
+        navigate(routes.HOME);
       })
       .catch((err) => setServerError(err.response.data));
   };
@@ -195,7 +195,7 @@ export default function SignUp() {
                   <p className="text-sm">
                     Already have an account?
                     <Link
-                      to={routes.signIn}
+                      to={routes.SIGN_IN}
                       className="text-[#917543] hover:underline"
                     >
                       {" "}

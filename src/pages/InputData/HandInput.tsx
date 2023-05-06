@@ -10,6 +10,7 @@ import ErrorMessage from "../../components/Messages/ErrorMessage";
 import dayjs from "dayjs";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
+import { SaveData } from "../../@types/ExerciseDataTypes";
 
 export default function HandInput() {
   const [userInput, setUserInput] = useState<userInputType[]>([
@@ -145,15 +146,7 @@ export default function HandInput() {
 
     const timeInSeconds = Number(time[0].value) * 60 + Number(time[1].value);
 
-    const data: {
-      name: string;
-      date: string;
-      userId: number;
-      trainingId: null;
-      time: string;
-      calories: number;
-      avg_hearth_rate: number | null;
-    } = {
+    const data: SaveData = {
       name: userInput[0].value,
       date: dayjs(date).format("DD.MM.YYYY"),
       userId: JSON.parse(user).userid,
