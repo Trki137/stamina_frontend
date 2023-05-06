@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useLayoutEffect, useRef, useState } from "react";
 import WorkoutCard from "./WorkoutCard";
 import Timer from "./Timer";
 import { TrainingData, TrainType } from "../../@types/TrainTypes";
@@ -14,8 +14,25 @@ import {
 } from "@fortawesome/free-solid-svg-icons";
 import { allWorkoutsType } from "../../@types/WorkoutType";
 import StartScreen from "./StartScreen";
+import ReactConfetti from "react-confetti";
+import { SaveData } from "../../@types/ExerciseDataTypes";
+import dayjs from "dayjs";
+import { avgTimePerIntensity, Time } from "../../util/trainingCalculation";
+import axios from "axios";
+import { backend_paths } from "../../api/backend_paths";
 
 export default function Training() {
+  const [confettiWidth, setConfettiWidth] = useState<number | undefined>(
+    undefined
+  );
+  const [confettiHeight, setConfettiHeight] = useState<number | undefined>(
+    undefined
+  );
+  const [trainingId, setTrainingId] = useState<number>(0);
+  const [restBetweenSets, setRestBetweenSets] = useState<number>(0);
+  const [restBetweenWorkouts, setRestBetweenWorkouts] = useState<number>(0);
+  const [numOfSets, setNumOfSets] = useState<number>(0);
+  const [calories, setCalories] = useState<number>(0);
   const [start, setStart] = useState<boolean>(false);
   const [stopped, setStopped] = useState<boolean>(false);
   const [trainingData, setTrainingData] = useState<TrainType[]>([]);
@@ -32,7 +49,8 @@ export default function Training() {
     from: 0,
     to: 2,
   });
-
+  const [trainingTime, setTrainingTime] = useState<number>(0);
+  const confetti = useRef<HTMLDivElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -44,17 +62,31 @@ export default function Training() {
     }
 
     const localData: TrainingData = JSON.parse(localDataString);
-    setTrainingData(localData.data);
+    const sizeOfData = localData.data.length - 1;
+    setTrainingData([
+      ...localData.data,
+      {
+        sequence: localData.data[sizeOfData].sequence + 1,
+        time: null,
+        repetition: null,
+        name: "Finished",
+        intensity: "low",
+      },
+    ]);
+    setTrainingId(localData.trainingId);
     setWorkouts(localData.workouts);
+    setRestBetweenSets(localData.restBetweenSets);
+    setRestBetweenWorkouts(localData.restBetweenWorkouts);
+    setNumOfSets(localData.numberOfSets);
+    setCalories(localData.avgCalories);
   }, []);
 
   useEffect(() => {
     if (
       trainingData.length > 0 &&
-      currentWorkoutIndex === trainingData.length
+      trainingData[currentWorkoutIndex].name === "Finished"
     ) {
       setFinished(true);
-      return;
     }
     setCurrentWorkout(trainingData[currentWorkoutIndex]);
     setFromTo((prevFromTo) => {
@@ -69,6 +101,56 @@ export default function Training() {
       return { from: currentWorkoutIndex - 1, to: currentWorkoutIndex + 2 };
     });
   }, [currentWorkoutIndex]);
+
+  useLayoutEffect(() => {
+    if (!finished) return;
+    if (!confetti.current) return;
+
+    setConfettiHeight(confetti.current.clientHeight);
+    setConfettiWidth(confetti.current.clientWidth);
+
+    const user = localStorage.getItem("staminaUser");
+    if (!user) return;
+
+    const workoutTime = trainingData
+      .filter((data) => data.name !== "Rest")
+      .reduce(
+        (acc, currentValue) =>
+          (acc += currentValue.time
+            ? Number(currentValue.time)
+            : currentValue.repetition
+            ? Number(currentValue.repetition) *
+              avgTimePerIntensity[
+                currentValue.intensity.toLowerCase() as keyof Time
+              ]
+            : 0),
+        0
+      );
+    const caloriesBurnt = calories * (trainingTime / workoutTime);
+    const today = dayjs(new Date()).format("DD.MM.YYYY");
+    const userId = JSON.parse(user).userid;
+
+    const data: SaveData = {
+      name: "Workout",
+      calories: Math.ceil(caloriesBurnt),
+      time: `${trainingTime}`,
+      avg_hearth_rate: null,
+      trainingId: trainingId,
+      date: today,
+      userId,
+    };
+
+    console.log(data);
+
+    axios
+      .post(`${backend_paths.DATA}`, data, {
+        headers: {
+          "Content-Type": "application/x-www-form-urlencoded",
+        },
+      })
+      .then((res) => localStorage.removeItem("trainingData"))
+      .catch((err) => console.log(err));
+  }, [finished]);
 
   const formatTime = (time: number) => {
     const minutes = Math.trunc(time / 60);
@@ -95,12 +177,23 @@ export default function Training() {
     setStopped(true);
   };
 
-  console.log(workouts);
-
   return (
-    <div className="w-full">
+    <div className="w-full" ref={confetti}>
+      {confettiWidth && confettiWidth && (
+        <ReactConfetti
+          numberOfPieces={100}
+          width={confettiHeight}
+          height={confettiHeight}
+        />
+      )}
       {!start && workouts.length > 0 && (
-        <StartScreen workouts={workouts} handleStart={handleStart} />
+        <StartScreen
+          workoutRest={restBetweenWorkouts}
+          setRest={restBetweenSets}
+          numOfSets={numOfSets}
+          workouts={workouts}
+          handleStart={handleStart}
+        />
       )}
       {start && (
         <React.Fragment>
@@ -112,6 +205,7 @@ export default function Training() {
                 currentWorkout={currentWorkout}
                 timeText={formatTime(currentWorkout.time)}
                 setCurrentWorkoutIndex={setCurrentWorkoutIndex}
+                setTrainingTime={setTrainingTime}
               />
             )}
 
@@ -150,7 +244,7 @@ export default function Training() {
               <Button
                 icon={faBackwardStep}
                 handleClick={() => {
-                  if (currentWorkoutIndex === trainingData.length) return;
+                  if (finished) return;
                   if (currentWorkoutIndex !== 0)
                     setCurrentWorkoutIndex((prev) => --prev);
                 }}
@@ -173,8 +267,7 @@ export default function Training() {
               <Button
                 icon={faForwardStep}
                 handleClick={() => {
-                  if (currentWorkoutIndex < trainingData.length - 1)
-                    setCurrentWorkoutIndex((prev) => ++prev);
+                  if (!finished) setCurrentWorkoutIndex((prev) => ++prev);
                 }}
                 myStyle="w-fit text-[45px]"
               />

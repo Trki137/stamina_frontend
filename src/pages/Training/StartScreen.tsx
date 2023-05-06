@@ -7,8 +7,14 @@ import TrainingItem from "../AddTraining/TrainingItem";
 type StartScreenType = {
   workouts: allWorkoutsType[];
   handleStart: () => void;
+  workoutRest: number;
+  setRest: number;
+  numOfSets: number;
 };
 export default function StartScreen({
+  workoutRest,
+  setRest,
+  numOfSets,
   workouts,
   handleStart,
 }: StartScreenType) {
@@ -22,6 +28,9 @@ export default function StartScreen({
   return (
     <div className="w-full h-full flex p-6">
       <div className="m-auto w-1/3">
+        <p>Rest between workouts: {workoutRest === 0 ? "None" : workoutRest}</p>
+        <p>Rest between sets: {setRest}</p>
+        <p>Number of sets: {numOfSets}</p>
         {workouts.map((workout) => (
           <TrainingItem
             key={workout.workoutid}

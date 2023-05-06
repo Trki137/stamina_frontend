@@ -7,12 +7,12 @@ type CalorieCount = {
   low: number;
 };
 
-type Time = {
+export type Time = {
   high: number;
   moderate: number;
   low: number;
 };
-const avgTimePerIntensity: Time = {
+export const avgTimePerIntensity: Time = {
   high: 6,
   moderate: 4.25,
   low: 2.5,
@@ -29,19 +29,15 @@ export function calculateTime(
   roundInfo: trainingInfoType
 ) {
   const numberOfSets = roundInfo.sets;
-  console.log(trainingInfo);
-  console.log(workouts);
+
   let totalTime: number =
-    roundInfo.restSet * numberOfSets + roundInfo.restWorkout * workouts.length;
+    roundInfo.restSet * numberOfSets +
+    roundInfo.restWorkout * workouts.length * roundInfo.sets;
 
   for (let i = 0; i < workouts.length; i++) {
     const workout = workouts[i];
 
     const workoutInfo = trainingInfo.filter((w) => {
-      console.log(w.workoutid);
-      console.log(workout.workoutid);
-
-      console.log(w.workoutid === workout.workoutid);
       return w.workoutid === workout.workoutid;
     })[0];
 
@@ -59,7 +55,6 @@ export function calculateTime(
       avgTimePerIntensity[workout.intensity.toLowerCase() as keyof Time];
   }
 
-  console.log(totalTime);
   return `${totalTime}`;
 }
 
@@ -123,14 +118,9 @@ const getTime = (
   trainingInfo: workoutsToSendType,
   intensity: string
 ) => {
-  console.log(workoutid);
-  console.log(trainingInfo);
-
   const workout = trainingInfo.filter(
     (info) => info.workoutid === workoutid
   )[0];
-
-  console.log(workout);
 
   if (!workout) return 0;
   if (workout.time !== null) return workout.time;

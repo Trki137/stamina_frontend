@@ -17,3 +17,13 @@ export type AvgDataType = {
   avgcalories: number;
   avg_hearth_rate: number;
 };
+
+export type SaveData = {
+  name: string;
+  date: string;
+  userId: number;
+  trainingId: null | number;
+  time: string;
+  calories: number;
+  avg_hearth_rate: number | null;
+};

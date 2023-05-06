@@ -5,9 +5,15 @@ export type TrainType = {
   time: number | null;
   repetition: number | null;
   name: string;
+  intensity: string;
 };
 
 export type TrainingData = {
+  trainingId: number;
+  restBetweenWorkouts: number;
+  restBetweenSets: number;
+  numberOfSets: number;
+  avgCalories: number;
   data: TrainType[];
   workouts: allWorkoutsType[];
 };
