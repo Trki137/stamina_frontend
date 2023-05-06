@@ -15,7 +15,7 @@ export default function HomeRegistered() {
           image="bannerRegistered.jpg"
         />
       </div>
-      <div className=" py-8 w-full flex flex-col items-center justify-center sm:h-max-52 md:flex md:flex-row md:justify-evenly">
+      <div className=" py-8 w-full items-center place-items-center grid grid-cols-1 sm:h-max-52 sm:grid-cols-2 xl:grid-cols-3">
         {cardInfoArray.map((cardInfo) => (
           <HomeCard key={cardInfo.title} cardInfo={cardInfo} />
         ))}
