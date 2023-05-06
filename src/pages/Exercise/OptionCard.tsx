@@ -24,7 +24,7 @@ export default function OptionCard({ data }: OptionCardType) {
               {text}
             </p>
           ))}
-          <div className="sm:absolute sm:w-[150px] sm:bottom-2 sm:right-0">
+          <div className="sm:absolute sm:w-[250px] sm:bottom-2 sm:right-[-50px]">
             <ButtonLink address={data.link} text={data.linkText} />
           </div>
         </div>
