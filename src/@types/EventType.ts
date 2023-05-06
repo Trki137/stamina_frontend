@@ -3,18 +3,6 @@ export type CardChallengeType = {
   createdby: string;
   name: string;
   until: string;
-  equipment: string;
-  description: string;
-  image: string | null;
-  finished: boolean;
-};
-
-export type ProfileCardChallengeType = {
-  id: number;
-  createdby: string;
-  name: string;
-  until: string;
-  equipment: string;
   description: string;
   image: string | null;
   finished: boolean;
@@ -24,8 +12,14 @@ export type SaveChallengeType = {
   name: string;
   description: string;
   date: string;
-  workoutId: number;
   userId: number;
+};
+
+export type UpdateChallengeType = {
+  eventId: number;
+  date: string;
+  name: string;
+  description: string;
 };
 
 export type SaveGroupEventType = {

@@ -5,6 +5,10 @@ import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
 import FailTag from "../../pages/Profile/FailTag";
 import SuccessTag from "../../pages/Profile/SuccessTag";
+import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
+import { faPencil } from "@fortawesome/free-solid-svg-icons";
+import dayjs from "dayjs";
+import CreateChallengeModal from "../../pages/Events/CreateChallengeModal";
 
 type ChallengeCardType = {
   cardInfo: CardChallengeType;
@@ -18,16 +22,28 @@ export default function ChallengeCard({
   profile,
 }: ChallengeCardType) {
   const [disappear, setDisappear] = useState<boolean>(false);
+  const [updateActive, setUpdateActive] = useState<boolean>(false);
+
+  const dateFormatted =
+    cardInfo.until.split(".")[1] +
+    "." +
+    cardInfo.until.split(".")[0] +
+    "." +
+    cardInfo.until.split(".")[2];
+
   const user = localStorage.getItem("staminaUser");
+
   let canAccess = false;
   if (user) {
     const username = JSON.parse(user).username;
     canAccess = username === cardInfo.createdby;
   }
-  const active = new Date().getDate() < new Date(cardInfo.until).getDate();
+
+  const active = dayjs(new Date()).diff(dayjs(dateFormatted), "days") <= 0;
+
   const className = disappear
     ? "relative opacity-0 transition-all ease-in-out duration-[1000ms]"
-    : cardInfo.finished || active
+    : cardInfo.finished || !active
     ? "relative mx-auto w-full max-w-sm bg-white opacity-60 border border-gray-200 rounded-lg shadow px-5"
     : "relative mx-auto w-full max-w-sm bg-white border border-gray-200 rounded-lg shadow px-5";
 
@@ -127,56 +143,68 @@ export default function ChallengeCard({
   };
 
   return (
-    <div className={className}>
-      {profile && cardInfo.finished && <SuccessTag />}
-      {profile && !cardInfo.finished && active && <FailTag />}
-      <div className="flex flex-col items-center justify-end pb-10 pt-5">
-        {cardInfo.image && (
-          <img
-            className="w-24 h-24 mb-3 rounded-full shadow-lg"
-            src={`data:image/jpeg;base64,${cardInfo.image}`}
-            alt="No image"
+    <React.Fragment>
+      {updateActive && (
+        <CreateChallengeModal
+          setActive={setUpdateActive}
+          setAllChallenges={setAllChallenges}
+          oldValues={cardInfo}
+        />
+      )}
+      <div className={className}>
+        {profile && canAccess && active && (
+          <FontAwesomeIcon
+            icon={faPencil}
+            onClick={() => setUpdateActive(true)}
+            className="absolute right-3 top-2 text-green-700"
           />
         )}
-        <h5 className="mb-1 text-xl font-medium text-gray-900">
-          {cardInfo.createdby}
-        </h5>
-        <span className="text-sm text-[#917543]">{cardInfo.name}</span>
-        <div className="text-left mt-6 space-y-3">
-          <p>Description: {cardInfo.description}</p>
-          <p>
-            Equipment:{" "}
-            {cardInfo.equipment?.length > 0 ? cardInfo.equipment : "None"}
-          </p>
-          <p>Challenge active: {cardInfo.until}</p>
-        </div>
-        <div className="flex mt-4 w-full">
-          {!profile && (
-            <ProfileButton
-              text={"Join"}
-              handleClick={() => handleJoin(cardInfo.id)}
+        {profile && cardInfo.finished && <SuccessTag />}
+        {profile && !cardInfo.finished && !active && <FailTag />}
+        <div className="flex flex-col items-center justify-end pb-10 pt-5">
+          {cardInfo.image && (
+            <img
+              className="w-24 h-24 mb-3 rounded-full shadow-lg"
+              src={`data:image/jpeg;base64,${cardInfo.image}`}
+              alt="No image"
             />
           )}
-          <div className="w-full flex space-x-3">
-            {profile && canAccess && !cardInfo.finished && (
+          <h5 className="mb-1 text-xl font-medium text-gray-900">
+            {cardInfo.createdby}
+          </h5>
+          <span className="text-sm text-[#917543]">{cardInfo.name}</span>
+          <div className="text-left mt-6 space-y-3">
+            <p>Description: {cardInfo.description}</p>
+            <p>Challenge active: {cardInfo.until}</p>
+          </div>
+          <div className="flex mt-4 w-full">
+            {!profile && (
               <ProfileButton
-                text={"Cancel"}
-                handleClick={() => handleCancel(cardInfo.id)}
+                text={"Join"}
+                handleClick={() => handleJoin(cardInfo.id)}
               />
             )}
-
-            {profile &&
-              canAccess &&
-              cardInfo.finished !== undefined &&
-              !cardInfo.finished && (
+            <div className="w-full flex space-x-3">
+              {profile && canAccess && !cardInfo.finished && (
                 <ProfileButton
-                  text={"Finish"}
-                  handleClick={() => handleFinishChallenge(cardInfo.id)}
+                  text={"Cancel"}
+                  handleClick={() => handleCancel(cardInfo.id)}
                 />
               )}
+
+              {profile &&
+                canAccess &&
+                cardInfo.finished !== undefined &&
+                !cardInfo.finished && (
+                  <ProfileButton
+                    text={"Finish"}
+                    handleClick={() => handleFinishChallenge(cardInfo.id)}
+                  />
+                )}
+            </div>
           </div>
         </div>
       </div>
-    </div>
+    </React.Fragment>
   );
 }
