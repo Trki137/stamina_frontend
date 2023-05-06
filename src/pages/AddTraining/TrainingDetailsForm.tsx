@@ -34,16 +34,18 @@ export default function TrainingDetailsForm({
         />
       )}
       <div className="flex w-full">
-        <div className={"mx-auto"}>
-          {trainingInfo.map((info) => (
-            <Input
-              key={info.name}
-              inputInfo={info}
-              handleChange={handleTrainingInfo}
-              error={null}
-            />
-          ))}
-          <div className="flex flex-col gap-1">
+        <div className={"mx-auto w-full"}>
+          <div className="mx-auto w-2/3">
+            {trainingInfo.map((info) => (
+              <Input
+                key={info.name}
+                inputInfo={info}
+                handleChange={handleTrainingInfo}
+                error={null}
+              />
+            ))}
+          </div>
+          <div className="flex flex-col gap-1 w-full">
             <ProfileButton
               text="Save workout"
               handleClick={handleSaveTraining}

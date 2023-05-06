@@ -20,7 +20,10 @@ export default function ChooseTraining() {
     axios
       .get(`${backend_paths.TRAINING}/all-training`)
       .then((res) => res.data)
-      .then((data) => setAllTraining(data))
+      .then((data) => {
+        setAllTraining(data);
+        setFiltered(data);
+      })
       .catch((e) => console.log(e));
 
     axios
@@ -64,20 +67,6 @@ export default function ChooseTraining() {
     return Math.ceil(num / 60);
   };
 
-  const maxTime = filtered
-    .map((data) => data.time)
-    .sort((t1, t2) => t2 - t1)[0];
-  const minTime = filtered
-    .map((data) => data.time)
-    .sort((t1, t2) => t1 - t2)[0];
-
-  const maxCal = filtered
-    .map((data) => data.avg_calories)
-    .sort((t1, t2) => t2 - t1)[0];
-  const minCal = filtered
-    .map((data) => data.avg_calories)
-    .sort((t1, t2) => t1 - t2)[0];
-
   return (
     <React.Fragment>
       <div className="w-full flex flex-col">
@@ -86,10 +75,6 @@ export default function ChooseTraining() {
           sortValues={sortValues}
           setIntensityFilter={setIntensityFilter}
           setFilteredMuscle={setFilteredMuscle}
-          minTime={getMinutes(Number(minTime))}
-          maxTime={getMinutes(Number(maxTime))}
-          minCal={Number(minCal)}
-          maxCal={Number(maxCal)}
           allMuscles={allMuscles}
         />
         <div className="w-full mb-8">

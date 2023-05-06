@@ -4,7 +4,6 @@ import { faFilter } from "@fortawesome/free-solid-svg-icons";
 
 import { intensityLevel } from "../../constants/IntensityLevel";
 import CheckBox from "../../components/Input/CheckBox";
-import RangeSlider from "../../components/Input/RangeSlider";
 import { muscleGroupType } from "../../@types/WorkoutType";
 import Sort from "./Sort";
 import { SortValueTypes } from "../../@types/SortTypes";
@@ -14,18 +13,10 @@ type FilterType = {
   setFilteredMuscle: Dispatch<SetStateAction<string[]>>;
   setSort: (sort: SortValueTypes) => void;
   sortValues: SortValueTypes[];
-  maxTime: number;
-  minTime: number;
-  maxCal: number;
-  minCal: number;
   allMuscles: muscleGroupType[];
 };
 export default function Filter({
   setIntensityFilter,
-  maxTime,
-  minTime,
-  maxCal,
-  minCal,
   allMuscles,
   setFilteredMuscle,
   setSort,
@@ -83,7 +74,7 @@ export default function Filter({
       </div>
       <div>
         {filterActive && (
-          <div className="grid grid-cols-3">
+          <div className="grid gap-y-3 grid-cols-1 min-[400px]:grid-cols-2 min-[400px]:gap-y-0 ">
             <div className="flex flex-col items-center mt-2">
               <p>Intensity</p>
               <div className="mt-2">
@@ -96,27 +87,6 @@ export default function Filter({
                     clear={clear}
                   />
                 ))}
-              </div>
-            </div>
-            <div className="flex flex-col items-center ">
-              <div className="flex-col items-center justify-center">
-                <p>Workout time</p>
-                <RangeSlider
-                  className="w-72 h-8"
-                  marks={true}
-                  value={[minTime, maxTime]}
-                  max={maxTime}
-                  min={minTime}
-                />
-              </div>
-              <div>
-                <p>Calories burnt</p>
-                <RangeSlider
-                  className="w-72 h-8"
-                  value={[minCal, maxCal]}
-                  max={maxCal}
-                  min={minCal}
-                />
               </div>
             </div>
 
