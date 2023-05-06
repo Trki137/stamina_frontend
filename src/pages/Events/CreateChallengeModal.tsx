@@ -24,12 +24,14 @@ export default function CreateChallengeModal({
   setAllChallenges,
   oldValues,
 }: CreateChallengeModalType) {
-  const dateFormatted =
-    oldValues?.until.split(".")[1] +
-    "." +
-    oldValues?.until.split(".")[0] +
-    "." +
-    oldValues?.until.split(".")[2];
+  const dateFormatted = oldValues
+    ? oldValues?.until.split(".")[1] +
+      "." +
+      oldValues?.until.split(".")[0] +
+      "." +
+      oldValues?.until.split(".")[2]
+    : null;
+  console.log(dateFormatted);
 
   const [startDate, setStartDate] = useState<Date>(
     dateFormatted ? new Date(dateFormatted) : new Date()
