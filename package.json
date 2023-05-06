@@ -13,6 +13,7 @@
     "@fortawesome/react-fontawesome": "^0.2.0",
     "@headlessui/react": "^1.7.14",
     "@mapbox/mapbox-gl-geocoder": "^5.0.1",
+    "@material/slider": "^14.0.0",
     "@mui/x-date-pickers": "^5.0.11",
     "@react-oauth/google": "^0.11.0",
     "@testing-library/jest-dom": "^5.14.1",
@@ -70,7 +71,7 @@
     ]
   },
   "devDependencies": {
-    "@mui/material": "^5.11.0",
+    "@mui/material": "^5.12.3",
     "@types/mapbox__mapbox-gl-geocoder": "^4.7.3",
     "prettier": "2.8.4",
     "tailwindcss": "^3.2.7"

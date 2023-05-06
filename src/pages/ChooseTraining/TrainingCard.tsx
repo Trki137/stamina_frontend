@@ -38,29 +38,27 @@ export default function TrainingCard({ training }: TrainingCardType) {
       .catch((e) => console.log(e));
   };
 
-  const getWorkoutGroup = () => {
-    return "";
-  };
-
   return (
-    <div className="w-5/12  mx-auto mt-3 grid place-items-center font-mono  rounded-md">
-      <div className="rounded-md shadow-lg w-full ">
-        <div className="md:flex px-4 leading-none ">
-          <div className="flex-col text-center text-gray-600 mx-auto">
-            <p className="pt-4 text-2xl font-bold">{training.name}</p>
+    <div className="w-7/12  max-w-lg mx-auto mt-3 grid place-items-center rounded-md">
+      <div className="rounded-md shadow-lg w-full max-w-lg ">
+        <div className="md:flex px-4 leading-none max-w-lg">
+          <div className="max-w-sm  flex-col text-center text-gray-600 mx-auto">
+            <p className="max-w-sm  pt-4 text-2xl font-bold">{training.name}</p>
             <hr className="hr-text" />
-            <div className="text-md  text-center flex flex-col justify-center px-4 my-2">
-              <p className="font-bold ">
+            <div className="max-w-sm  text-md flex-wrap  text-center flex flex-col justify-center px-4 my-2">
+              <p className="max-w-sm  font-bold ">
                 {getWorkoutTime()} | {training.intensity}
               </p>
 
-              <p className="font-bold mt-3">{training.targeted_muscles}</p>
+              <p className="hidden sm:block font-bold max-w-sm md:inline my-4 text-md text-left  break-words">
+                {training.targeted_muscles}
+              </p>
             </div>
-            <p className="hidden md:block my-4 text-sm text-left">
+            <p className="max-w-sm hidden md:inline my-4 text-sm text-left flex-wrap break-words">
               {training.description}
             </p>
 
-            <div className="text-xs my-5">
+            <div className="max-w-sm text-xs my-5">
               <ChooseTrainingButton
                 handleClick={() => handleClick(training.trainingid)}
               />

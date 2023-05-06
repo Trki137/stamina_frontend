@@ -9,18 +9,23 @@ import { sortValues } from "../../constants/SortValues";
 import { SortValueTypes } from "../../@types/SortTypes";
 
 export default function ChooseTraining() {
+  const [first, setFirst] = useState<boolean>(true);
   const [allTraining, setAllTraining] = useState<trainingInfoCardType[]>([]);
   const [intensityFilter, setIntensityFilter] = useState<string[]>([]);
   const [filteredMuscle, setFilteredMuscle] = useState<string[]>([]);
   const [filtered, setFiltered] = useState<trainingInfoCardType[]>([]);
   const [allMuscles, setAllMuscles] = useState<muscleGroupType[]>([]);
   const [currentSort, setCurrentSort] = useState<SortValueTypes | null>(null);
-
+  const [time, setTime] = useState<number[]>([0, 0]);
+  const [calories, setCalories] = useState<number[]>([0, 0]);
   useEffect(() => {
     axios
       .get(`${backend_paths.TRAINING}/all-training`)
       .then((res) => res.data)
-      .then((data) => setAllTraining(data))
+      .then((data) => {
+        setAllTraining(data);
+        setFiltered(data);
+      })
       .catch((e) => console.log(e));
 
     axios
@@ -56,7 +61,7 @@ export default function ChooseTraining() {
 
       return sort.order === "ASC" ? t1 - t2 : t2 - t1;
     });
-    setFiltered(sorted);
+    if (!first) setFiltered(sorted);
   };
 
   const getMinutes = (num: number) => {
@@ -64,20 +69,29 @@ export default function ChooseTraining() {
     return Math.ceil(num / 60);
   };
 
-  const maxTime = filtered
-    .map((data) => data.time)
-    .sort((t1, t2) => t2 - t1)[0];
-  const minTime = filtered
-    .map((data) => data.time)
-    .sort((t1, t2) => t1 - t2)[0];
+  useEffect(() => {
+    const maxTime = filtered
+      .map((data) => data.time)
+      .sort((t1, t2) => t2 - t1)[0];
+    const minTime = filtered
+      .map((data) => data.time)
+      .sort((t1, t2) => t1 - t2)[0];
 
-  const maxCal = filtered
-    .map((data) => data.avg_calories)
-    .sort((t1, t2) => t2 - t1)[0];
-  const minCal = filtered
-    .map((data) => data.avg_calories)
-    .sort((t1, t2) => t1 - t2)[0];
+    const maxCal = filtered
+      .map((data) => data.avg_calories)
+      .sort((t1, t2) => t2 - t1)[0];
+    const minCal = filtered
+      .map((data) => data.avg_calories)
+      .sort((t1, t2) => t1 - t2)[0];
 
+    console.log("Setting min and max");
+
+    console.log(minTime, maxTime, minCal, maxCal);
+    setTime([minTime, maxTime]);
+    setCalories([getMinutes(minCal), getMinutes(maxCal)]);
+  }, [filtered]);
+  console.log(time);
+  console.log(calories);
   return (
     <React.Fragment>
       <div className="w-full flex flex-col">
@@ -86,10 +100,6 @@ export default function ChooseTraining() {
           sortValues={sortValues}
           setIntensityFilter={setIntensityFilter}
           setFilteredMuscle={setFilteredMuscle}
-          minTime={getMinutes(Number(minTime))}
-          maxTime={getMinutes(Number(maxTime))}
-          minCal={Number(minCal)}
-          maxCal={Number(maxCal)}
           allMuscles={allMuscles}
         />
         <div className="w-full mb-8">
