@@ -19,6 +19,7 @@ import MyData from "./pages/MyData/MyData";
 import Event from "./pages/Events/Event";
 import InputData from "./pages/InputData/InputData";
 import Training from "./pages/Training/Training";
+import PageNotFound from "./pages/PageNotFound/PageNotFound";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
@@ -59,6 +60,10 @@ function App() {
             <Route element={<Event />} path={routes.EVENTS} />
             <Route element={<InputData />} path={routes.INPUT_DATA} />
             <Route element={<Training />} path={routes.TRAIN} />
+            <Route
+              element={<PageNotFound />}
+              path={routes.PAGE_NOT_FOUND_URL}
+            />
           </Routes>
         </main>
         <Footer />

@@ -11,4 +11,5 @@ export const routes = {
   SIGN_IN: "/sign-in",
   SIGN_UP: "/sign-up",
   TRAIN: "/training",
+  PAGE_NOT_FOUND_URL: "*",
 };

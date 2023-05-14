@@ -53,7 +53,10 @@ export default function FileInput() {
         setTimeout(() => setShowSuccess(false), 2000);
         setTimeout(() => setHide(true), 3500);
       })
-      .catch((err) => setErrorMsg(fileName + " is not valid file"));
+      .catch((err) => {
+        console.log(err);
+        setErrorMsg(fileName + " is not valid file");
+      });
   };
 
   return (
