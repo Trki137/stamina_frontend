@@ -86,7 +86,8 @@ export default function MyData() {
           });
           hearthData.push({
             xAxisText: date,
-            lineData: myData[i].avg_hearth_rate,
+            lineData:
+              myData[i].avg_hearth_rate == null ? 0 : myData[i].avg_hearth_rate,
             barData: avgHearthRate,
           });
         }
@@ -132,6 +133,7 @@ export default function MyData() {
   const hasDataForDisplay =
     timeData.length != 0 || hearthData.length != 0 || caloriesData.length != 0;
 
+  console.log(barHearthData);
   return (
     <React.Fragment>
       {!hasDataForDisplay && (
