@@ -8,7 +8,7 @@ import ProfileModal from "../../components/Modal/ProfileModal";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
 
-type EditProfileModal = {
+type EditProfileModalType = {
   title: string;
   setModalActive: Dispatch<SetStateAction<number>>;
 
@@ -23,7 +23,7 @@ export default function EditProfileModal({
   profile,
   setProfileInfo,
   userid,
-}: EditProfileModal) {
+}: EditProfileModalType) {
   const [description, setDescription] = useState<string>(
     profile.description === null ? "" : profile.description
   );

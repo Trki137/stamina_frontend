@@ -131,7 +131,7 @@ export default function EventCard({
                   ? cardInfo.image
                   : `data:image/jpeg;base64,${cardInfo.image}`
               }
-              alt="No image"
+              alt="missing"
             />
           )}
           <h5 className="mb-1 text-xl font-medium text-gray-900">

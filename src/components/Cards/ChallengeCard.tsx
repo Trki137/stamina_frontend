@@ -166,7 +166,7 @@ export default function ChallengeCard({
             <img
               className="w-24 h-24 mb-3 rounded-full shadow-lg"
               src={`data:image/jpeg;base64,${cardInfo.image}`}
-              alt="No image"
+              alt="missing"
             />
           )}
           <h5 className="mb-1 text-xl font-medium text-gray-900">

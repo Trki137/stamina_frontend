@@ -85,6 +85,7 @@ export default function SignIn({ userSetter }: SignInType) {
               if (data.user === undefined) user = data;
               else user = data.user;
 
+              console.log(user);
               localStorage.setItem("staminaUser", JSON.stringify(user));
               userSetter(true);
               navigate(routes.HOME);

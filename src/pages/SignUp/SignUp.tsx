@@ -117,11 +117,7 @@ export default function SignUp() {
           "Content-Type": "application/x-www-form-urlencoded",
         },
       })
-      .then((res) => res.data)
-      .then((data) => {
-        localStorage.setItem("staminaUser", JSON.stringify(data));
-        navigate(routes.HOME);
-      })
+      .then((res) => navigate(routes.SIGN_IN))
       .catch((err) => setServerError(err.response.data));
   };
 
@@ -138,17 +134,7 @@ export default function SignUp() {
       data: formData,
       headers: { "Content-Type": "multipart/form-data" },
     })
-      .then((res) => res.data)
-      .then((data) => {
-        const user = data.user;
-
-        if (data.image) {
-          user.image = data.image;
-        }
-        localStorage.setItem("staminaUser", JSON.stringify(data.user));
-
-        navigate(routes.HOME);
-      })
+      .then((res) => navigate(routes.SIGN_IN))
       .catch((err) => setServerError(err.response.data));
   };
   return (
