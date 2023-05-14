@@ -19,6 +19,8 @@ import MyData from "./pages/MyData/MyData";
 import Event from "./pages/Events/Event";
 import InputData from "./pages/InputData/InputData";
 import Training from "./pages/Training/Training";
+import PageNotFound from "./pages/PageNotFound/PageNotFound";
+import PrivateRoute from "./components/PrivateRoute/PrivateRoute";
 
 function App() {
   const [searchActive, setSearchActive] = useState<boolean>(false);
@@ -50,15 +52,24 @@ function App() {
               element={<SignIn userSetter={setUser} />}
               path={routes.SIGN_IN}
             />
-            <Route element={<Exercise />} path={routes.WORKOUT} />
-            <Route element={<AddWorkout />} path={routes.ADD_WORKOUT} />
-            <Route element={<AddTraining />} path={routes.CREATE_TRAINING} />
-            <Route element={<Profile />} path={`${routes.PROFILE}/:id`} />
-            <Route element={<ChooseTraining />} path={routes.CHOOSE_TRAINING} />
-            <Route element={<MyData />} path={routes.MY_DATA} />
-            <Route element={<Event />} path={routes.EVENTS} />
-            <Route element={<InputData />} path={routes.INPUT_DATA} />
-            <Route element={<Training />} path={routes.TRAIN} />
+            <Route element={<PrivateRoute />}>
+              <Route element={<Exercise />} path={routes.WORKOUT} />
+              <Route element={<AddWorkout />} path={routes.ADD_WORKOUT} />
+              <Route element={<AddTraining />} path={routes.CREATE_TRAINING} />
+              <Route element={<Profile />} path={`${routes.PROFILE}/:id`} />
+              <Route
+                element={<ChooseTraining />}
+                path={routes.CHOOSE_TRAINING}
+              />
+              <Route element={<MyData />} path={routes.MY_DATA} />
+              <Route element={<Event />} path={routes.EVENTS} />
+              <Route element={<InputData />} path={routes.INPUT_DATA} />
+              <Route element={<Training />} path={routes.TRAIN} />
+            </Route>
+            <Route
+              element={<PageNotFound />}
+              path={routes.PAGE_NOT_FOUND_URL}
+            />
           </Routes>
         </main>
         <Footer />
