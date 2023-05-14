@@ -23,7 +23,6 @@ type CreateEventModalType = {
   oldData?: CardEventType;
 };
 
-type Error = { name: string; message: string };
 export default function CreateEventModal({
   setActive,
   setAllEvents,
@@ -121,40 +120,8 @@ export default function CreateEventModal({
       .catch((e) => console.log(e));
   };
 
-  const validate = () => {
-    const err: Error[] = [];
-
-    if (dateTime.length == 0) {
-      err.push({
-        name: "time",
-        message: "Date and time is not defined",
-      });
-    }
-
-    if (userInput[0].value.length == 0) {
-      err.push({
-        name: userInput[0].name,
-        message: "Event name field empty",
-      });
-    }
-    if (userInput[1].value.length == 0) {
-      err.push({
-        name: userInput[1].name,
-        message: "Number of person field empty",
-      });
-    }
-
-    if (description.length == 0) {
-      err.push({
-        name: "description",
-        message: "Description empty",
-      });
-    }
-
-    return err;
-  };
-
   const handleUpdate = () => {
+    setError([]);
     let user = localStorage.getItem("staminaUser");
     if (!user) return;
     if (!oldData?.addressid) return;
@@ -210,6 +177,39 @@ export default function CreateEventModal({
         setActive(false);
       })
       .catch((e) => console.log(e));
+  };
+
+  const validate = () => {
+    const err: Error[] = [];
+
+    if (dateTime.length == 0) {
+      err.push({
+        name: "time",
+        message: "Date and time is not defined",
+      });
+    }
+
+    if (userInput[0].value.length == 0) {
+      err.push({
+        name: userInput[0].name,
+        message: "Event name field empty",
+      });
+    }
+    if (userInput[1].value.length == 0) {
+      err.push({
+        name: userInput[1].name,
+        message: "Number of person field empty",
+      });
+    }
+
+    if (description.length == 0) {
+      err.push({
+        name: "description",
+        message: "Description empty",
+      });
+    }
+
+    return err;
   };
 
   const getError = (name: string) => {
