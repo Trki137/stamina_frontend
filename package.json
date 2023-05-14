@@ -30,6 +30,7 @@
     "classnames": "^2.3.2",
     "dayjs": "^1.11.7",
     "dotenv": "^16.0.3",
+    "fs": "^0.0.1-security",
     "mapbox-gl": "^2.11.1",
     "react": "^18.2.0",
     "react-body-highlighter": "^2.0.5",

@@ -22,11 +22,14 @@ type CreateEventModalType = {
   setAllEvents: Dispatch<SetStateAction<CardEventType[]>>;
   oldData?: CardEventType;
 };
+
+type Error = { name: string; message: string };
 export default function CreateEventModal({
   setActive,
   setAllEvents,
   oldData,
 }: CreateEventModalType) {
+  const [error, setError] = useState<Error[] | null>([]);
   const [userInput, setUserInput] = useState<userInputType[]>([
     {
       name: "name",
@@ -80,6 +83,7 @@ export default function CreateEventModal({
   };
 
   const handleSave = () => {
+    setError([]);
     let user = localStorage.getItem("staminaUser");
     if (!user) return;
 
@@ -96,6 +100,13 @@ export default function CreateEventModal({
       longitude: location.lng,
     };
 
+    const err = validate();
+
+    if (err.length > 0) {
+      setError(err);
+      return;
+    }
+
     axios
       .post(backend_paths.GROUP_EVENT, data, {
         headers: {
@@ -110,11 +121,51 @@ export default function CreateEventModal({
       .catch((e) => console.log(e));
   };
 
+  const validate = () => {
+    const err: Error[] = [];
+
+    if (dateTime.length == 0) {
+      err.push({
+        name: "time",
+        message: "Date and time is not defined",
+      });
+    }
+
+    if (userInput[0].value.length == 0) {
+      err.push({
+        name: userInput[0].name,
+        message: "Event name field empty",
+      });
+    }
+    if (userInput[1].value.length == 0) {
+      err.push({
+        name: userInput[1].name,
+        message: "Number of person field empty",
+      });
+    }
+
+    if (description.length == 0) {
+      err.push({
+        name: "description",
+        message: "Description empty",
+      });
+    }
+
+    return err;
+  };
+
   const handleUpdate = () => {
     let user = localStorage.getItem("staminaUser");
     if (!user) return;
     if (!oldData?.addressid) return;
     if (!oldData.cityid) return;
+
+    const err: Error[] = validate();
+
+    if (err.length > 0) {
+      setError(err);
+      return;
+    }
 
     const data: UpdateGroupEventType = {
       addressId: oldData.addressid,
@@ -160,6 +211,14 @@ export default function CreateEventModal({
       })
       .catch((e) => console.log(e));
   };
+
+  const getError = (name: string) => {
+    if (!error) return null;
+
+    const index = error.findIndex((item) => item.name === name);
+    return index !== -1 ? error[index].message : null;
+  };
+
   return (
     <AddDataModal title={"Create event"} modalChange={() => setActive(false)}>
       <div className="flex-col w-full flex items-center space-y-2 py-2 px-3">
@@ -168,7 +227,9 @@ export default function CreateEventModal({
           timeZone="Europe/Zagreb"
         >
           <DateTimePicker
-            renderInput={(props) => <TextField {...props} error={false} />}
+            renderInput={(props) => (
+              <TextField {...props} error={!!getError("time")} />
+            )}
             label="Start date/time"
             className="md:mr-3"
             value={dateTime}
@@ -188,13 +249,14 @@ export default function CreateEventModal({
             key={input.name}
             inputInfo={input}
             handleChange={handleChange}
-            error={null}
+            error={getError(input.name)}
           />
         ))}
         <Textarea
           placeholder="Description..."
           value={description}
           setValue={setDescription}
+          error={!!getError("description")}
         />
         <Map
           setPostcode={setPostcode}
