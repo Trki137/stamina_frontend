@@ -9,6 +9,7 @@ import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import dayjs from "dayjs";
 import CreateChallengeModal from "../../pages/Events/CreateChallengeModal";
+import { useParams } from "react-router-dom";
 
 type ChallengeCardType = {
   cardInfo: CardChallengeType;
@@ -21,6 +22,7 @@ export default function ChallengeCard({
   setAllChallenges,
   profile,
 }: ChallengeCardType) {
+  const { id } = useParams();
   const [disappear, setDisappear] = useState<boolean>(false);
   const [updateActive, setUpdateActive] = useState<boolean>(false);
 
@@ -34,9 +36,12 @@ export default function ChallengeCard({
   const user = localStorage.getItem("staminaUser");
 
   let canAccess = false;
+  let canCancel = false;
   if (user) {
     const username = JSON.parse(user).username;
+    const userid = JSON.parse(user).userid;
     canAccess = username === cardInfo.createdby;
+    canCancel = id == userid;
   }
 
   const active = dayjs(new Date()).diff(dayjs(dateFormatted), "days") <= 0;
@@ -185,7 +190,7 @@ export default function ChallengeCard({
               />
             )}
             <div className="w-full flex space-x-3">
-              {profile && canAccess && !cardInfo.finished && (
+              {profile && canCancel && !cardInfo.finished && (
                 <ProfileButton
                   text={"Cancel"}
                   handleClick={() => handleCancel(cardInfo.id)}
@@ -193,7 +198,7 @@ export default function ChallengeCard({
               )}
 
               {profile &&
-                canAccess &&
+                canCancel &&
                 cardInfo.finished !== undefined &&
                 !cardInfo.finished && (
                   <ProfileButton
