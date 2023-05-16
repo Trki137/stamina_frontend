@@ -25,8 +25,15 @@ import {
   calculateTime,
   resolveIntensity,
 } from "../../util/trainingCalculation";
+import ErrorMessage from "../../components/Messages/ErrorMessage";
+
+type Error = {
+  name: string;
+  message: string;
+};
 
 export default function AddTraining() {
+  const [error, setError] = useState<Error[]>([]);
   const [trainingInfo, setTrainingInfo] = useState<userInputType[]>([
     {
       name: "restBetweenSet",
@@ -89,7 +96,46 @@ export default function AddTraining() {
   };
 
   const handleAddWorkout = () => {
-    if (!selectedWorkout || !selectedRepetitionOption) return;
+    setError([]);
+    if (!selectedWorkout) {
+      setError([
+        {
+          name: "workout",
+          message: "Choose workout",
+        },
+      ]);
+      return;
+    }
+
+    if (!selectedRepetitionOption) {
+      setError([
+        {
+          name: "rep",
+          message: "Choose repetition type",
+        },
+      ]);
+      return;
+    }
+
+    if (repetitionValue.value.length == 0) {
+      setError([
+        {
+          name: repetitionValue.name,
+          message: "Field can't be empty",
+        },
+      ]);
+      return;
+    }
+
+    if (Number(repetitionValue.value) <= 0) {
+      setError([
+        {
+          name: repetitionValue.name,
+          message: "Invalid value",
+        },
+      ]);
+      return;
+    }
 
     const workoutIndex = allWorkouts.findIndex(
       (workout) => workout.workoutid === parseInt(selectedWorkout.value)
@@ -102,6 +148,9 @@ export default function AddTraining() {
       typeOfRepetition: selectedRepetitionOption.label,
     };
     setListOfWorkouts((prev) => [...prev, data]);
+    setRepetitionValue((prevValue) => ({ ...prevValue, value: "" }));
+    setSelectedWorkout(null);
+    setSelectedRepetitionOption(null);
   };
 
   const handleInfo = (id: number) => {
@@ -131,6 +180,16 @@ export default function AddTraining() {
   };
 
   const handleNext = () => {
+    if (listOfWorkouts.length === 0) {
+      setError([
+        {
+          name: "workout",
+          message: "There should be at least one workout",
+        },
+      ]);
+      return;
+    }
+
     setIsWorkoutAddPhaseActive(false);
     setWorkoutInfo(null);
 
@@ -180,7 +239,7 @@ export default function AddTraining() {
   };
 
   const handleSaveToDb = (data: { description: string; name: string }) => {
-    const workouts: workoutsToSendType = listOfWorkouts.map((workout) => {
+    const workouts: workoutsToSendType[] = listOfWorkouts.map((workout) => {
       if (workout.typeOfRepetition === "x") {
         return {
           workoutid: workout.workout.workoutid,
@@ -203,6 +262,7 @@ export default function AddTraining() {
     };
 
     const time = calculateTime(allWorkouts, workouts, roundInfo);
+
     if (!time) return;
 
     const avg_calories = calculateAvgCalories(
@@ -212,7 +272,7 @@ export default function AddTraining() {
       roundInfo
     );
     const intensity = resolveIntensity(allWorkouts);
-
+    console.log(workouts);
     const dataToSend: saveTrainingType = {
       time,
       description: data.description,
@@ -224,7 +284,6 @@ export default function AddTraining() {
       restBetweenWorkouts: roundInfo.restWorkout,
       workouts,
     };
-
     console.log(dataToSend);
 
     axios
@@ -248,9 +307,79 @@ export default function AddTraining() {
       .catch((err) => console.log(err));
   };
 
+  const handleSave = () => {
+    const err: Error[] = [];
+    setError([]);
+
+    const restSetString = trainingInfo[0].value;
+    const restWorkoutString = trainingInfo[1].value;
+    const setsString = trainingInfo[2].value;
+
+    if (restSetString.length == 0) {
+      err.push({
+        name: trainingInfo[0].name,
+        message: "Field can't be empty",
+      });
+    }
+
+    if (restWorkoutString.length == 0) {
+      err.push({
+        name: trainingInfo[1].name,
+        message: "Field can't be empty",
+      });
+    }
+
+    if (setsString.length == 0) {
+      err.push({
+        name: trainingInfo[2].name,
+        message: "Field can't be empty",
+      });
+    }
+    if (err.length > 0) {
+      setError(err);
+      return;
+    }
+
+    const restSet = parseInt(trainingInfo[0].value);
+    const restWorkout = parseInt(trainingInfo[1].value);
+    const sets = parseInt(trainingInfo[2].value);
+
+    if (restSet < 0) {
+      err.push({
+        name: trainingInfo[0].name,
+        message: "Invalid value",
+      });
+    }
+
+    if (restWorkout < 0) {
+      err.push({
+        name: trainingInfo[1].name,
+        message: "Invalid value",
+      });
+    }
+
+    if (sets <= 0) {
+      err.push({
+        name: trainingInfo[2].name,
+        message: "Invalid value",
+      });
+    }
+
+    if (err.length > 0) {
+      setError(err);
+      return;
+    }
+
+    setModalVisible(true);
+  };
+
   return (
     <div className="w-full h-full min-h-[700px] min-w-full flex  justify-center ">
       <div className="w-full px-4 h-full my-auto max-w-sm flex flex-col items-center justify-center align-middle">
+        {error.length > 0 &&
+          (error[0].name === "rep" || error[0].name === "workout") && (
+            <ErrorMessage error={error[0].message} />
+          )}
         {isWorkoutAddPhaseActive && (
           <React.Fragment>
             <AddWorkoutForm
@@ -262,6 +391,7 @@ export default function AddTraining() {
               setSelectedRepetitionOption={setSelectedRepetitionOption}
               selectedRepetitionOption={selectedRepetitionOption}
               handleAddWorkout={handleAddWorkout}
+              error={error}
             />
 
             <div className="w-full">
@@ -282,11 +412,12 @@ export default function AddTraining() {
             <TrainingDetailsForm
               trainingInfo={trainingInfo}
               handleTrainingInfo={handleTrainingInfo}
-              handleSaveTraining={() => setModalVisible(true)}
+              handleSaveTraining={handleSave}
               handleSave={handleSaveToDb}
               handleCancelSave={() => setModalVisible(false)}
               handleGoBack={() => setIsWorkoutAddPhaseActive(true)}
               modalVisible={modalVisible}
+              error={error}
             />
           </div>
         )}

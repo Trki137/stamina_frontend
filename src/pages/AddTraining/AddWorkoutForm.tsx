@@ -19,6 +19,7 @@ type AddWorkoutFormType = {
   selectedRepetitionOption: Option | null;
 
   handleAddWorkout: () => void;
+  error: { name: string; message: string }[];
 };
 
 export default function AddWorkoutForm({
@@ -30,7 +31,15 @@ export default function AddWorkoutForm({
   workoutSelectFormat,
   handleAddWorkout,
   repetitionValue,
+  error,
 }: AddWorkoutFormType) {
+  const errorMessage =
+    error.length == 0
+      ? null
+      : error[0].name !== repetitionValue.name
+      ? null
+      : error[0].message;
+
   return (
     <div className="w-full flex flex-col gap-y-1 max-w-sm items-center align-middle justify-center ">
       <MySelect
@@ -50,7 +59,7 @@ export default function AddWorkoutForm({
               value: e.target.value,
             }))
           }
-          error={null}
+          error={errorMessage}
         />
         <div className="w-[150px]">
           <MySelect

@@ -9,10 +9,16 @@ type SaveTrainingModalType = {
   handleClose: () => void;
   handleSave: (data: { description: string; name: string }) => void;
 };
+
+type Error = {
+  name: string;
+  message: string;
+};
 export default function SaveTrainingModal({
   handleSave,
   handleClose,
 }: SaveTrainingModalType) {
+  const [error, setError] = useState<Error[]>([]);
   const [input, setInput] = useState<userInputType>({
     name: "name",
     value: "",
@@ -20,6 +26,21 @@ export default function SaveTrainingModal({
     type: "text",
   });
   const [description, setDescription] = useState<string>("");
+
+  const handleSaveEvent = () => {
+    setError([]);
+    if (input.value.length == 0) {
+      setError([
+        {
+          name: input.name,
+          message: "Name can't be empty",
+        },
+      ]);
+      return;
+    }
+
+    handleSave({ description: description, name: input.value });
+  };
 
   return (
     <ProfileModal title="Save" setModalActive={handleClose}>
@@ -33,7 +54,7 @@ export default function SaveTrainingModal({
                 value: e.target.value,
               }))
             }
-            error={null}
+            error={error.length > 0 ? error[0].message : null}
           />
 
           <Textarea
@@ -42,12 +63,7 @@ export default function SaveTrainingModal({
             setValue={setDescription}
           />
           <div className="w-1/2 mx-auto mt-3">
-            <ProfileButton
-              text={"Save"}
-              handleClick={() =>
-                handleSave({ description: description, name: input.value })
-              }
-            />
+            <ProfileButton text={"Save"} handleClick={handleSaveEvent} />
           </div>
         </div>
       </div>

@@ -121,7 +121,7 @@ export default function AddWorkout() {
       setError(err);
       return;
     }
-    console.log(name.value);
+
     if (name.value.length === 0) {
       err.push({
         name: name.name,
@@ -179,7 +179,6 @@ export default function AddWorkout() {
     return index !== -1 ? error[index].message : null;
   };
 
-  console.log(error);
   return (
     <div className="w-full h-[100%] pt-56 flex justify-center items-center align-middle">
       <div className="w-full lg:w-1/2 h-full flex flex-row">
