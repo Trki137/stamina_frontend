@@ -1,15 +1,8 @@
-export type trainingDataTypes = {
-  numOfSet: string;
-  restBetweenSets: string;
-  restBetweenWorkouts: string;
-  workouts: number[];
-};
-
 export type workoutsToSendType = {
   workoutid: number;
   time: number | null;
   repetition: number | null;
-}[];
+};
 
 export type saveTrainingType = {
   time: string;
@@ -20,7 +13,7 @@ export type saveTrainingType = {
   numOfSets: number;
   restBetweenSets: number;
   restBetweenWorkouts: number;
-  workouts: workoutsToSendType;
+  workouts: workoutsToSendType[];
 };
 
 export type trainingInfoType = {

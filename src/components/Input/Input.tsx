@@ -20,7 +20,6 @@ export default function Input({ inputInfo, handleChange, error }: InputType) {
           value={inputInfo.value}
           name={inputInfo.name}
           onChange={handleChange}
-          id="floating_outlined"
           className={inputClass}
           style={{}}
           placeholder=" "

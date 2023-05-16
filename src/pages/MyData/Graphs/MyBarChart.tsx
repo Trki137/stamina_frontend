@@ -19,6 +19,7 @@ import {
   getYearSpan,
   monthNames,
 } from "../../../util/date";
+import dayjs from "dayjs";
 
 type MyBarChartType = {
   data: BarChartDataType[];
@@ -100,10 +101,10 @@ export default function MyBarChart({
 
       finalData.push({
         xAxisText: monthNames[i],
-        barData: Math.trunc(avg_calories_month_count / monthData.length),
-        lineData: Math.trunc(
+        barData: Math.trunc(
           avg_calories_month_personal_count / monthData.length
         ),
+        lineData: Math.trunc(avg_calories_month_count / monthData.length),
       });
     }
 
@@ -149,12 +150,25 @@ export default function MyBarChart({
       const dateValue = Date.parse(`${year}-${month}-${day}`);
       return dateValue >= startDate && dateValue <= endDate;
     });
+
     if (filtered.length > 0)
-      filtered.sort((d1, d2) =>
-        new Date(d1.xAxisText) > new Date(d2.xAxisText) ? 1 : -1
-      );
+      filtered.sort((d1, d2) => {
+        const date1Formatted = formatDate(d1.xAxisText);
+        const date2Formatted = formatDate(d2.xAxisText);
+
+        const date1 = dayjs(date1Formatted);
+        const date2 = dayjs(date2Formatted);
+
+        return date1.isAfter(date2) ? 1 : -1;
+      });
+
     setData(filtered);
   }, [date]);
+
+  const formatDate = (oldDate: string) => {
+    const split = oldDate.split(".");
+    return split[1] + "." + split[0] + "." + split[2];
+  };
 
   return (
     <div>

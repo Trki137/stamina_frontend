@@ -19,8 +19,12 @@ import { userInputType } from "../../@types/LoginTypes";
 import { IExerciseData, Muscle } from "react-body-highlighter";
 import BodyHighlighter from "../../components/BodyHighlighter/BodyHighlighter";
 import ProfileButton from "../../components/Button/ProfileButton";
+import ErrorMessage from "../../components/Messages/ErrorMessage";
+
+type Error = { name: string; message: string };
 
 export default function AddWorkout() {
+  const [error, setError] = useState<Error[]>([]);
   const [name, setName] = useState<userInputType>({
     label: "Name",
     value: "",
@@ -98,7 +102,37 @@ export default function AddWorkout() {
   };
 
   const handleSaveWorkout = () => {
-    if (!(Array.isArray(selectedMuscle) && selectedIntensity)) return;
+    const err: Error[] = [];
+    setError([]);
+    if (!Array.isArray(selectedMuscle)) {
+      err.push({
+        name: "muscle",
+        message: "Please select muscle group",
+      });
+      setError(err);
+      return;
+    }
+
+    if (!selectedIntensity) {
+      err.push({
+        name: "intensity",
+        message: "Please select intensity",
+      });
+      setError(err);
+      return;
+    }
+
+    if (name.value.length === 0) {
+      err.push({
+        name: name.name,
+        message: "Workout name is empty",
+      });
+    }
+
+    if (err.length > 0) {
+      setError(err);
+      return;
+    }
 
     const intensity = selectedIntensity.value;
     const muscleTargeted: number[] = selectedMuscle.map((muscle) =>
@@ -138,16 +172,28 @@ export default function AddWorkout() {
       .catch((err) => console.log(err));
   };
 
+  const getError = (name: string) => {
+    if (!error) return null;
+
+    const index = error.findIndex((item) => item.name === name);
+    return index !== -1 ? error[index].message : null;
+  };
+
   return (
     <div className="w-full h-[100%] pt-56 flex justify-center items-center align-middle">
       <div className="w-full lg:w-1/2 h-full flex flex-row">
         <div className="pl-32 w-full min-w-fit lg:pl-0 flex flex-col gap-y-1">
+          {error.length > 0 && error[0].name !== "name" && (
+            <div>
+              <ErrorMessage error={error[0].message} />
+            </div>
+          )}
           <Input
             inputInfo={name}
             handleChange={(e: ChangeEvent<HTMLInputElement>) =>
               setName((prev) => ({ ...prev, value: e.target.value }))
             }
-            error={null}
+            error={getError(name.name)}
           />
           <Textarea
             placeholder={"Write workout description"}

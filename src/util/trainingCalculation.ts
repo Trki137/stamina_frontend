@@ -18,21 +18,20 @@ export const avgTimePerIntensity: Time = {
   low: 2.5,
 };
 const averageCaloriesPerMinute: CalorieCount = {
-  high: 10,
-  moderate: 8,
-  low: 5,
+  high: 35,
+  moderate: 25,
+  low: 16,
 };
 
 export function calculateTime(
   workouts: allWorkoutsType[],
-  trainingInfo: workoutsToSendType,
+  trainingInfo: workoutsToSendType[],
   roundInfo: trainingInfoType
 ) {
   const numberOfSets = roundInfo.sets;
-
   let totalTime: number =
-    roundInfo.restSet * numberOfSets +
-    roundInfo.restWorkout * workouts.length * roundInfo.sets;
+    roundInfo.restSet * (numberOfSets - 1) +
+    roundInfo.restWorkout * (workouts.length - 1) * numberOfSets;
 
   for (let i = 0; i < workouts.length; i++) {
     const workout = workouts[i];
@@ -44,11 +43,11 @@ export function calculateTime(
     if (!workoutInfo) continue;
 
     if (workoutInfo.time !== null) {
-      totalTime += workoutInfo.time;
+      totalTime += workoutInfo.time * numberOfSets;
       continue;
     }
-    if (workoutInfo.repetition === null) return;
 
+    if (workoutInfo.repetition === null) return;
     totalTime +=
       workoutInfo.repetition *
       numberOfSets *
@@ -60,32 +59,19 @@ export function calculateTime(
 
 export function calculateAvgCalories(
   workouts: allWorkoutsType[],
-  totalDuration: number,
-  trainingInfo: workoutsToSendType,
-  roundInfo: trainingInfoType
+  trainingInfo: workoutsToSendType[]
 ) {
-  const totalCalories = workouts.reduce(
+  const totalCalories = trainingInfo.reduce(
     (sum, workout) =>
       (sum +=
-        averageCaloriesPerMinute[
-          workout.intensity.toLowerCase() as keyof CalorieCount
-        ] *
-        getTime(
-          workout.workoutid,
-          trainingInfo,
-          workout.intensity.toLowerCase()
-        )),
+        getAvgCalPerMinute(workout, workouts) *
+        getTime(workout.workoutid, workouts, workout)),
     0
   );
 
-  const durationWithoutRest =
-    totalDuration -
-    roundInfo.restWorkout * workouts.length -
-    roundInfo.restSet * roundInfo.sets;
+  console.log(totalCalories);
 
-  const avgCalories = (totalCalories * roundInfo.sets) / durationWithoutRest;
-
-  return `${Math.round(avgCalories * 100) / 100}`;
+  return `${Math.round(totalCalories * 100) / 100}`;
 }
 
 export function resolveIntensity(workouts: allWorkoutsType[]) {
@@ -113,19 +99,35 @@ export function resolveIntensity(workouts: allWorkoutsType[]) {
   return "low";
 }
 
+const getAvgCalPerMinute = (
+  workout: workoutsToSendType,
+  trainingInfo: allWorkoutsType[]
+) => {
+  const intensity = trainingInfo
+    .filter((info) => info.workoutid === workout.workoutid)
+    .map((info) => info.intensity)[0];
+
+  return averageCaloriesPerMinute[
+    intensity.toLowerCase() as keyof CalorieCount
+  ];
+};
+
 const getTime = (
   workoutid: number,
-  trainingInfo: workoutsToSendType,
-  intensity: string
+  trainingInfo: allWorkoutsType[],
+  workout: workoutsToSendType
 ) => {
-  const workout = trainingInfo.filter(
-    (info) => info.workoutid === workoutid
-  )[0];
+  const intensity = trainingInfo
+    .filter((info) => info.workoutid === workoutid)
+    .map((i) => i.intensity)[0];
 
   if (!workout) return 0;
-  if (workout.time !== null) return workout.time;
-
+  if (workout.time !== null) return workout.time / 60;
+  if (workout.repetition != null)
+    console.log(
+      workout.repetition * avgTimePerIntensity[intensity as keyof Time]
+    );
   return workout.repetition === null
     ? 0
-    : workout.repetition * avgTimePerIntensity[intensity as keyof Time];
+    : (workout.repetition * avgTimePerIntensity[intensity as keyof Time]) / 60;
 };

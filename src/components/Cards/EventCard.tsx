@@ -6,6 +6,7 @@ import { backend_paths } from "../../api/backend_paths";
 import { FontAwesomeIcon } from "@fortawesome/react-fontawesome";
 import { faPencil } from "@fortawesome/free-solid-svg-icons";
 import CreateEventModal from "../../pages/Events/CreateEventModal";
+import { useParams } from "react-router-dom";
 
 type EventCardType = {
   cardInfo: CardEventType;
@@ -18,10 +19,10 @@ export default function EventCard({
   setAllEvents,
   profile,
 }: EventCardType) {
+  const { id } = useParams();
   const [disappear, setDisappear] = useState<boolean>(false);
   const [updateActive, setUpdateActive] = useState<boolean>(false);
   const active = new Date(cardInfo.startsat).getTime() > new Date().getTime();
-
   const className = disappear
     ? "relative opacity-0 transition-all ease-in-out duration-[1000ms]"
     : !active
@@ -30,9 +31,12 @@ export default function EventCard({
 
   const user = localStorage.getItem("staminaUser");
   let canAccess = false;
+  let canCancel = false;
   if (user) {
     const username = JSON.parse(user).username;
+    const userid = JSON.parse(user).userid;
     canAccess = username === cardInfo.createdby;
+    canCancel = id == userid;
   }
 
   const handleJoin = (eventId: number) => {
@@ -131,7 +135,7 @@ export default function EventCard({
                   ? cardInfo.image
                   : `data:image/jpeg;base64,${cardInfo.image}`
               }
-              alt="No image"
+              alt="missing"
             />
           )}
           <h5 className="mb-1 text-xl font-medium text-gray-900">
@@ -154,7 +158,7 @@ export default function EventCard({
                 handleClick={() => handleJoin(cardInfo.id)}
               />
             )}
-            {profile && canAccess && active && (
+            {profile && canCancel && active && (
               <ProfileButton
                 text={"Cancel"}
                 handleClick={() => handleCancel(cardInfo.id)}

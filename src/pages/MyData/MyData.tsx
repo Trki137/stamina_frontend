@@ -76,20 +76,24 @@ export default function MyData() {
 
           calData.push({
             xAxisText: date,
-            lineData: myData[i].calories,
-            barData: avgCal,
+            lineData: avgCal,
+            barData: myData[i].calories,
           });
           timeData.push({
             xAxisText: date,
-            lineData: Number(myData[i].time),
-            barData: avgTime,
+            lineData: avgTime,
+            barData: Number(myData[i].time),
           });
           hearthData.push({
             xAxisText: date,
-            lineData: myData[i].avg_hearth_rate,
-            barData: avgHearthRate,
+            lineData: avgHearthRate,
+            barData:
+              myData[i].avg_hearth_rate == null ? 0 : myData[i].avg_hearth_rate,
           });
         }
+
+        console.log(myData);
+        console.log(timeData);
 
         for (let i = 0; i < avgData.length; i++) {
           const index = myData.findIndex(
@@ -99,18 +103,18 @@ export default function MyData() {
 
           calData.push({
             xAxisText: avgData[i].date,
-            lineData: 0,
-            barData: avgData[i].avgcalories,
+            lineData: avgData[i].avgcalories,
+            barData: 0,
           });
           timeData.push({
             xAxisText: avgData[i].date,
-            lineData: 0,
-            barData: Number(avgData[i].avgtime),
+            lineData: Number(avgData[i].avgtime),
+            barData: 0,
           });
           hearthData.push({
             xAxisText: avgData[i].date,
-            lineData: 0,
-            barData: avgData[i].avg_hearth_rate,
+            lineData: avgData[i].avg_hearth_rate,
+            barData: 0,
           });
         }
 
@@ -129,78 +133,92 @@ export default function MyData() {
       .catch((e) => console.log(e));
   }, []);
 
+  const hasDataForDisplay =
+    timeData.length != 0 || hearthData.length != 0 || caloriesData.length != 0;
+
   return (
-    <div className="w-full flex flex-col items-center align-center">
-      <div className="w-full space-y-8 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-y-10 p-10">
-        {dateForCalories && (
-          <div className="w-full">
-            <BarChartTimeChooser
-              setDate={setDateForCalories}
-              setActive={setActiveForCalories}
-              active={activeForCalories}
-              date={dateForCalories}
-            />
-            <MyBarChart
-              data={barCaloriesData}
-              copyData={caloriesData}
-              setData={setBarCaloriesData}
-              active={activeForCalories}
-              date={dateForCalories}
-              setDate={setDateForCalories}
-              barLegendName={"Average calories"}
-              lineLegendName={"My calories"}
-            />
-          </div>
-        )}
+    <React.Fragment>
+      {!hasDataForDisplay && (
+        <div className="w-full mt-4">
+          <p className="mx-auto">There are no data to display</p>
+        </div>
+      )}
+      {hasDataForDisplay && (
+        <div className="w-full flex flex-col items-center align-center">
+          <div className="w-full space-y-8 lg:space-y-0 lg:grid lg:grid-cols-2 lg:gap-y-10 p-10">
+            {dateForCalories && (
+              <div className="w-full">
+                <BarChartTimeChooser
+                  setDate={setDateForCalories}
+                  setActive={setActiveForCalories}
+                  active={activeForCalories}
+                  date={dateForCalories}
+                />
+                <MyBarChart
+                  data={barCaloriesData}
+                  copyData={caloriesData}
+                  setData={setBarCaloriesData}
+                  active={activeForCalories}
+                  date={dateForCalories}
+                  setDate={setDateForCalories}
+                  barLegendName={"My calories"}
+                  lineLegendName={"Average calories"}
+                />
+              </div>
+            )}
 
-        {dateForHearth && (
-          <div className="w-full">
-            <BarChartTimeChooser
-              setDate={setDateForHearth}
-              setActive={setActiveForHearth}
-              active={activeForHearth}
-              date={dateForHearth}
-            />
-            <MyBarChart
-              data={barHearthData}
-              copyData={hearthData}
-              setData={setBarHearthData}
-              active={activeForHearth}
-              date={dateForHearth}
-              setDate={setDateForHearth}
-              barLegendName={"My average hearth rate"}
-              lineLegendName={"Average hearth rate"}
-              color={COLORS[3]}
-            />
-          </div>
-        )}
+            {dateForHearth && (
+              <div className="w-full">
+                <BarChartTimeChooser
+                  setDate={setDateForHearth}
+                  setActive={setActiveForHearth}
+                  active={activeForHearth}
+                  date={dateForHearth}
+                />
+                <MyBarChart
+                  data={barHearthData}
+                  copyData={hearthData}
+                  setData={setBarHearthData}
+                  active={activeForHearth}
+                  date={dateForHearth}
+                  setDate={setDateForHearth}
+                  barLegendName={"My average hearth rate"}
+                  lineLegendName={"Average hearth rate"}
+                  color={COLORS[3]}
+                />
+              </div>
+            )}
 
-        {dateForTime && (
-          <div className="w-full">
-            <BarChartTimeChooser
-              setDate={setDateForTime}
-              setActive={setActiveForTime}
-              active={activeForTime}
-              date={dateForTime}
-            />
-            <MyBarChart
-              data={barTimeData}
-              copyData={timeData}
-              setData={setBarTimeData}
-              active={activeForTime}
-              date={dateForTime}
-              setDate={setDateForTime}
-              barLegendName={"My average workout time"}
-              lineLegendName={"Average workout time"}
-              color={COLORS[6]}
-            />
+            {dateForTime && (
+              <div className="w-full">
+                <BarChartTimeChooser
+                  setDate={setDateForTime}
+                  setActive={setActiveForTime}
+                  active={activeForTime}
+                  date={dateForTime}
+                />
+                <MyBarChart
+                  data={barTimeData}
+                  copyData={timeData}
+                  setData={setBarTimeData}
+                  active={activeForTime}
+                  date={dateForTime}
+                  setDate={setDateForTime}
+                  barLegendName={"My average workout time"}
+                  lineLegendName={"Average workout time"}
+                  color={COLORS[6]}
+                />
+              </div>
+            )}
           </div>
-        )}
-      </div>
 
-      <div className="w-1/3 ">
-        <MyPieChart data={activityData} title={"My Activities"} />
-      </div>
-    </div>
+          {activityData.length > 0 && (
+            <div className="w-1/3 ">
+              <MyPieChart data={activityData} title={"My Activities"} />
+            </div>
+          )}
+        </div>
+      )}
+    </React.Fragment>
   );
 }
