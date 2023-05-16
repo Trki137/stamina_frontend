@@ -76,21 +76,24 @@ export default function MyData() {
 
           calData.push({
             xAxisText: date,
-            lineData: myData[i].calories,
-            barData: avgCal,
+            lineData: avgCal,
+            barData: myData[i].calories,
           });
           timeData.push({
             xAxisText: date,
-            lineData: Number(myData[i].time),
-            barData: avgTime,
+            lineData: avgTime,
+            barData: Number(myData[i].time),
           });
           hearthData.push({
             xAxisText: date,
-            lineData:
+            lineData: avgHearthRate,
+            barData:
               myData[i].avg_hearth_rate == null ? 0 : myData[i].avg_hearth_rate,
-            barData: avgHearthRate,
           });
         }
+
+        console.log(myData);
+        console.log(timeData);
 
         for (let i = 0; i < avgData.length; i++) {
           const index = myData.findIndex(
@@ -100,18 +103,18 @@ export default function MyData() {
 
           calData.push({
             xAxisText: avgData[i].date,
-            lineData: 0,
-            barData: avgData[i].avgcalories,
+            lineData: avgData[i].avgcalories,
+            barData: 0,
           });
           timeData.push({
             xAxisText: avgData[i].date,
-            lineData: 0,
-            barData: Number(avgData[i].avgtime),
+            lineData: Number(avgData[i].avgtime),
+            barData: 0,
           });
           hearthData.push({
             xAxisText: avgData[i].date,
-            lineData: 0,
-            barData: avgData[i].avg_hearth_rate,
+            lineData: avgData[i].avg_hearth_rate,
+            barData: 0,
           });
         }
 
@@ -133,7 +136,6 @@ export default function MyData() {
   const hasDataForDisplay =
     timeData.length != 0 || hearthData.length != 0 || caloriesData.length != 0;
 
-  console.log(barHearthData);
   return (
     <React.Fragment>
       {!hasDataForDisplay && (
@@ -159,8 +161,8 @@ export default function MyData() {
                   active={activeForCalories}
                   date={dateForCalories}
                   setDate={setDateForCalories}
-                  barLegendName={"Average calories"}
-                  lineLegendName={"My calories"}
+                  barLegendName={"My calories"}
+                  lineLegendName={"Average calories"}
                 />
               </div>
             )}

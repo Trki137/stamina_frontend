@@ -101,10 +101,10 @@ export default function MyBarChart({
 
       finalData.push({
         xAxisText: monthNames[i],
-        barData: Math.trunc(avg_calories_month_count / monthData.length),
-        lineData: Math.trunc(
+        barData: Math.trunc(
           avg_calories_month_personal_count / monthData.length
         ),
+        lineData: Math.trunc(avg_calories_month_count / monthData.length),
       });
     }
 
