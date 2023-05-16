@@ -11,6 +11,7 @@ type TrainingDetailsFormType = {
   handleGoBack: () => void;
   handleCancelSave: () => void;
   modalVisible: boolean;
+  handleStartWorkout: () => void;
   handleSave: (data: { description: string; name: string }) => void;
   error: { name: string; message: string }[];
 };
@@ -23,6 +24,7 @@ export default function TrainingDetailsForm({
   handleCancelSave,
   modalVisible,
   handleSave,
+  handleStartWorkout,
   error,
 }: TrainingDetailsFormType) {
   const getError = (name: string) => {
@@ -31,7 +33,6 @@ export default function TrainingDetailsForm({
     const index = error.findIndex((item) => item.name === name);
     return index !== -1 ? error[index].message : null;
   };
-  const handleStartWorkout = () => {};
 
   return (
     <React.Fragment>

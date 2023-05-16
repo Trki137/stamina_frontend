@@ -3,6 +3,7 @@ import { allWorkoutsType } from "../../@types/WorkoutType";
 import Button from "../../components/Button/Button";
 import WorkoutInfo from "../AddTraining/WorkoutInfo";
 import TrainingItem from "../AddTraining/TrainingItem";
+import { nanoid } from "nanoid";
 
 type StartScreenType = {
   workouts: allWorkoutsType[];
@@ -33,7 +34,7 @@ export default function StartScreen({
         <p>Number of sets: {numOfSets}</p>
         {workouts.map((workout) => (
           <TrainingItem
-            key={workout.workoutid}
+            key={nanoid()}
             data={{
               workout: workout,
               typeOfRepetition: "s",

@@ -26,6 +26,9 @@ import {
   resolveIntensity,
 } from "../../util/trainingCalculation";
 import ErrorMessage from "../../components/Messages/ErrorMessage";
+import { TrainingData, TrainType } from "../../@types/TrainTypes";
+import { useNavigate } from "react-router-dom";
+import { routes } from "../../api/paths";
 
 type Error = {
   name: string;
@@ -33,6 +36,7 @@ type Error = {
 };
 
 export default function AddTraining() {
+  const navigate = useNavigate();
   const [error, setError] = useState<Error[]>([]);
   const [trainingInfo, setTrainingInfo] = useState<userInputType[]>([
     {
@@ -265,14 +269,9 @@ export default function AddTraining() {
 
     if (!time) return;
 
-    const avg_calories = calculateAvgCalories(
-      allWorkouts,
-      parseFloat(time),
-      workouts,
-      roundInfo
-    );
+    const avg_calories = calculateAvgCalories(allWorkouts, workouts);
     const intensity = resolveIntensity(allWorkouts);
-    console.log(workouts);
+
     const dataToSend: saveTrainingType = {
       time,
       description: data.description,
@@ -284,7 +283,6 @@ export default function AddTraining() {
       restBetweenWorkouts: roundInfo.restWorkout,
       workouts,
     };
-    console.log(dataToSend);
 
     axios
       .post(backend_paths.TRAINING, dataToSend, {
@@ -307,7 +305,13 @@ export default function AddTraining() {
       .catch((err) => console.log(err));
   };
 
-  const handleSave = () => {
+  const openModal = () => {
+    const err = validate();
+    if (err) return;
+
+    setModalVisible(true);
+  };
+  const validate = () => {
     const err: Error[] = [];
     setError([]);
 
@@ -337,7 +341,7 @@ export default function AddTraining() {
     }
     if (err.length > 0) {
       setError(err);
-      return;
+      return err;
     }
 
     const restSet = parseInt(trainingInfo[0].value);
@@ -367,10 +371,104 @@ export default function AddTraining() {
 
     if (err.length > 0) {
       setError(err);
-      return;
+      return err;
     }
+  };
 
-    setModalVisible(true);
+  const handleStartWorkout = () => {
+    const err = validate();
+
+    if (err) return;
+
+    const workouts: workoutsToSendType[] = listOfWorkouts.map((workout) => {
+      if (workout.typeOfRepetition === "x") {
+        return {
+          workoutid: workout.workout.workoutid,
+          time: null,
+          repetition: parseInt(workout.numOfRepetitions),
+        };
+      }
+
+      return {
+        workoutid: workout.workout.workoutid,
+        time: parseInt(workout.numOfRepetitions),
+        repetition: null,
+      };
+    });
+
+    const trainData: TrainType[] = [];
+    const numberOfSets = parseInt(trainingInfo[2].value);
+    const restBetweenSets = parseInt(trainingInfo[0].value);
+    const restBetweenWorkouts = parseInt(trainingInfo[1].value);
+
+    let sequence = 0;
+    for (let i = 0; i < workouts.length * numberOfSets; i++) {
+      const intensity = allWorkouts
+        .filter(
+          (info) => info.workoutid === workouts[i % workouts.length].workoutid
+        )
+        .map((i) => i.intensity)[0];
+      const name = allWorkouts
+        .filter(
+          (info) => info.workoutid === workouts[i % workouts.length].workoutid
+        )
+        .map((i) => i.name)[0];
+
+      trainData.push({
+        sequence: sequence++,
+        time: workouts[i % workouts.length].time,
+        repetition: workouts[i % workouts.length].repetition,
+        name,
+        intensity,
+      });
+
+      if (i === workouts.length * numberOfSets - 1) continue;
+
+      if (
+        restBetweenWorkouts !== 0 &&
+        i % workouts.length !== workouts.length
+      ) {
+        trainData.push({
+          sequence: sequence++,
+          time: restBetweenWorkouts,
+          repetition: null,
+          name: "Rest",
+          intensity: "low",
+        });
+      }
+
+      if (
+        restBetweenWorkouts !== 0 &&
+        i % workouts.length === workouts.length
+      ) {
+        trainData.push({
+          sequence: sequence++,
+          time: restBetweenSets,
+          repetition: null,
+          name: "Rest",
+          intensity: "low",
+        });
+      }
+    }
+    const workoutsData = allWorkouts.filter(
+      (w) =>
+        listOfWorkouts.findIndex((l) => l.workout.workoutid === w.workoutid) !==
+        -1
+    );
+    const data: TrainingData = {
+      trainingId: -1,
+      numberOfSets,
+      restBetweenWorkouts,
+      restBetweenSets,
+      avgCalories: Number(calculateAvgCalories(allWorkouts, workouts)),
+      workouts: workoutsData,
+      data: trainData,
+    };
+
+    const training = JSON.stringify(data);
+    localStorage.removeItem("trainingData");
+    localStorage.setItem("trainingData", training);
+    navigate(routes.TRAIN);
   };
 
   return (
@@ -412,12 +510,13 @@ export default function AddTraining() {
             <TrainingDetailsForm
               trainingInfo={trainingInfo}
               handleTrainingInfo={handleTrainingInfo}
-              handleSaveTraining={handleSave}
+              handleSaveTraining={openModal}
               handleSave={handleSaveToDb}
               handleCancelSave={() => setModalVisible(false)}
               handleGoBack={() => setIsWorkoutAddPhaseActive(true)}
               modalVisible={modalVisible}
               error={error}
+              handleStartWorkout={handleStartWorkout}
             />
           </div>
         )}

@@ -62,11 +62,6 @@ export default function ChooseTraining() {
     setFiltered(sorted);
   };
 
-  const getMinutes = (num: number) => {
-    if (Number.isNaN(num)) return 0;
-    return Math.ceil(num / 60);
-  };
-
   return (
     <React.Fragment>
       <div className="w-full flex flex-col">

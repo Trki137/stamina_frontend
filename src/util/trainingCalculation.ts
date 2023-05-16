@@ -59,9 +59,7 @@ export function calculateTime(
 
 export function calculateAvgCalories(
   workouts: allWorkoutsType[],
-  totalDuration: number,
-  trainingInfo: workoutsToSendType[],
-  roundInfo: trainingInfoType
+  trainingInfo: workoutsToSendType[]
 ) {
   const totalCalories = trainingInfo.reduce(
     (sum, workout) =>

@@ -135,12 +135,10 @@ export default function Training() {
       calories: Math.ceil(caloriesBurnt),
       time: `${trainingTime}`,
       avg_hearth_rate: null,
-      trainingId: trainingId,
+      trainingId: trainingId === -1 ? null : trainingId,
       date: today,
       userId,
     };
-
-    console.log(data);
 
     axios
       .post(`${backend_paths.DATA}`, data, {
@@ -240,7 +238,7 @@ export default function Training() {
               );
             })}
 
-            <div className="w-1/2 mx-auto space-x-3 flex items-center justify-center">
+            <div className="w-1/2 mx-auto space-x-3 flex items-center justify-center absolute bottom-[-50px] ">
               <Button
                 icon={faBackwardStep}
                 handleClick={() => {
