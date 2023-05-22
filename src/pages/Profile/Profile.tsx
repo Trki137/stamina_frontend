@@ -7,16 +7,16 @@ import { CardChallengeType, CardEventType } from "../../@types/EventType";
 import axios from "axios";
 import { backend_paths } from "../../api/backend_paths";
 import { ProfileData } from "../../@types/Profile";
-import { useParams } from "react-router-dom";
+import { useLocation } from "react-router-dom";
 
 export default function Profile() {
-  const { id } = useParams();
+  const [id, setId] = useState<string | undefined>();
   const [tabIndexActive, setTabIndexActive] = useState<number>(0);
   const [challenges, setChallenges] = useState<CardChallengeType[]>([]);
   const [groupEvents, setGroupEvents] = useState<CardEventType[]>([]);
   useEffect(() => {
     if (!id) return;
-
+    console.log(id);
     axios
       .get(`${backend_paths.EVENT}/${id}`)
       .then((res) => res.data)
@@ -25,7 +25,15 @@ export default function Profile() {
         setGroupEvents(data.my_events);
       })
       .catch((e) => console.log(e));
-  }, []);
+  }, [id]);
+
+  useEffect(() => {
+    const uID = window.location.href.substring(
+      window.location.href.lastIndexOf("/") + 1
+    );
+
+    setId(uID);
+  }, [useLocation().pathname]);
 
   return (
     <div className="w-full">

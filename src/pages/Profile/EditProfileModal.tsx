@@ -149,7 +149,9 @@ export default function EditProfileModal({
       <div className="flex items-center justify-center relative w-auto h-24">
         <ProfileImageUpload
           file={file}
-          isBase64={imageFile === null}
+          isBase64={
+            imageFile === null && file !== null && !file.startsWith("http")
+          }
           handleFileInput={handleFileInput}
         />
       </div>

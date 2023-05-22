@@ -33,9 +33,9 @@ export default function ModalRow({ user, setModalActive }: ModalRowType) {
           to={`${routes.PROFILE}/${user.userid}`}
           onClick={() => setModalActive(0)}
         >
-          <p className="text-md font-bold">{user.username}</p>
+          <p className="text-md text-start font-bold">{user.username}</p>
         </Link>
-        <p className="flex flex-row items-center text-[0.5rem] font-extralight text-gray-400">
+        <p className="flex flex-row items-start text-[0.5rem] text-start font-extralight text-gray-400">
           {user.name}
         </p>
       </div>

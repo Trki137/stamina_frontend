@@ -15,6 +15,8 @@ export default function ProfileImageUpload({
   handleFileInput,
   isBase64,
 }: ProfileImageUploadType) {
+  console.log(file);
+  console.log(isBase64);
   return (
     <div className="absolute file-input-container">
       <input
