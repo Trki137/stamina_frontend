@@ -80,8 +80,6 @@ export default function CreateChallengeModal({
       return;
     }
 
-    console.log(data);
-
     axios
       .post(backend_paths.CHALLENGE, data, {
         headers: {
@@ -142,8 +140,16 @@ export default function CreateChallengeModal({
 
   const validate = () => {
     const err: Error[] = [];
-    console.log(endDate);
-    if (new Date().getDate() > endDate.getDate()) {
+
+    const dateFormatted =
+      endDate.getDate() +
+      "." +
+      (endDate.getMonth() + 1) +
+      "." +
+      endDate.getFullYear();
+    console.log(dateFormatted);
+
+    if (new Date().getDate() > new Date(dateFormatted).getDate()) {
       err.push({
         name: "date",
         message: "Invalid date",
