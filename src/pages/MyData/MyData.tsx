@@ -162,7 +162,7 @@ export default function MyData() {
                   date={dateForCalories}
                   setDate={setDateForCalories}
                   barLegendName={"My calories"}
-                  lineLegendName={"Average calories"}
+                  lineLegendName={"Average calories  (other users)"}
                 />
               </div>
             )}
@@ -183,7 +183,7 @@ export default function MyData() {
                   date={dateForHearth}
                   setDate={setDateForHearth}
                   barLegendName={"My average hearth rate"}
-                  lineLegendName={"Average hearth rate"}
+                  lineLegendName={"Average hearth rate  (other users)"}
                   color={COLORS[3]}
                 />
               </div>
@@ -205,7 +205,7 @@ export default function MyData() {
                   date={dateForTime}
                   setDate={setDateForTime}
                   barLegendName={"My average workout time"}
-                  lineLegendName={"Average workout time"}
+                  lineLegendName={"Average workout time (other users)"}
                   color={COLORS[6]}
                 />
               </div>

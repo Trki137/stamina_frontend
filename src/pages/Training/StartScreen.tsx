@@ -19,7 +19,9 @@ export default function StartScreen({
   workouts,
   handleStart,
 }: StartScreenType) {
-  const [currentSelected, setCurrentSelected] = useState<number | null>(null);
+  const [currentSelected, setCurrentSelected] = useState<number | null>(
+    workouts && workouts.length > 0 ? workouts[0].workoutid : null
+  );
   const getInfo = () => {
     return workouts.filter(
       (workout) => workout.workoutid === currentSelected
