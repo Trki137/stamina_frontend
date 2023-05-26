@@ -22,6 +22,9 @@ export default function StartScreen({
   const [currentSelected, setCurrentSelected] = useState<number | null>(
     workouts && workouts.length > 0 ? workouts[0].workoutid : null
   );
+  const [active, setActive] = useState<number>(
+    workouts && workouts.length > 0 ? 0 : -1
+  );
   const getInfo = () => {
     return workouts.filter(
       (workout) => workout.workoutid === currentSelected
@@ -34,7 +37,7 @@ export default function StartScreen({
         <p>Rest between workouts: {workoutRest === 0 ? "None" : workoutRest}</p>
         <p>Rest between sets: {setRest}</p>
         <p>Number of sets: {numOfSets}</p>
-        {workouts.map((workout) => (
+        {workouts.map((workout, index) => (
           <TrainingItem
             key={nanoid()}
             data={{
@@ -42,6 +45,8 @@ export default function StartScreen({
               typeOfRepetition: "s",
               numOfRepetitions: "30",
             }}
+            handleIndex={() => setActive(index)}
+            active={active !== -1 && active === index}
             handleInfo={() => setCurrentSelected(workout.workoutid)}
           />
         ))}

@@ -10,16 +10,24 @@ type TrainingItemType = {
   data: selectedWorkoutType;
   handleInfo?: () => void;
   handleTrash?: () => void;
+  active?: boolean;
+  handleIndex?: () => void;
 };
 export default function TrainingItem({
   data,
   handleInfo,
   handleTrash,
+  active,
+  handleIndex,
 }: TrainingItemType) {
   const name = data.workout.name;
 
+  const className = active
+    ? "flex w-full items-center mt-2 justify-between px-4 gap-x-5 py-3 bg-white border border-green-600 rounded-md"
+    : "flex w-full items-center mt-2 justify-between px-4 gap-x-5 py-3 bg-white border border-gray-200 rounded-md";
+
   return (
-    <div className="flex w-full items-center mt-2 justify-between px-4 gap-x-5 py-3 bg-white border border-gray-200 rounded-md">
+    <div className={className}>
       <div className="flex items-center gap-x-3">
         <p className="text-lg">{name}</p>
         <p className="font-bold">
@@ -32,7 +40,11 @@ export default function TrainingItem({
           <FontAwesomeIcon
             color="green"
             icon={faCircleInfo}
-            onClick={handleInfo}
+            onClick={() => {
+              if (handleIndex) handleIndex();
+
+              handleInfo();
+            }}
             className="cursor-pointer"
           />
         )}

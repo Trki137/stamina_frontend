@@ -36,8 +36,8 @@ export default function Profile() {
   }, [useLocation().pathname]);
 
   return (
-    <div className="w-full">
-      <div className="w-10/12 m-auto">
+    <div className="w-full pb-5">
+      <div className="w-10/12 m-auto ">
         <ProfileHead />
         <Tab
           setTabIndexActive={setTabIndexActive}
