@@ -221,7 +221,7 @@ export default function CreateEventModal({
 
   return (
     <AddDataModal title={"Create event"} modalChange={() => setActive(false)}>
-      <div className="flex-col w-full flex items-center space-y-2 py-2 px-3">
+      <div className="flex-col w-full flex items-start space-y-2 py-2 px-3">
         <LocalizationProvider
           dateAdapter={AdapterDayjs}
           timeZone="Europe/Zagreb"
@@ -244,14 +244,16 @@ export default function CreateEventModal({
             }}
           />
         </LocalizationProvider>
-        {userInput.map((input) => (
-          <Input
-            key={input.name}
-            inputInfo={input}
-            handleChange={handleChange}
-            error={getError(input.name)}
-          />
-        ))}
+        <div className="w-full max-w-[260px] flex flex-col">
+          {userInput.map((input) => (
+            <Input
+              key={input.name}
+              inputInfo={input}
+              handleChange={handleChange}
+              error={getError(input.name)}
+            />
+          ))}
+        </div>
         <Textarea
           placeholder="Description..."
           value={description}

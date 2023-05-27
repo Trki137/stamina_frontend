@@ -185,27 +185,31 @@ export default function CreateChallengeModal({
       title={"Create challenge"}
       modalChange={() => setActive(false)}
     >
-      <div className="w-2/3 mx-auto mt-3">
-        <div className="space-y-4">
+      <div className="w-full mx-auto mt-3">
+        <div className="w-full space-y-4 pl-5 pr-10 flex flex-col items-start">
           <MyDatePicker
             error={!!getError("date")}
             setStartDate={setEndDate}
             startDate={endDate}
           />
-          {userInput.map((input) => (
-            <Input
-              key={input.name}
-              inputInfo={input}
-              handleChange={handleChange}
-              error={getError(input.name)}
+          <div className="w-full max-w-[260px]">
+            {userInput.map((input) => (
+              <Input
+                key={input.name}
+                inputInfo={input}
+                handleChange={handleChange}
+                error={getError(input.name)}
+              />
+            ))}
+          </div>
+          <div className="w-full">
+            <Textarea
+              placeholder={"Description..."}
+              value={description}
+              setValue={setDescription}
+              error={!!getError("description")}
             />
-          ))}
-          <Textarea
-            placeholder={"Description..."}
-            value={description}
-            setValue={setDescription}
-            error={!!getError("description")}
-          />
+          </div>
         </div>
         <div className="mt-3">
           {!oldValues && (

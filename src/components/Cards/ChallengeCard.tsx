@@ -182,31 +182,33 @@ export default function ChallengeCard({
             <p>Description: {cardInfo.description}</p>
             <p>Challenge active: {cardInfo.until}</p>
           </div>
-          <div className="flex mt-4 w-full">
+          <div className="flex mt-4 w-full align-middle">
             {!profile && (
               <ProfileButton
                 text={"Join"}
                 handleClick={() => handleJoin(cardInfo.id)}
               />
             )}
-            <div className="w-full flex space-x-3">
-              {profile && canCancel && !cardInfo.finished && (
-                <ProfileButton
-                  text={"Cancel"}
-                  handleClick={() => handleCancel(cardInfo.id)}
-                />
-              )}
-
-              {profile &&
-                canCancel &&
-                cardInfo.finished !== undefined &&
-                !cardInfo.finished && (
+            {profile && (
+              <div className="w-full flex space-x-3">
+                {profile && canCancel && !cardInfo.finished && (
                   <ProfileButton
-                    text={"Finish"}
-                    handleClick={() => handleFinishChallenge(cardInfo.id)}
+                    text={"Cancel"}
+                    handleClick={() => handleCancel(cardInfo.id)}
                   />
                 )}
-            </div>
+
+                {profile &&
+                  canCancel &&
+                  cardInfo.finished !== undefined &&
+                  !cardInfo.finished && (
+                    <ProfileButton
+                      text={"Finish"}
+                      handleClick={() => handleFinishChallenge(cardInfo.id)}
+                    />
+                  )}
+              </div>
+            )}
           </div>
         </div>
       </div>
