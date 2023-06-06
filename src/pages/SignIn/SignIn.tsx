@@ -138,7 +138,7 @@ export default function SignIn({ userSetter }: SignInType) {
         let user = null;
         if (data.user === undefined) user = data;
         else user = data.user;
-
+        console.log(data);
         if (data.image) {
           user.image = data.image;
         }
@@ -146,9 +146,12 @@ export default function SignIn({ userSetter }: SignInType) {
         userSetter(true);
         navigate(routes.HOME);
       })
-      .catch((err) => setServerError(err.response.data));
+      .catch((err) => {
+        console.log(err.response.data);
+        setServerError(err.response.data[0].message);
+      });
   };
-
+  console.log(serverError);
   return (
     <div className="flex flex-col items-center justify-center w-full">
       {serverError && (

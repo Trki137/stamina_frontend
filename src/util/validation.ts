@@ -1,6 +1,9 @@
 import { UserSignIn, UserSignUp } from "../@types/UserType";
 
 export function validateSignUp(user: UserSignUp) {
+  const passwordPattern: RegExp =
+    /^(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[!@#$%^&*()\-_=+[{\]}\\|;:'",<.>/?]).{8,}$/;
+
   let errors = [];
   if (user.username === "") {
     errors.push({
@@ -58,10 +61,11 @@ export function validateSignUp(user: UserSignUp) {
     });
   }
 
-  if (user.password.length < 8) {
+  if (!passwordPattern.test(user.password)) {
     errors.push({
       name: "password",
-      message: "Password must be at least 8 characters",
+      message:
+        "Password must contain at least 8 characters, with one upper and lower case and special sign and digit",
     });
   }
 
